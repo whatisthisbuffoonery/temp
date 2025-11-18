@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-void	*ft_memmove(void *dest, void *src, int n)
+void	*ft_memmove(void *dest, void *src, unsigned int n)
 {
-	int		i;
-	int		move;
-	char	*d;
-	char	*s;
+	unsigned int		i;
+	int					move;
+	char				*d;
+	char				*s;
 
 	i = 0;
 	d = (char *) dest;

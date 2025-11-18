@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-void	*ft_memcpy(void *dest, void *src, int n)
+void	*ft_memcpy(void *dest, void *src, unsigned int n)
 {
-	int		i;
-	char	*d;
-	char	*s;
+	unsigned int		i;
+	char				*d;
+	char				*s;
 
 	i = 0;
 	d = (char *) dest;

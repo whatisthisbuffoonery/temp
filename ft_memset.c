@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-void	*ft_memset(void *s, int c, int n)
+void	*ft_memset(void *s, unsigned int c, unsigned int n)
 {
-	int		i;
-	char	*a;
+	unsigned int		i;
+	char				*a;
 
 	a = (char *) s;
 	i = 0;

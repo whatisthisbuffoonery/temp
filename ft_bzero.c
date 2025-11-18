@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_bzero(void *s, int n)
+void	ft_bzero(void *s, unsigned int n)
 {
-	int		i;
-	char	*a;
+	unsigned int		i;
+	char				*a;
 
 	a = (char *) s;
 	i = 0;
