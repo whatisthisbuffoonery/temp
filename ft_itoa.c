@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 17:11:10 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 17:11:33 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/19 23:57:04 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 static void	var_help(int *i, int *n, int *t, int *flag)
 {

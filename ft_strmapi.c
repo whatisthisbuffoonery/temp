@@ -6,16 +6,16 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 23:15:43 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 23:16:25 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 00:03:18 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
 	unsigned int	i;
-	char			ret;
+	char			*ret;
 
 	i = 0;
 	if (!s || !f)

@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 18:12:57 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 23:03:31 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 00:00:54 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 static char	*ft_substr_help(char const *s, unsigned int start, size_t len)
 {

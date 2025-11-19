@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 18:08:59 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 18:09:01 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 00:02:41 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include "libft.h"
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dsize)
 {

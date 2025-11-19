@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 17:45:24 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 22:05:56 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 00:01:28 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 char	*ft_strdup(const char *s)
 {

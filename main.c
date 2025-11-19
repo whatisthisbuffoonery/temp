@@ -1,4 +1,4 @@
-#include <unistd.h>
+#include "libft.h"
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -23,8 +23,21 @@ void	ft_bzero(void *s, size_t n);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_itoa(int n);
 char	*ft_strrchr(const char *s, int c);
+char	*ft_strdup(const char *s);
 
 char	**ft_split(char const *s, char c);
+
+//----
+
+t_list *ft_lstnew(void *content);
+void ft_lstadd_front(t_list **lst, t_list *new);
+int ft_lstsize(t_list *lst);
+t_list *ft_lstlast(t_list *lst);
+void ft_lstadd_back(t_list **lst, t_list *new);
+void ft_lstdelone(t_list *lst, void (*del)(void*));
+void ft_lstclear(t_list **lst, void (*del)(void*));
+void ft_lstiter(t_list *lst, void (*f)(void *));
+t_list *ft_lstmap(t_list *lst, void *(*f)(void *),void (*del)(void *));
 
 void	ft_putnbr(int n)
 {
@@ -59,7 +72,15 @@ void	ft_putstr(char *a)
 	write(1, "\n", 1);
 }
 
-#include <stdlib.h>
+void	muh_putstr(void *a)
+{
+	ft_putstr((char *) a);
+}
+
+void	*muh_dup(void *a)
+{
+	return ((void *) ft_strdup((char *) a));
+}
 
 int		main(int c, char **v)
 {
@@ -89,7 +110,7 @@ int		main(int c, char **v)
 	*/
 	if (c < 2)
 		return (1);
-	
+/*	
 	char **arr = ft_split(v[1], 'a');
 	int i = 0;
 	if (!arr)
@@ -103,7 +124,7 @@ int		main(int c, char **v)
 		}
 		free(arr);
 	}
-	
+*/	
 /*
 	char *test = ft_itoa(ft_atoi("   \r\r\t\n -1015a6"));
 	ft_putstr(test);
@@ -115,6 +136,19 @@ int		main(int c, char **v)
 //	ft_putstr(s + 1);
 
 //	ft_putnbr(ft_strncmp("aaa", "aa", 99));
+	int i = 1;
+	t_list *dis = NULL;
+	while (i < c - 1)
+		ft_lstadd_front(&dis, ft_lstnew((void *) v[i++]));
+	ft_lstadd_back(&dis, ft_lstnew((void *) v[i]));
+	
+	ft_putnbr(ft_lstsize(dis));
+	write(1, "a\n", 2);
+	ft_putstr((char *) ft_lstlast(dis)->content);
+	t_list *deez = ft_lstmap(dis, muh_dup, free);
+	ft_lstiter(dis, muh_putstr);
+	ft_lstclear(&dis, free);
+	ft_lstclear(&deez, free);
 	(void) c;
 	(void) v;
 	(void) a;

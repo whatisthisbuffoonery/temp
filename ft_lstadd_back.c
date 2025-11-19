@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/19 17:43:38 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 23:57:47 by dthoo            ###   ########.fr       */
+/*   Created: 2025/11/20 00:37:48 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/20 00:40:54 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_memcmp(const void *s1, const void *s2, size_t n)
+static t_list	*ft_lstlast_help(t_list *lst)
 {
-	unsigned int	i;
-	unsigned char	*a;
-	unsigned char	*b;
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
 
-	i = 0;
-	a = (unsigned char *) s1;
-	b = (unsigned char *) s2;
-	while (i < n && a[i] == b[i])
-		i ++;
-	return (a[i] - b[i]);
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*a;
+
+	if (!lst)
+		return ;
+	a = ft_lstlast_help(*lst);
+	if (!a)
+		*lst = new;
+	else
+		a->next = new;
+	new->next = NULL;
 }
