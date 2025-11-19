@@ -14,7 +14,12 @@ void	*ft_memset(void *s, int c, size_t n);
 void	*ft_memcpy(void *s, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
 
+
 void	ft_bzero(void *s, size_t n);
+
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+
+char	**ft_split(char const *s, char c);
 
 void	ft_putnbr(int n)
 {
@@ -42,7 +47,9 @@ void	ft_putstr(char *a)
 	write(1, "\n", 1);
 }
 
-int		main(void)
+#include <stdlib.h>
+
+int		main(int c, char **v)
 {
 	/*
 	if (ft_print('a'))
@@ -68,5 +75,20 @@ int		main(void)
 	ft_putnbr(ft_strlcat(a, "bobby", 5));
 	ft_putstr(a);
 	*/
+	if (c < 2)
+		return (1);
+	char **arr = ft_split(v[1], 'a');
+	int i = 0;
+	if (!arr)
+		write(1, "wtf\n", 4);
+	else
+	{
+		while (arr[i])
+		{
+			ft_putstr(arr[i]);
+			free(arr[i++]);
+		}
+		free(arr);
+	}
 	(void) a;
 }
