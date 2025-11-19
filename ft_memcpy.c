@@ -6,11 +6,13 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 21:54:26 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/17 22:08:43 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/19 17:58:41 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	*ft_memcpy(void *dest, void *src, unsigned int n)
+#include <string.h>
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	unsigned int		i;
 	char				*d;

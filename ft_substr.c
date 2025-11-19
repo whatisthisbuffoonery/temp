@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 18:07:48 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:03:32 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
-void	ft_putstr(char *a);
+
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	unsigned int	i;
@@ -16,8 +28,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		len = i - start;
 	ret = malloc ((len + 1) * sizeof(char));
 	if (!ret)
-		return (0);
-//	ft_putstr();
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -25,6 +36,5 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		i ++;
 	}
 	ret[i] = '\0';
-//	ft_putstr(ret);
 	return (ret);
 }

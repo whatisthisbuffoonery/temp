@@ -1,11 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 17:09:35 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:06:31 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 
-void	*ft_calloc(unsigned int nmemb, unsigned int size)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
 	unsigned long	intmax;
 	unsigned int	i;
 	char			*ret;
 
+	if (!nmemb || !size)
+	{
+		ret = malloc(0);
+		return (ret);
+	}
 	i = 0;
 	intmax = 1;
 	while (i++ < 32)
@@ -17,7 +34,7 @@ void	*ft_calloc(unsigned int nmemb, unsigned int size)
 	size *= nmemb;
 	ret = malloc(size);
 	if (!ret)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (i < size)
 		ret[i++] = '\0';

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 17:45:24 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:05:56 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 
-char	*ft_strdup(char *s)
+char	*ft_strdup(const char *s)
 {
 	int		i;
 	char	*ret;
@@ -10,7 +22,7 @@ char	*ft_strdup(char *s)
 		i ++;
 	ret = malloc((i + 1) * sizeof(char));
 	if (!ret)
-		return (0);
+		return (NULL);
 	i = 0;
 	while (s[i])
 	{

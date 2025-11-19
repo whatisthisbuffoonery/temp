@@ -1,4 +1,18 @@
-char	*ft_strnstr(char *hay, char *needle, unsigned int n)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 17:51:16 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:04:31 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <string.h>
+
+char	*ft_strnstr(const char *big, const char *little, size_t n)
 {
 	unsigned int	i;
 	unsigned int	k;
@@ -7,12 +21,12 @@ char	*ft_strnstr(char *hay, char *needle, unsigned int n)
 	i = 0;
 	k = 0;
 	max = 0;
-	while (needle && needle[max])
+	while (little && little[max])
 		max ++;
 	n -= max;
-	while (hay[i + k] && k < max && i < n)
+	while (big[i + k] && k < max && i < n)
 	{
-		if (hay[i + k] == needle[k])
+		if (big[i + k] == little[k])
 		{
 			k ++;
 			continue ;
@@ -21,6 +35,6 @@ char	*ft_strnstr(char *hay, char *needle, unsigned int n)
 		i ++;
 	}
 	if (k == max)
-		return (&hay[i]);
-	return (0);
+		return ((char *) &big[i]);
+	return (NULL);
 }

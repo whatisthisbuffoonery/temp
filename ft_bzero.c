@@ -6,11 +6,13 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 21:43:23 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/17 21:51:59 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/19 17:17:08 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_bzero(void *s, unsigned int n)
+#include <strings.h>
+
+void	ft_bzero(void *s, size_t n)
 {
 	unsigned int		i;
 	char				*a;

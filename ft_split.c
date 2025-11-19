@@ -1,16 +1,42 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 18:12:57 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 23:03:31 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-
-void	ft_putstr(char *a);
-
-void	ft_putnbr(int n);
-
-static int	err2_help(char const *s)
+static char	*ft_substr_help(char const *s, unsigned int start, size_t len)
 {
-	if (!s || !s[0])
-		return (1);
-	return (0);
+	unsigned int	i;
+	char			*ret;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i ++;
+	if (start > i)
+		len = 0;
+	if (start + len >= i)
+		len = i - start;
+	ret = malloc ((len + 1) * sizeof(char));
+	i = 0;
+	if (!ret)
+		return (0);
+	while (i < len)
+	{
+		ret[i] = s[i + start];
+		i ++;
+	}
+	ret[i] = '\0';
+	return (ret);
 }
 
 static int	while_help(char const *s, char c, int *index, int *zero)
@@ -18,7 +44,7 @@ static int	while_help(char const *s, char c, int *index, int *zero)
 	int	i;
 
 	i = *index;
-	if (err2_help(s))
+	if (!s || !s[0])
 		return (0);
 	if (*zero)
 	{
@@ -39,49 +65,62 @@ static int	while_help(char const *s, char c, int *index, int *zero)
 	return (0);
 }
 
-static void	var_help(int *a, int *b, int *c)
+static void	var_help(int *a, int *b, int *c, char ***d)
 {
 	*a = 0;
 	*b = 0;
 	*c = 0;
+	*d = NULL;
 }
 
-static int	err_help(char **ret, int count)
+static int	err_help(char **ret, char ***err, int *count, int loop)
 {
 	if (!ret)
 		return (1);
-	if (!count)
+	if (!*count && !loop)
 	{
 		ret[0] = 0;
+		*err = ret;
 		return (1);
 	}
-	return (0);
+	if (loop && !ret[*count])
+	{
+		while (*count > 0)
+		{
+			*count -= 1;
+			free(ret[*count]);
+		}
+		free(ret);
+		return (1);
+	}
+	*count += 1;
+	return (!ret);
 }
 
 char	**ft_split(char const *s, char c)
 {
 	int		i;
 	int		k;
-	int		zero;
 	int		count;
+	char	**err;
 	char	**ret;
 
-	var_help(&i, &count, &zero);
-	while (while_help(s, c, &i, &zero))
+	var_help(&i, &count, &k, &err);
+	while (while_help(s, c, &i, &k))
 		count ++;
 	ret = malloc((count + 1) * sizeof(char *));
-	if (err_help(ret, count))
-		return (ret);
-	var_help(&i, &count, &k);
+	if (err_help(ret, &err, &count, 0))
+		return (err);
+	var_help(&i, &count, &k, &err);
 	while (while_help(s, c, &i, &k))
 	{
-		k = i;
+		k = i + 1;
 		while (s[k] && s[k] != c)
 			k ++;
-		ret[count] = ft_substr(s, i, k - i);
-		if (!(ret[count++]))
-			return (0);
+		ret[count] = ft_substr_help(s, i, k - i);
+		if (err_help(ret, &err, &count, 1))
+			return (NULL);
 	}
-	ret[count] = 0;
+	ret[count] = NULL;
 	return (ret);
 }

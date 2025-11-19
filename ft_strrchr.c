@@ -1,4 +1,18 @@
-char	*ft_strrchr(char *s, int c)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 18:06:04 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:33:13 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+
+char	*ft_strrchr(const char *s, int c)
 {
 	int	i;
 
@@ -8,6 +22,6 @@ char	*ft_strrchr(char *s, int c)
 	while (i && s[i] != c)
 		i --;
 	if (s[i] == c)
-		return (&s[i]);
-	return (0);
+		return ((char *) &s[i]);
+	return (NULL);
 }

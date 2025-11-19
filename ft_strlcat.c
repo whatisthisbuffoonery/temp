@@ -1,4 +1,18 @@
-int	ft_strlcat(char *dest, char *src, unsigned int dsize)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 17:25:08 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 17:47:14 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <string.h>
+
+size_t	ft_strlcat(char *dest, const char *src, size_t dsize)
 {
 	unsigned int	i;
 	unsigned int	k;

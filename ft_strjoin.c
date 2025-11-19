@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/19 18:08:38 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/19 22:03:09 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -14,7 +26,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		b ++;
 	ret = malloc((a + b + 1) * sizeof(char));
 	if (!ret)
-		return (0);
+		return (NULL);
 	a = -1;
 	while (s1[++a])
 		ret[a] = s1[a];

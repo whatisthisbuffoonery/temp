@@ -6,11 +6,13 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 21:35:32 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/17 21:35:34 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/19 17:48:25 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_strlen(char *s)
+#include <string.h>
+
+size_t	ft_strlen(const char *s)
 {
 	int	i;
 
