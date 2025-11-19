@@ -1,0 +1,42 @@
+#include <stdlib.h>
+
+static void var_help(int *i, int *n, int *t, int *flag)
+{
+	*t = 1;
+	*i = 0;
+	*flag = 0;
+	if (*n < 0)
+	{
+		*n = 0 - *n;
+		*i = 1;
+		*flag = 1;
+	}
+}
+
+char	*ft_itoa(int n)
+{
+	int		t;
+	int 	i;
+	int		flag;
+	char	*ret;
+
+	var_help(&i, &n, &t, &flag);
+	while (n / t > 9)
+	{
+		t *= 10;
+		i ++;
+	}
+	ret = malloc((i + 1 + 1) * sizeof(char));
+	if (!ret)
+		return (0);
+	if (flag)
+		ret[0] = '-';
+	i = flag;
+	while (t)
+	{
+		ret[i++] = ((n / t) % 10) + 48;
+		t /= 10;
+	}
+	ret[i] = '\0';
+	return (ret);
+}

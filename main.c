@@ -18,6 +18,7 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 void	ft_bzero(void *s, size_t n);
 
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_itoa(int n);
 
 char	**ft_split(char const *s, char c);
 
@@ -75,8 +76,9 @@ int		main(int c, char **v)
 	ft_putnbr(ft_strlcat(a, "bobby", 5));
 	ft_putstr(a);
 	*/
-	if (c < 2)
-		return (1);
+//	if (c < 2)
+//		return (1);
+	/*
 	char **arr = ft_split(v[1], 'a');
 	int i = 0;
 	if (!arr)
@@ -90,5 +92,11 @@ int		main(int c, char **v)
 		}
 		free(arr);
 	}
+	*/
+	char *test = ft_itoa(-101);
+	ft_putstr(test);
+	free(test);
+	(void) c;
+	(void) v;
 	(void) a;
 }
