@@ -29,7 +29,7 @@ int main(int c, char **v)
 	{
 		ft_putstr_ext(fd, v[i]);
 		if (!(i % 5))
-			ft_putstr(fd, "\n");
+			ft_putstr(fd, " \\\n");
 		else
 			ft_putstr(fd, " ");
 		i ++;

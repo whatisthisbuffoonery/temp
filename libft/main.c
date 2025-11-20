@@ -5,6 +5,8 @@ int		ft_isdigit(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);
+int		ft_toupper(int c);
+int		ft_tolower(int c);
 
 int		ft_atoi(const char *nptr);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -24,8 +26,23 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_itoa(int n);
 char	*ft_strrchr(const char *s, int c);
 char	*ft_strdup(const char *s);
+char	*ft_strnstr(const char *big, const char *little, size_t len);
 
 char	**ft_split(char const *s, char c);
+//----
+
+int		ft_memcmp(const void *s1, const void *s2, size_t n);//if !n, return (0)
+
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_striteri(char *s, void (*f)(unsigned int, char *));
+
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+char	*ft_strtrim(char const *s1, char const *set);
 
 //----
 
@@ -82,6 +99,18 @@ void	*muh_dup(void *a)
 	return ((void *) ft_strdup((char *) a));
 }
 
+char	muh_upper(unsigned int n, char c)
+{
+	(void) n;
+	return (ft_tolower((char) c));
+}
+
+void	muh_print(unsigned int n, char *s)
+{
+	(void) n;
+	ft_putchar_fd(*s, 1);
+}
+
 int		main(int c, char **v)
 {
 	/*
@@ -108,7 +137,7 @@ int		main(int c, char **v)
 	ft_putnbr(ft_strlcat(a, "bobby", 5));
 	ft_putstr(a);
 	*/
-	if (c < 2)
+	if (c < 4)
 		return (1);
 /*	
 	char **arr = ft_split(v[1], 'a');
@@ -136,7 +165,8 @@ int		main(int c, char **v)
 //	ft_putstr(s + 1);
 
 //	ft_putnbr(ft_strncmp("aaa", "aa", 99));
-	int i = 1;
+//	int i = 1;
+	/*
 	t_list *dis = NULL;
 	while (i < c - 1)
 		ft_lstadd_front(&dis, ft_lstnew((void *) v[i++]));
@@ -149,6 +179,31 @@ int		main(int c, char **v)
 	ft_lstiter(dis, muh_putstr);
 	ft_lstclear(&dis, free);
 	ft_lstclear(&deez, free);
+	*/
+	/*
+	//char *str = ft_strnstr(v[1], v[2], ft_atoi(v[3]));
+	char *str = ft_strjoin(v[1], v[2]);
+//	char *res = ft_strtrim(str, v[3]);
+	char *res = ft_strchr(str, v[3][0]);
+	ft_putstr(res);
+	free(str);
+//	free(res);
+	//write(1, str, ft_strlen(v[2]));
+	*/
+	/*
+	ft_putchar_fd(v[1][0], 1);
+	ft_putendl_fd(v[2], 1);
+	ft_putstr_fd(v[1], 1);
+	ft_putendl_fd(v[2], 1);
+	ft_putnbr_fd(-80, 1);
+	ft_putendl_fd(v[2], 1);
+	*/
+	/*
+	char *str = ft_strmapi(v[1], muh_upper);
+	ft_striteri(str, muh_print);
+	free(str);
+	*/
+	ft_putnbr(ft_memcmp(v[1], v[2], ft_atoi(v[3])));
 	(void) c;
 	(void) v;
 	(void) a;

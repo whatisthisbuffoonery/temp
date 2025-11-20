@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 18:09:14 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 00:04:59 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 21:43:03 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		i;
 	int		k;
-	char	table[128];
+	char	table[256];
 
 	i = 0;
 	k = 0;
-	while (i < 128)
+	while (i < 256)
 		table[i++] = 0;
 	i = 0;
 	while (set[i])
@@ -58,7 +58,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (s1[k])
 		k ++;
 	k --;
-	while (table[(unsigned char) s1[k]])
+	while (k && table[(unsigned char) s1[k]])
 		k --;
-	return (ft_substr_help(s1, i, k - i));
+	return (ft_substr_help(s1, i, ((k - i) * (s1[i] > 0)) + 1));
 }

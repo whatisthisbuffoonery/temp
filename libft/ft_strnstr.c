@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 17:51:16 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 00:04:26 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 20:38:27 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ char	*ft_strnstr(const char *big, const char *little, size_t n)
 	i = 0;
 	k = 0;
 	max = 0;
+	if (!big)
+		return (NULL);
 	while (little && little[max])
 		max ++;
 	n -= max;
-	while (big[i + k] && k < max && i < n)
+	while (big[i + k] && k < max && i <= n)
 	{
 		if (big[i + k] == little[k])
 		{
