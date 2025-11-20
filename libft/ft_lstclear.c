@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 00:53:27 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 01:14:26 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/20 04:45:25 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,4 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 		ft_lstdelone(f, del);
 		f = tmp;
 	}
-
-//	*lst = NULL;
 }

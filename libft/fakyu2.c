@@ -24,7 +24,7 @@ int main(int c, char **v)
 		return (1);
 	int i = 1;
 	int fd = open("fuckoff2.txt", O_CREAT | O_WRONLY, 0644);
-	write(fd, "dot_o: ", 7);
+	write(fd, "dot_o := ", 7);
 	while (i < c)
 	{
 		ft_putstr_ext(fd, v[i]);
