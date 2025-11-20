@@ -5,20 +5,25 @@ AR := ar
 AR_FLAGS := rcs
 HEADER := libft.h
 
-dot_o := ft_atoi.o ft_bzero.o ft_calloc.o \
+OBJ := ft_atoi.o ft_bzero.o ft_calloc.o \
 ft_isalnum.o ft_isalpha.o ft_isascii.o ft_isdigit.o ft_isprint.o \
-ft_itoa.o ft_lstadd_back.o ft_lstadd_front.o ft_lstclear.o ft_lstdelone.o \
-ft_lstiter.o ft_lstlast.o ft_lstmap.o ft_lstnew.o ft_lstsize.o \
+ft_itoa.o \
 ft_memchr.o ft_memcmp.o ft_memcpy.o ft_memmove.o ft_memset.o \
 ft_putchar_fd.o ft_putendl_fd.o ft_putnbr_fd.o ft_putstr_fd.o ft_split.o \
 ft_strchr.o ft_strdup.o ft_striteri.o ft_strjoin.o ft_strlcat.o \
 ft_strlcpy.o ft_strlen.o ft_strmapi.o ft_strncmp.o ft_strnstr.o \
 ft_strrchr.o ft_strtrim.o ft_substr.o ft_tolower.o ft_toupper.o
 
+BONUS_OBJ := ft_lstadd_back_bonus.o ft_lstadd_front_bonus.o ft_lstclear_bonus.o ft_lstdelone_bonus.o \
+ft_lstiter_bonus.o ft_lstlast_bonus.o ft_lstmap_bonus.o ft_lstnew_bonus.o ft_lstsize_bonus.o
+
 all: $(NAME)
 
-$(NAME): $(dot_o)
-	$(AR) $(AR_FLAGS) $@ $^
+$(NAME): $(OBJ)
+	$(AR) $(AR_FLAGS) $(NAME) $^
+
+bonus: $(OBJ) $(BONUS_OBJ)
+	$(AR) $(AR_FLAGS) $(NAME) $^
 
 ft_atoi.o: ft_atoi.c
 	$(CC) $(CC_FLAGS) $< -o $@
@@ -38,23 +43,23 @@ ft_isprint.o: ft_isprint.c
 	$(CC) $(CC_FLAGS) $< -o $@
 ft_itoa.o: ft_itoa.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstadd_back.o: ft_lstadd_back.c
+ft_lstadd_back_bonus.o: ft_lstadd_back_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstadd_front.o: ft_lstadd_front.c
+ft_lstadd_front_bonus.o: ft_lstadd_front_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstclear.o: ft_lstclear.c
+ft_lstclear_bonus.o: ft_lstclear_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstdelone.o: ft_lstdelone.c
+ft_lstdelone_bonus.o: ft_lstdelone_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstiter.o: ft_lstiter.c
+ft_lstiter_bonus.o: ft_lstiter_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstlast.o: ft_lstlast.c
+ft_lstlast_bonus.o: ft_lstlast_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstmap.o: ft_lstmap.c
+ft_lstmap_bonus.o: ft_lstmap_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstnew.o: ft_lstnew.c
+ft_lstnew_bonus.o: ft_lstnew_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
-ft_lstsize.o: ft_lstsize.c
+ft_lstsize_bonus.o: ft_lstsize_bonus.c
 	$(CC) $(CC_FLAGS) $< -o $@
 ft_memchr.o: ft_memchr.c
 	$(CC) $(CC_FLAGS) $< -o $@
@@ -108,7 +113,7 @@ ft_toupper.o: ft_toupper.c
 	$(CC) $(CC_FLAGS) $< -o $@
 
 clean:
-	rm -f $(dot_o)
+	rm -f $(OBJ) $(BONUS_OBJ)
 
 fclean: clean
 	rm -f $(NAME)

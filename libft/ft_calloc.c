@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 17:09:35 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 23:56:37 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 01:03:54 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
-	unsigned long	intmax;
-	unsigned int	i;
-	char			*ret;
+	size_t	i;
+	size_t	size_max;
+	char	*ret;
 
 	if (!nmemb || !size)
 	{
@@ -24,13 +24,10 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (ret);
 	}
 	i = 0;
-	intmax = 1;
-	while (i++ < 32)
-		intmax *= 2;
-	intmax --;
-	i = intmax / size;
+	size_max = -1;
+	i = size_max / size;
 	if (nmemb > i)
-		return (0);
+		return (NULL);
 	size *= nmemb;
 	ret = malloc(size);
 	if (!ret)
