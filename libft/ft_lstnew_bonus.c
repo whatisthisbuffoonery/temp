@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 00:14:50 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 00:34:47 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 23:38:24 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static char	*ft_strdup_help(const char *s)
 	char	*ret;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	while (s[i])
 		i ++;
 	ret = malloc((i + 1) * sizeof(char));
@@ -38,6 +40,8 @@ t_list	*ft_lstnew(void *content)
 	t_list	*a;
 
 	a = malloc(sizeof(t_list));
+	if (!a)
+		return (NULL);
 	a->next = NULL;
 	a->content = ft_strdup_help((char *) content);
 	return (a);

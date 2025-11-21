@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 17:43:38 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 22:28:19 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 22:27:49 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,7 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 	b = (unsigned char *) s2;
 	while (i < n && a[i] == b[i])
 		i ++;
-	return (a[i] - b[i]);
+	if (i < n)
+		return (a[i] - b[i]);
+	return (0);
 }

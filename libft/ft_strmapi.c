@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 23:15:43 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 00:03:18 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 23:05:21 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 		ret[i] = f(i, s[i]);
 		i ++;
 	}
+	ret[i] = '\0';
 	return (ret);
 }

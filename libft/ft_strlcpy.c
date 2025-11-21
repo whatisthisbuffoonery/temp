@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 18:08:59 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 00:02:41 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 21:49:44 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dsize)
 {
-	unsigned int		i;
-	unsigned int		min;
-	unsigned int		ret;
+	int	i;
+	int	min;
+	int	ret;
 
 	i = 0;
 	min = dsize - 1;

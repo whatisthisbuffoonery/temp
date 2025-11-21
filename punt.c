@@ -2,5 +2,5 @@
 
 int main(void)
 {
-	printf("|%#a|%", 1.9999);
+	printf("|%0d|", 1);
 }

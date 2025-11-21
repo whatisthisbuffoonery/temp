@@ -122,13 +122,14 @@ int		main(int c, char **v)
 	char a[20];
 //	a[4] = 'q';
 //	int src = 4;
-	/*
+	/*	
 	char *b = &a[0];
 	b = (char *)ft_memset(a, '1', 20);
 	ft_memcpy(&b[src], "banana\0", 7);
-	b = ft_memmove(&b[1], &b[src], 7);
-	ft_putnbr(ft_strlen(b));
-	return (0);
+	b = ft_memmove(&b[2], &b[src], 7);
+	//ft_putnbr(ft_strlen(b));
+	ft_putstr(b);
+	//return (0);
 	*/
 //	ft_bzero(a, 6);
 	/*
@@ -137,8 +138,8 @@ int		main(int c, char **v)
 	ft_putnbr(ft_strlcat(a, "bobby", 5));
 	ft_putstr(a);
 	*/
-	if (c < 4)
-		return (1);
+//	if (c < 4)
+//		return (1);
 /*	
 	char **arr = ft_split(v[1], 'a');
 	int i = 0;
@@ -159,11 +160,18 @@ int		main(int c, char **v)
 	ft_putstr(test);
 	free(test);
 */
-
-	//char s = *(char *) ft_memchr((void *) "abc", 'c', 3);
+	char *s1 = ".........";
+	char *s2 = ".........";
+	ft_putnbr(ft_memcmp(s1, s2, 10));
+//	char *s = (char *) ft_memchr((void *) ex, '\xde', 15);
 //	char *s = ft_strrchr("ab\0cdef", '\0');
-//	ft_putstr(s + 1);
-
+//	ft_putstr(s);
+	/*
+	if (s)
+		write(1, "yes\n", 4);
+	else
+		write(1, "no\n", 3);
+	*/
 //	ft_putnbr(ft_strncmp("aaa", "aa", 99));
 //	int i = 1;
 	/*
@@ -203,9 +211,9 @@ int		main(int c, char **v)
 	ft_striteri(str, muh_print);
 	free(str);
 	*/
-	ft_putnbr(ft_memcmp(v[1], v[2], ft_atoi(v[3])));
+//	ft_putnbr(ft_memcmp(v[1], v[2], ft_atoi(v[3])));
 	(void) c;
 	(void) v;
 	(void) a;
-	write(1, "\n", 1);
+//	write(1, "\n", 1);
 }

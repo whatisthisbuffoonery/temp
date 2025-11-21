@@ -4,6 +4,7 @@ CC_FLAGS := -Wall -Wextra -Werror -c
 AR := ar
 AR_FLAGS := rcs
 HEADER := libft.h
+BONUS_FLAG := -DBONUS
 
 OBJ := ft_atoi.o ft_bzero.o ft_calloc.o \
 ft_isalnum.o ft_isalpha.o ft_isascii.o ft_isdigit.o ft_isprint.o \
@@ -22,6 +23,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(AR) $(AR_FLAGS) $(NAME) $^
 
+bonus: CC_FLAG += $(BONUS_FLAG)
 bonus: $(OBJ) $(BONUS_OBJ)
 	$(AR) $(AR_FLAGS) $(NAME) $^
 

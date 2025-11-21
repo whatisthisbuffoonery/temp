@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 21:54:26 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/19 23:58:12 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/21 21:34:26 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	char				*s;
 
 	i = 0;
+	if (!dest || !src)
+		return (NULL);
 	d = (char *) dest;
 	s = (char *) src;
 	while (i < n)
