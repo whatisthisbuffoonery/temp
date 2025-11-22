@@ -11,28 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-/*
-static char	*ft_strdup_help(const char *s)
-{
-	int		i;
-	char	*ret;
 
-	i = 0;
-	while (s[i])
-		i ++;
-	ret = malloc((i + 1) * sizeof(char));
-	if (!ret)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		ret[i] = s[i];
-		i ++;
-	}
-	ret[i] = '\0';
-	return (ret);
-}
-*/
 static t_list	*ft_lstnew_help(void *content)
 {
 	t_list	*a;
@@ -43,7 +22,7 @@ static t_list	*ft_lstnew_help(void *content)
 	return (a);
 }
 
-static void	ft_lstdelone(t_list *lst, void (*del)(void *))
+static void	ft_lstdelone_help(t_list *lst, void (*del)(void *))
 {
 	if (!lst)
 		return ;
@@ -63,7 +42,7 @@ static void	ft_lstclear_help(t_list **lst, void (*del)(void *))
 	while (f)
 	{
 		tmp = f->next;
-		ft_lstdelone(f, del);
+		ft_lstdelone_help(f, del);
 		f = tmp;
 	}
 	*lst = NULL;
@@ -75,7 +54,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	t_list	*curr;
 	t_list	*tmp;
 
-	head = 0;
+	head = NULL;
 	if (!lst || !f)
 		return (NULL);
 	while (lst)

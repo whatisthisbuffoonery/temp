@@ -14,9 +14,9 @@
 
 size_t	ft_strlcat(char *dest, const char *src, size_t dsize)
 {
-	unsigned int	i;
-	unsigned int	k;
-	int				ret;
+	size_t	i;
+	size_t	k;
+	size_t	ret;
 
 	i = 0;
 	k = 0;
@@ -25,10 +25,10 @@ size_t	ft_strlcat(char *dest, const char *src, size_t dsize)
 		ret ++;
 	while (dest[i] && i < dsize)
 		i ++;
-	if (i == dsize)
-		return (i + ret);
-	dsize -= i + 1;
-	while (k < dsize)
+	if (i >= dsize)
+		return (dsize + ret);
+	dsize -= i;
+	while (k + 1 < dsize && k < ret)
 	{
 		dest[i + k] = src[k];
 		k ++;

@@ -14,23 +14,23 @@
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t dsize)
 {
-	int	i;
-	int	min;
-	int	ret;
+	size_t	i;
+	size_t	min;
+	size_t	ret;
 
-	i = 0;
+	ret = 0;
+	while (src[ret])
+		ret ++;
+	if (dsize < 1)
+		return (ret);
 	min = dsize - 1;
-	while (src[i])
-		i ++;
-	if (i < min)
-		min = i;
-	ret = i;
 	i = 0;
-	while (i < min)
+	while (i < min && i < ret)
 	{
 		dest[i] = src[i];
 		i ++;
 	}
-	dest[i] = '\0';
+	if (dsize > 0)
+		dest[i] = '\0';
 	return (ret);
 }

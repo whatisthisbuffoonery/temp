@@ -23,8 +23,9 @@ char	*ft_strnstr(const char *big, const char *little, size_t n)
 	max = 0;
 	while (little[max])
 		max ++;
-	n -= max;
-	while (big[i + k] && k < max && i <= n)
+	if (max && !n)
+		return (NULL);
+	while (big[i + k] && k < max && i + k < n)
 	{
 		if (big[i + k] == little[k])
 		{

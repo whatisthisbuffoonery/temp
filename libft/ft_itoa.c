@@ -25,7 +25,7 @@ static void	var_help(int *i, long *n, int *t, int *flag)
 	}
 }
 
-static void ft_line_shave(int flag, char *ret, int *i)
+static void	ft_line_shave(int flag, char *ret, int *i)
 {
 	if (flag)
 		ret[0] = '-';

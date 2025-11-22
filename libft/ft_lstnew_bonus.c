@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-
+/*
 static char	*ft_strdup_help(const char *s)
 {
 	int		i;
@@ -34,7 +34,7 @@ static char	*ft_strdup_help(const char *s)
 	ret[i] = '\0';
 	return (ret);
 }
-
+*/
 t_list	*ft_lstnew(void *content)
 {
 	t_list	*a;
@@ -43,6 +43,6 @@ t_list	*ft_lstnew(void *content)
 	if (!a)
 		return (NULL);
 	a->next = NULL;
-	a->content = ft_strdup_help((char *) content);
+	a->content = content;
 	return (a);
 }

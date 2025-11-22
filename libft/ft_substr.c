@@ -12,33 +12,25 @@
 
 #include "libft.h"
 
-static void	var_help(int *s, unsigned int start, size_t len, int *l)
-{
-	*l = len;
-	*s = start;
-}
-
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	int		i;
-	int		ft_len;
-	int		ft_start;
+	size_t	i;
 	char	*ret;
 
 	if (!s)
 		return (NULL);
+	i = 0;
 	while (s[i])
 		i ++;
-	var_help(&ft_start, start, len, &ft_len);
-	if (ft_start > i)
-		ft_len = 0;
-	else if (ft_start + ft_len > i)
-		ft_len = i - ft_start;
-	ret = malloc ((ft_len + 1) * sizeof(char));
+	if (start > i)
+		len = 0;
+	else if (start + len > i)
+		len = i - start;
+	ret = malloc ((len + 1) * sizeof(char));
 	if (!ret)
 		return (NULL);
 	i = 0;
-	while (i < ft_len)
+	while (i < len)
 	{
 		ret[i] = s[i + start];
 		i ++;

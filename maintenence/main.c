@@ -1,5 +1,5 @@
 #include "libft.h"
-
+/*
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
@@ -55,7 +55,7 @@ void ft_lstdelone(t_list *lst, void (*del)(void*));
 void ft_lstclear(t_list **lst, void (*del)(void*));
 void ft_lstiter(t_list *lst, void (*f)(void *));
 t_list *ft_lstmap(t_list *lst, void *(*f)(void *),void (*del)(void *));
-
+*/
 void	ft_putnbr(int n)
 {
 	int 	t;
@@ -138,8 +138,6 @@ int		main(int c, char **v)
 	ft_putnbr(ft_strlcat(a, "bobby", 5));
 	ft_putstr(a);
 	*/
-//	if (c < 4)
-//		return (1);
 /*	
 	char **arr = ft_split(v[1], 'a');
 	int i = 0;
@@ -160,9 +158,11 @@ int		main(int c, char **v)
 	ft_putstr(test);
 	free(test);
 */
+	/*
 	char *s1 = ".........";
 	char *s2 = ".........";
 	ft_putnbr(ft_memcmp(s1, s2, 10));
+	*/
 //	char *s = (char *) ft_memchr((void *) ex, '\xde', 15);
 //	char *s = ft_strrchr("ab\0cdef", '\0');
 //	ft_putstr(s);
@@ -172,9 +172,11 @@ int		main(int c, char **v)
 	else
 		write(1, "no\n", 3);
 	*/
-//	ft_putnbr(ft_strncmp("aaa", "aa", 99));
-//	int i = 1;
-	/*
+	ft_putnbr(ft_strncmp("aaa", "aa", 99));
+
+	if (c < 2)
+		return (1);
+	int i = 1;	
 	t_list *dis = NULL;
 	while (i < c - 1)
 		ft_lstadd_front(&dis, ft_lstnew((void *) v[i++]));
@@ -187,7 +189,7 @@ int		main(int c, char **v)
 	ft_lstiter(dis, muh_putstr);
 	ft_lstclear(&dis, free);
 	ft_lstclear(&deez, free);
-	*/
+	
 	/*
 	//char *str = ft_strnstr(v[1], v[2], ft_atoi(v[3]));
 	char *str = ft_strjoin(v[1], v[2]);
