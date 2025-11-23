@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 01:14:45 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/20 01:26:31 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/23 17:03:57 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static t_list	*ft_lstnew_help(void *content)
 	t_list	*a;
 
 	a = malloc(sizeof(t_list));
+	if (!a)
+		return (NULL);
 	a->next = NULL;
 	a->content = content;
 	return (a);
@@ -48,31 +50,41 @@ static void	ft_lstclear_help(t_list **lst, void (*del)(void *))
 	*lst = NULL;
 }
 
+static void	var_help(t_list **head, t_list **curr, t_list *tmp)
+{
+	if (!*head)
+	{
+		*head = tmp;
+		*curr = tmp;
+		return ;
+	}
+	(*curr)->next = tmp;
+	*curr = (*curr)->next;
+}
+
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
 	t_list	*head;
 	t_list	*curr;
 	t_list	*tmp;
+	char	*str;
 
 	head = NULL;
 	if (!lst || !f)
 		return (NULL);
 	while (lst)
 	{
-		tmp = ft_lstnew_help(f(lst->content));
-		lst = lst->next;
+		str = f(lst->content);
+		tmp = ft_lstnew_help(str);
 		if (!tmp)
-			ft_lstclear_help(&head, del);
-		if (!tmp)
-			return (NULL);
-		if (!head)
 		{
-			head = tmp;
-			curr = tmp;
-			continue ;
+			if (del && str)
+				del(str);
+			ft_lstclear_help(&head, del);
+			return (NULL);
 		}
-		curr->next = tmp;
-		curr = curr->next;
+		lst = lst->next;
+		var_help(&head, &curr, tmp);
 	}
 	return (head);
 }
