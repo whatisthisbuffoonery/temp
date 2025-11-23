@@ -16,25 +16,23 @@
 # include "libft.h"
 # include <stdarg.h>
 
-# ifdef BONUS
+# define PERCENT 1
+# define HASH 2
+# define PLUS 4
+# define SPACE 8
+# define DASH 16
+# define ZERO 32
+# define DOT 64
+# define ERR 5
 
-int	bonus(void);
+int	handle_flag(const char *format, int *i, int *flag, t_tables *table);
 
-#  define BONUS handle_flag
-# endif
-
-# ifndef BONUS
-#  define BONUS 0
-# endif
-
-typedef struct s_flags
+typedef union s_param
 {
-	char	minus_stack;
-	char	plus_stack;
-	char	dot;
-	char	hash;
-	char	type;
-}			t_flags;
+	int		a;
+	char	c;
+	char	*p;
+}			t_param;
 
 typedef struct s_tables
 {
