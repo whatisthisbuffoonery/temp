@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/23 17:37:47 by dthoo             #+#    #+#             */
+/*   Updated: 2025/11/23 19:33:05 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 static void	tabler(t_tables *a, int *int1, int *int2, t_list *output)//relegate this to just d, i, x, X, u
@@ -19,6 +31,8 @@ static void	tabler(t_tables *a, int *int1, int *int2, t_list *output)//relegate 
 	a->type['u'] = 1;
 	a->type['x'] = 1;
 	a->type['X'] = 1;
+	if (handle_flag(0, 0, 0, 0) == NO_OP)
+		return ;
 	a->flag[' '] = 1;
 	a->flag['+'] = 1;
 	a->flag['#'] = 1;
@@ -27,24 +41,31 @@ static void	tabler(t_tables *a, int *int1, int *int2, t_list *output)//relegate 
 	a->flag['.'] = 1;//atoi is allowed to return '0' on invalid num
 }
 
-static void	increment(const char *format, int *index, t_list **output)
+static int	increment(const char *format, t_list **output, t_tables *table)
 {
-	int	i;
+	int				i;
+	int 			start;
+	char 			*str;
+	unsigned char	cmp;
 
-	i = *index;
+	i = 0;
+	start = 0;
 	while (format[i])
 	{
 		if (format[i] == '%')
 		{
-			if (format[i + 1] == '%')
+			if (i > start)
 			{
-				i ++;
-				ft_lstadd_back(output, ft_lstnew((void *) "%"));
+				str = ft_substr(format, start, i - start);
+				ft_lstadd_back(output, ft_lstnew((void *) str));
+				start = i + 1 + (format[i + 1] == '%');
 			}
-			else
-				break ;
+			i ++;
+			cmp = format[i];
+			if (table->type[cmp] || table->flag[cmp])
+				break;
 		}
-		i ++;
+		i += (format[i + 1] == '%');
 	}
 	*index = i;
 }
@@ -74,6 +95,6 @@ int		ft_printf(const char *format, ...)//do a LINKED LIST AHAHAHAHAHAH for error
 			i ++;
 		}
 		else
-			increment(format, &i, &output);
+			i += increment(&format[i], &output, table);
 	}
 }

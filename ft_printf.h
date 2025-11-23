@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 17:37:28 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/21 19:18:53 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/23 18:21:19 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 # define DASH 16
 # define ZERO 32
 # define DOT 64
-# define ERR 5
+# define ERR 128
+# define NO_OP 256
 
 int	handle_flag(const char *format, int *i, int *flag, t_tables *table);
 

@@ -4,6 +4,8 @@ int	handle_flag(const char *format, int *i, int *flag, t_tables *table)
 {
 	unsigned char	c;
 
+	if (!format)
+		return (NO_OP);
 	*i += 1;
 	*flag = 0;
 	c = (unsigned char) format[*i];
