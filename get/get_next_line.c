@@ -40,7 +40,7 @@ char	*get_next_line(int fd)
 		return (get_strjoin(ret, get_next_line(fd)));
 	return (ret);
 }
-
+/*
 #include <fcntl.h>
 
 void ft_putstr(char *a)
@@ -120,4 +120,4 @@ int main(int c, char **v)
 	close(fd);
 //	write(1, "\n", 1);
 }
-
+*/

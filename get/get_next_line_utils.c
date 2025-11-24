@@ -12,6 +12,13 @@
 
 #include "get_next_line.h"
 
+static char	*yeet(char *a)
+{
+	if (a)
+		free(a);
+	return (NULL);
+}
+
 char	*get_strjoin(char *a, char *b)
 {
 	int		i;
@@ -28,7 +35,7 @@ char	*get_strjoin(char *a, char *b)
 		k ++;
 	ret = malloc((i + k + 1) * sizeof(char));
 	if (!ret)
-		return (a);
+		return (yeet(a));//this returned a, idk
 	i = -1;
 	k = -1;
 	while (a[++i])
