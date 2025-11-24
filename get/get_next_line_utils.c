@@ -20,15 +20,15 @@ char	*get_strjoin(char *a, char *b)
 
 	i = 0;
 	k = 0;
-	if (!a)
-		return (NULL);
-	if (!b)
+	if (!a || !b)
 		return (a);
 	while (a[i])
 		i ++;
 	while (b[k])
 		k ++;
 	ret = malloc((i + k + 1) * sizeof(char));
+	if (!ret)
+		return (a);
 	i = -1;
 	k = -1;
 	while (a[++i])
@@ -45,23 +45,32 @@ int	get_condition(t_var *buffer, int start, int len)
 {
 	int	a;
 	int	b;
-	int	c;
 
 	a = (start + len >= buffer->lim);
-	b = (buffer->buf[buffer->count] != '\n');
-	c = (buffer->lim == BUFFER_SIZE);
-	return (a && b && c);
+	b = (buffer->lim == BUFFER_SIZE);
+	return (a && b && buffer->buf[buffer->count - 1] != '\n');
 }
 
-int	refresh_buffer(t_var *buffer, int fd)
+int	refresh_buffer(t_var *buffer, int fd, int *me_fd)
 {
-	if (fd < 0)
-		return (1);
-	if (buffer->count != buffer->lim)
+	int	i;
+
+	i = 0;
+	if (fd >= 0 && *me_fd == fd && buffer->count < buffer->lim)
 		return (0);
-	buffer->lim = read(fd, buffer->buf, BUFFER_SIZE);
+	if (fd >= 0)
+		buffer->lim = read(fd, buffer->buf, BUFFER_SIZE);
+	*me_fd = fd;
 	buffer->count = 0;
-	if (!buffer->lim)
+	if (fd < 0 || buffer->lim < 1)
+	{
+		*me_fd = 0;
+		if (buffer->lim < 0)
+			write(1, " | err | ", 9);
+		while (i < BUFFER_SIZE)
+			buffer->buf[i++] = '\0';
+		buffer->lim = 0;
 		return (1);
+	}
 	return (0);
 }

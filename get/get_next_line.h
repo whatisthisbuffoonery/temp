@@ -32,6 +32,6 @@ typedef struct s_var
 char	*get_next_line(int fd);
 char	*get_strjoin(char *a, char *b);
 int		get_condition(t_var *buffer, int start, int len);
-int		refresh_buffer(t_var *buffer, int fd);
+int		refresh_buffer(t_var *buffer, int fd, int *me_fd);
 
 #endif
