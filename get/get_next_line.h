@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 22:15:13 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/24 02:08:05 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/25 16:48:06 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_var
 }			t_var;
 
 char	*get_next_line(int fd);
-char	*get_strjoin(char *a, char *b, ssize_t i, ssize_t k);
+int		get_strjoin(char **a, char *b, ssize_t i, ssize_t k);
 void	refresh_buffer(t_var *file, int fd);
 
 #endif

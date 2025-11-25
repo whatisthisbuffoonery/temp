@@ -6,12 +6,12 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/24 03:04:23 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/25 16:47:32 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+/*
 void	probe(char *a, int b, ssize_t c, ssize_t e)
 {
 	char d;
@@ -49,7 +49,7 @@ void	probe(char *a, int b, ssize_t c, ssize_t e)
 		t /= 10;
 	}
 }
-
+*/
 char	*read_buf(t_var *file, int fd, int *done)
 {
 	ssize_t	i;
@@ -90,7 +90,6 @@ char	*get_next_line(int fd)
 	ret = read_buf(&file, fd, &done);
 	while (ret && !done && file.lim > 0)
 	{
-	//	probe(ret, done, file.lim, file.count);
 		tmp = read_buf(&file, fd, &done);
 		if (!tmp)
 		{
@@ -99,12 +98,8 @@ char	*get_next_line(int fd)
 			free(ret);
 			return (NULL);
 		}
-		ret = get_strjoin(ret, tmp, 0, 0);
+		done += get_strjoin(&ret, tmp, 0, 0);
 	}
-	if (ret)
-		write(1, "1", 1);
-	else
-		write(1, "2", 1);
 	return (ret);
 }
 /*
