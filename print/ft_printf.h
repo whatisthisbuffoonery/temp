@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 17:37:28 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/23 18:21:19 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/26 00:33:40 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@
 # define ERR 128
 # define NO_OP 256
 
-int	handle_flag(const char *format, int *i, int *flag, t_tables *table);
+char		print_ptr(char type, char *src);
+static void	tabler(char *table, int *i, char **ret);
+char		*print_base_signed(intptr_t n, char type);
 
 typedef union s_param
 {
