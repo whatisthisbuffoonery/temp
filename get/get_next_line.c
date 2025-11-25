@@ -12,48 +12,122 @@
 
 #include "get_next_line.h"
 
+void	probe(char *a, int b, ssize_t c, ssize_t e)
+{
+	char d;
+	if (a)
+		write(1, " ye a ", 5);
+	if (b)
+		write(1, " ye b ", 5);
+	ssize_t t = 1;
+	if (c < 0)
+	{
+		write(1, "-", 1);
+		c = 0 - c;
+	}
+	while (c / t > 9)
+		t *= 10;
+	while (t)
+	{
+		d = ((c / t) % 10) + 48;
+		write(1, &d, 1);
+		t /= 10;
+	}
+	t = 1;
+	write(1, " | ", 3);
+	if (e < 0)
+	{
+		write(1, "-", 1);
+		e = 0 - e;
+	}
+	while (e / t > 9)
+		t *= 10;
+	while (t)
+	{
+		d = ((e / t) % 10) + 48;
+		write(1, &d, 1);
+		t /= 10;
+	}
+}
+
+char	*read_buf(t_var *file, int fd, int *done)
+{
+	ssize_t	i;
+	ssize_t	k;
+	char	*ret;
+
+	k = -1;
+	if (file->count >= file->lim || fd != file->fd)
+		refresh_buffer(file, fd);
+	if (file->lim < 1)
+		return (NULL);
+	i = file->count;
+	while (file->count < file->lim && file->buf[file->count] != '\n')
+		file->count ++;
+	*done = (file->count < file->lim && file->buf[file->count] == '\n');
+	file->count += *done;
+	ret = malloc(((file->count - i) + 1) * sizeof(char));
+	if (!ret)
+	{
+		file->count = i;
+		file->lim = -1;
+		return (NULL);
+	}
+	while (i + ++k < file->count)
+		ret[k] = file->buf[i + k];
+	ret[k] = '\0';
+	return (ret);
+}
+
 char	*get_next_line(int fd)
 {
-	static t_var	buffer;
-	static int		me_fd;
+	static t_var	file;
 	char			*ret;
-	int				start;
-	int				len;
+	char			*tmp;
+	int				done;
 
-	if (refresh_buffer(&buffer, fd, &me_fd))
-		return (NULL);
-	start = buffer.count;
-	while (buffer.count < buffer.lim && buffer.buf[buffer.count] != '\n')
-		buffer.count += 1;
-	if (buffer.count < buffer.lim && buffer.buf[buffer.count] == '\n')
-		buffer.count += 1;
-	len = buffer.count - start;
-	ret = malloc((len + 1) * sizeof(char));
-	if (!ret)
-		return (NULL);
-	buffer.count = -1;
-	while (++buffer.count < len)
-		ret[buffer.count] = buffer.buf[start + buffer.count];
-	ret[buffer.count] = '\0';
-	buffer.count = start + len;
-	if (fd >= 0 && me_fd == fd && get_condition(&buffer, start, len))
-		return (get_strjoin(ret, get_next_line(fd)));
+	done = 0;
+	ret = read_buf(&file, fd, &done);
+	while (ret && !done && file.lim > 0)
+	{
+	//	probe(ret, done, file.lim, file.count);
+		tmp = read_buf(&file, fd, &done);
+		if (!tmp)
+		{
+			if (file.lim == 0)
+				break ;
+			free(ret);
+			return (NULL);
+		}
+		ret = get_strjoin(ret, tmp, 0, 0);
+	}
+	if (ret)
+		write(1, "1", 1);
+	else
+		write(1, "2", 1);
 	return (ret);
 }
 /*
 #include <fcntl.h>
 
-void ft_putstr(char *a)
+void ft_putstr(char *a, int flag)
 {
 	int i = 0;
 	if (!a)
 	{
-		ft_putstr("(null)\n");
+		ft_putstr("(null)\n", 0);
 		return ;
 	}
 	while (a[i])
 		i ++;
 	write(1, a, i);
+	if (flag)
+	{
+		if (a[i - 1] == '\n')
+			write(1, "nl\n", 3);
+		else
+			write(1, "empty\n", 6);
+	}
 }
 
 void ft_putnbr(int n)
@@ -87,11 +161,13 @@ void read_file(int fd, size_t lines)
 	while (lines--)
 	{
 		a = get_next_line(fd);
+		
 		if (a && a[0] == '\n')
-			ft_putstr("nl\n");
+			ft_putstr("nl\n", 0);
 		if (a && a[0] == '\0')
-			ft_putstr(".\n");
-		ft_putstr(a);
+			ft_putstr(".\n", 0);
+		
+		ft_putstr(a, 1);
 		//ft_putnbr(ft_strlen(a));
 		if (!a)
 			return ;
@@ -108,14 +184,18 @@ int main(int c, char **v)
 	int fd = open(v[1], O_RDONLY);
 	if (fd < 0)
 		return (1);
-	read_file(fd, 2);
-	close(fd);
+	read_file(fd, 0);
+//	close(fd);
 //	fd = open("not_a_file.txt", O_WRONLY);
 //	fd = -100;
 //	read_file(fd, 0);
-	fd = open(v[1], O_RDONLY);
-	if (fd < 0)
-		return (0);
+//	fd = open(v[1], O_RDONLY);
+//	if (fd < 0)
+//		return (0);
+	read_file(fd, 0);
+	read_file(fd, 0);
+	read_file(fd, 0);
+	read_file(fd, 0);
 	read_file(fd, 0);
 	close(fd);
 //	write(1, "\n", 1);

@@ -25,13 +25,13 @@
 typedef struct s_var
 {
 	char	buf[BUFFER_SIZE];
-	int		count;
-	int		lim;
+	ssize_t	count;
+	ssize_t	lim;
+	int		fd;
 }			t_var;
 
 char	*get_next_line(int fd);
-char	*get_strjoin(char *a, char *b);
-int		get_condition(t_var *buffer, int start, int len);
-int		refresh_buffer(t_var *buffer, int fd, int *me_fd);
+char	*get_strjoin(char *a, char *b, ssize_t i, ssize_t k);
+void	refresh_buffer(t_var *file, int fd);
 
 #endif
