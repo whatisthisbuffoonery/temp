@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 02:17:50 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/26 06:00:32 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/11/26 06:12:51 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static void	type_bus(t_queue **q, char **dst, char type)
 		return ;//let caller clean up
 	(*dst)[0] = type;
 	(*dst)[1] = '\0';
+	f->str = *dst;//i fuggin forgot
 }
 
 static void	*clear_q(t_queue **q)
