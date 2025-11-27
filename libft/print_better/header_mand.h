@@ -14,11 +14,14 @@
 # define MAND_HEADER_H
 
 # include <libft.h>
+# include <stdarg.h>
+# include <stdint.h>
 
 typedef enum
 {
 	str,
-	op
+	op,
+	nil
 }	t_type;
 
 typedef struct s_queue
@@ -27,5 +30,13 @@ typedef struct s_queue
 	char			*str;
 	t_type			type;
 }					t_queue;
+
+int		enq(t_queue **q, t_queue *new);
+t_queue	q_new(void);
+void	clear_q(t_queue **q);
+char	*char_op(unsigned char c);
+char	*ptr_op(char *p, char type);
+char	*uint_op(uintptr_t n, char type);
+char	*int_op(long long n);
 
 #endif
