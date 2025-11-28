@@ -35,4 +35,12 @@ int main(void)
 	ft_printf("%%%%%%%%");
 	ft_printf("\n%%%%%%%%\n");
 	ft_printf("%%%%%%%%\n");
+
+	ft_printf("%%%d", 42);
+	ft_printf("\n%%%d\n%d", 43, 44);
+	ft_printf("%d%%\n", 45);
+	ft_printf("%%%%%%%%");
+	ft_printf("\n%%%%%%%%\n");
+	ft_printf("%%%%%%%%\n");
+
 }
