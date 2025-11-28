@@ -31,9 +31,11 @@ typedef struct s_queue
 	t_type			type;
 }					t_queue;
 
+int		ft_printf(const char *format, ...);
+
 int		enq(t_queue **q, t_queue *new);
-t_queue	q_new(void);
-void	clear_q(t_queue **q);
+t_queue	*q_new(void);
+void	clear_q(t_queue **q, char *ret);
 char	*char_op(unsigned char c);
 char	*ptr_op(char *p, char type);
 char	*uint_op(uintptr_t n, char type);
