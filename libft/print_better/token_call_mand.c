@@ -1,19 +1,6 @@
 #include "header_mand.h"
 
-static void	type_bus(t_queue **q, char **dst, char type)//rename
-{
-	t_queue	*f;
-
-	f = *q;
-	*dst = NULL;
-	if (!f)
-		return ;
-	*dst = malloc(2 * sizeof(char));//practice flags in strings
-	if (!*dst)
-		return ;//let caller clean up
-	(*dst)[0] = type;
-	(*dst)[1] = '\0';
-}
+int	type_bus(t_queue **q, char **dst, const char *format);
 
 static void	*tantrum(t_queue **a, char **b)
 {
@@ -35,9 +22,8 @@ t_queue	*new_op(const char *format, int *index)//no va yet
 	t_queue	*ret;
 	char	*res;//no flag needed hopefully
 
-	*index += 2;//howd i forget the % that badly
 	ret = q_new();
-	type_bus(&ret, &res, format[1]);//i + 1
+	*index += 1 + type_bus(&ret, &res, &format[1]);//i + 1
 	if (!ret || !res)//practice putting types in strings for later
 		return (tantrum(&ret, &res));
 	ret->type = op;

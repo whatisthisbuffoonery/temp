@@ -19,7 +19,7 @@ int	ft_printf(const char *format, ...)//actual string production TBA
 {
 	va_list	va;
 	char	*ret;
-	t_queue *q;
+	t_queue	*q;
 	int		return_value;
 
 	q = NULL;

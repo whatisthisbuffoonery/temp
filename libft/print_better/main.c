@@ -12,8 +12,8 @@ int main(void)
 	ft_printf("%u\n", 4294967295U);
 	ft_printf("%x\n", 255);
 	ft_printf("%X\n", 255);
-*/
-/*
+
+
 	ft_printf("%s\n", "");
 	ft_printf("%s\n", NULL);
 	ft_printf("%c\n", '\0');
@@ -26,9 +26,9 @@ int main(void)
 	ft_printf("%X\n", 0XDEADBEEF);
 */
 
-//	ft_printf("%s %% %d %% %x %% %c\n", "test", 42, 255, '!');
-//	ft_printf("%X %X %X\n", (void *) 0xface, (void *) 0xa, (void *) 0xbed);
-
+	ft_printf("%s %% %d %% %x %% %c\n", "test", 42, 255, '!');
+	ft_printf("%X %X %X\n", (void *) 0xface, (void *) 0xa, (void *) 0xbed);
+/*
 	ft_printf("%%");
 	ft_printf("\n%%\n");
 	ft_printf("%%\n");
@@ -42,5 +42,5 @@ int main(void)
 	ft_printf("%%%%%%%%");
 	ft_printf("\n%%%%%%%%\n");
 	ft_printf("%%%%%%%%\n");
-
+*/
 }

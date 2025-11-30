@@ -13,15 +13,14 @@ LIBFT_LIB := libft
 LIBFT_NAME := $(LIBFT_DIR)$(LIBFT_LIB).a
 
 SRC := ft_printf_mand.c arg_mand.c process_mand.c token_mand.c token_call_mand.c \
-	   q_func_mand.c tabler_mand.c
+	   q_func_mand.c tabler_mand.c type_bus_mand.c
 
 OBJ := $(SRC:.c=.o)
-
 
 all: $(NAME)
 
 $(LIBFT_NAME):
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR) all
 
 $(NAME): $(OBJ) $(LIBFT_NAME)
 	$(AR) $(AR_FLAGS) $@ $(OBJ)

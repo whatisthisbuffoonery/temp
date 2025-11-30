@@ -1,6 +1,6 @@
 #include "header_mand.h"
 
-static char *grab(t_queue *q, va_list va)
+static char	*grab(t_queue *q, va_list va)
 {
 	char	cmp;
 
@@ -25,11 +25,11 @@ static char *grab(t_queue *q, va_list va)
 	return (NULL);
 }
 
-static char *print_strjoin(char *dst, char *src, t_queue *f)
+static char	*print_strjoin(char *dst, char *src, t_queue *f)
 {
 	char	*ret;
-	int    i;
-	int    k;
+	int		i;
+	int		k;
 
 	if (!dst || !src)
 		return (NULL);
@@ -48,7 +48,7 @@ static char *print_strjoin(char *dst, char *src, t_queue *f)
 	return (ret);
 }
 
-static void    *tantrum_boogaloo(char *new, char *tmp, t_queue *f)
+static void	*tantrum_boogaloo(char *new, char *tmp, t_queue *f)
 {
 	if (new && f->type == op)
 		free(new);
@@ -59,7 +59,7 @@ static void    *tantrum_boogaloo(char *new, char *tmp, t_queue *f)
 
 char	*process(t_queue *q, va_list va)
 {
-	t_queue *f;
+	t_queue	*f;
 	char	*ret;
 	char	*tmp;
 	char	*new;

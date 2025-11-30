@@ -92,14 +92,14 @@ char	*ptr_op(char *s, char type)
 	if (type == 'p')
 		return (uint_op((uintptr_t) s, type));
 	i = 0;
-	 while (s[i])
-		 i ++;
-	 ret = malloc((i + 1) * sizeof(char));
-	 if (!ret)
-		 return (NULL);
-	 i = -1;
-	 while (s[++i])
-		 ret[i] = s[i];
+	while (s[i])
+		i ++;
+	ret = malloc((i + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	i = -1;
+	while (s[++i])
+		ret[i] = s[i];
 	ret[i] = '\0';
 	return (ret);
 }
