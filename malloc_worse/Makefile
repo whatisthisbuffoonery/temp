@@ -6,7 +6,7 @@ OBJ := malloc_worse.o
 NAME := malloc_worse.so
 TESTER := dangerous.so
 SHARE_LINK := -shared
-DLSYM_FLAG := -ldl #dlfcn.h uses this
+DLSYM_FLAGS := -ldl #-D_GNU_SOURCE #dlfcn.h uses this
 
 all: $(NAME)
 
@@ -14,7 +14,7 @@ tester: $(TESTER)
 
 $(TESTER): $(OBJ)
 	$(CC) $(CC_FLAGS) $(COMPILE_SHARED) -DSEG=1 -o $(OBJ) $(SRC)
-	$(CC) $(SHARE_LINK) $(DLSYM_FLAG) -o $(TESTER) $(OBJ)
+	$(CC) $(SHARE_LINK) $(DLSYM_FLAGS) -o $(TESTER) $(OBJ)
 	rm -f $(OBJ)
 
 $(NAME): $(OBJ)

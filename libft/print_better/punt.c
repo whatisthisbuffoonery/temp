@@ -6,7 +6,7 @@
 
 // + force a + or - sign for numbers
 // ' ' use a space instead of +
-// - left justify. uses width.
+// - left justify. uses width. trailing spaces.
 // 0 pad leading zeros (width normally pads spaces)
 // # obviously sits next to the type char
 
