@@ -24,6 +24,13 @@ typedef enum
 	nil
 }	t_type;
 
+typedef struct s_flags
+{
+	char			a;
+	int				width;
+	int				precision;
+}					t_flags;
+
 typedef struct s_queue
 {
 	struct s_queue	*next;
