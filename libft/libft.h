@@ -16,13 +16,16 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+//plez reconfigure lst 
+
 typedef struct s_list
 {
 	void			*content;
+	void			*content2;
 	struct s_list	*next;
 }					t_list;
 
-t_list	*ft_lstnew(void *content);
+t_list	*ft_lstnew(void *content, void *content2);
 int		ft_lstsize(t_list *lst);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);

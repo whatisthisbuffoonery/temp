@@ -1,6 +1,8 @@
 #include "header_mand.h"
 
-static char	*grab(t_queue *q, va_list va)
+//shove arg node in thru here
+
+static char	*grab(t_queue *q, va_list va, t_list **null, int index)
 {
 	char	cmp;
 
@@ -8,15 +10,15 @@ static char	*grab(t_queue *q, va_list va)
 		return (q->str);
 	else if (q->type == op)
 	{
-		cmp = q->str[0];
+		cmp = q->arg;
 		if (cmp == 'c')
-			return (char_op(va_arg(va, int)));
+			return (char_op(va_arg(va, int), q, null, index));
 		else if (cmp == 's' || cmp == 'p')
-			return (ptr_op(va_arg(va, char *), cmp));
+			return (ptr_op(va_arg(va, char *), cmp, q));
 		else if (cmp == 'd' || cmp == 'i')
-			return (int_op(va_arg(va, int)));
+			return (int_op(va_arg(va, int), q));
 		else if (cmp == 'u' || cmp == 'x' || cmp == 'X')
-			return (uint_op(va_arg(va, unsigned int), cmp));
+			return (uint_op(va_arg(va, unsigned int), cmp, q));
 		write(1, &cmp, 1);
 		write(1, "	<--  who put this here\n", 25);
 	}
@@ -32,7 +34,7 @@ static char	*print_strjoin(char *dst, char *src, t_queue *f)
 	int		k;
 
 	if (!dst || !src)
-		return (NULL);
+		return (NULL);//derail char op here. output of three nulls needs to show up as three nulls
 	ret = malloc((ft_strlen(dst) + ft_strlen(src) + 1) * sizeof(char));
 	if (!ret)
 		return (NULL);
@@ -57,7 +59,7 @@ static void	*tantrum_boogaloo(char *new, char *tmp, t_queue *f)
 	return (NULL);
 }
 
-char	*process(t_queue *q, va_list va)
+char	*process(t_queue *q, va_list va, t_list **null)
 {
 	t_queue	*f;
 	char	*ret;
@@ -65,12 +67,12 @@ char	*process(t_queue *q, va_list va)
 	char	*new;
 
 	f = q->next;
-	ret = grab(q, va);
+	ret = grab(q, va, null, 0);
 	if (!ret)
 		return (NULL);
 	while (f)
 	{
-		new = grab(f, va);
+		new = grab(f, va, null, ft_strlen(ret));
 		tmp = print_strjoin(ret, new, f);
 		if (ret != q->str)
 			free(ret);

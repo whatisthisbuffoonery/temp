@@ -18,6 +18,8 @@ static void	ft_lstdelone_help(t_list *lst, void (*del)(void *))
 		return ;
 	if (del && lst->content)
 		del(lst->content);
+	if (del && lst->content2)
+		del(lst->content2);
 	free(lst);
 }
 

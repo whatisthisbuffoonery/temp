@@ -11,8 +11,6 @@ void	clear_q(t_queue **q, char *ret)
 	while (f)
 	{
 		tmp = f->next;
-		if (!f->str)
-			write(1, "\nnull node string?????\n", 23);
 		if (f->str && f->str != ret)//mmmmm
 			free(f->str);
 		free(f);
@@ -31,6 +29,8 @@ t_queue	*q_new(void)
 		return (NULL);
 	tmp->next = NULL;
 	tmp->str = NULL;//hm
+	tmp->flags = NULL;
+	tmp->arg = '\0';
 	tmp->type = nil;
 	return (tmp);
 }

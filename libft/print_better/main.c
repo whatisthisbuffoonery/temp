@@ -3,7 +3,7 @@
 
 int main(void)
 {
-/*
+
 	ft_printf("%c\n", 'a');
 	ft_printf("%s\n", "hello");
 	ft_printf("%p\n", (void *) 0x123);
@@ -24,11 +24,11 @@ int main(void)
 	ft_printf("%x\n", 0);
 	ft_printf("%x\n", 0xDEADBEEF);
 	ft_printf("%X\n", 0XDEADBEEF);
-*/
+
 
 	ft_printf("%s %% %d %% %x %% %c\n", "test", 42, 255, '!');
 	ft_printf("%X %X %X\n", (void *) 0xface, (void *) 0xa, (void *) 0xbed);
-/*
+
 	ft_printf("%%");
 	ft_printf("\n%%\n");
 	ft_printf("%%\n");
@@ -42,5 +42,14 @@ int main(void)
 	ft_printf("%%%%%%%%");
 	ft_printf("\n%%%%%%%%\n");
 	ft_printf("%%%%%%%%\n");
-*/
+
+	ft_printf("");
+	ft_printf("%");
+	ft_printf("%t");
+	ft_printf("%d %% w%\n", 2);
+
+	ft_printf("%c%c%c%c", 'a', 'a', 0, 0);
+	ft_printf("%c%c%c%c", '\n', 0, 0, '\n');
+	ft_printf("\nhere --> %c\n", 0);
+
 }

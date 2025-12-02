@@ -1,17 +1,13 @@
 #include "header_mand.h"
-
-int	type_bus(t_queue **q, char **dst, const char *format)
+//id need a third func for this, say, give token() a while help and drag count_flag here
+int	type_bus(t_queue **q, const char *format, char *type)
 {
 	t_queue	*f;
 
+	(void) type;//sheit
 	f = *q;
-	*dst = NULL;
 	if (!f)
 		return (0);
-	*dst = malloc(2 * sizeof(char)); //practice flags in strings
-	if (!*dst)
-		return (0); //let caller clean up
-	(*dst)[0] = format[0];
-	(*dst)[1] = '\0';
+	f->arg = format[0];
 	return (1);
 }

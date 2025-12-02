@@ -35,7 +35,7 @@ static char	*ft_strdup_help(const char *s)
 	return (ret);
 }
 */
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(void *content, void *content2)
 {
 	t_list	*a;
 
@@ -44,5 +44,6 @@ t_list	*ft_lstnew(void *content)
 		return (NULL);
 	a->next = NULL;
 	a->content = content;
+	a->content2 = content2;
 	return (a);
 }

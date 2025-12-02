@@ -1,6 +1,6 @@
 #include "header_mand.h"
 
-int	type_bus(t_queue **q, char **dst, const char *format);
+int	type_bus(t_queue **q, const char *format, char *type);
 
 static void	*tantrum(t_queue **a, char **b)
 {
@@ -9,7 +9,7 @@ static void	*tantrum(t_queue **a, char **b)
 		free(*a);
 		*a = NULL;
 	}
-	if (*b)
+	if (b && *b)
 	{
 		free(*b);
 		*b = NULL;
@@ -17,17 +17,15 @@ static void	*tantrum(t_queue **a, char **b)
 	return (NULL);
 }
 
-t_queue	*new_op(const char *format, int *index)//no va yet
+t_queue	*new_op(const char *format, int *index, char *type)//no va yet
 {
 	t_queue	*ret;
-	char	*res;//no flag needed hopefully
 
 	ret = q_new();
-	*index += 1 + type_bus(&ret, &res, &format[1]);//i + 1
-	if (!ret || !res)//practice putting types in strings for later
-		return (tantrum(&ret, &res));
+	*index += 1 + type_bus(&ret, &format[1], type);//i + 1// motherf i need to squeeze in 'type' here
+	if (!ret || !ret->arg)
+		return (tantrum(&ret, NULL));
 	ret->type = op;
-	ret->str = res;
 	return (ret);
 }
 

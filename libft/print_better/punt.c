@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("%+10.3d\n", 42);
+	printf("%5d", -3);
 }
