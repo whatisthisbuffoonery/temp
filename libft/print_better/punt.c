@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("%5d", -3);
+	printf("%.5s\n", "we");
 }

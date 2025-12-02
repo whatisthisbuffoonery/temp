@@ -1,11 +1,13 @@
 #include "header_mand.h"
 
-int	type_bus(t_queue **q, const char *format, char *type);
+int	type_bus(t_queue *q, const char *format, char *type);
 
 static void	*tantrum(t_queue **a, char **b)
 {
 	if (*a)
 	{
+		if ((*a)->flags)
+			free((*a)->flags);
 		free(*a);
 		*a = NULL;
 	}
@@ -22,7 +24,7 @@ t_queue	*new_op(const char *format, int *index, char *type)//no va yet
 	t_queue	*ret;
 
 	ret = q_new();
-	*index += 1 + type_bus(&ret, &format[1], type);//i + 1// motherf i need to squeeze in 'type' here
+	*index += 2 + type_bus(ret, &format[1], type);//i + 1// motherf i need to squeeze in 'type' here
 	if (!ret || !ret->arg)
 		return (tantrum(&ret, NULL));
 	ret->type = op;

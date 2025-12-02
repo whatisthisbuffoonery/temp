@@ -12,15 +12,15 @@
 //PROPOSE leaving hex # out of 'flag' to check ordering 
 
 void	tabler(char *type, char *flag, int *a, int *b);
-t_queue	*new_op(const char *format, int *index, char *table);
+t_queue	*new_op(const char *format, int *index, char *type);
 t_queue	*new_str(const char *format, int start, int *end);
+int valid_cond_printf(const char *format, char *type, char *flag, int *i);
 
-static int valid(const char *format, int size, char *table, char *flag)
+static int valid(const char *format, int size, char *type, char *flag)
 {
 	int	i;
 
 	i = 0;
-	(void) flag;
 	if (!format || !format[0] || size <= 0)
 		return (1);
 	if (size == 1 && format[0] == '%')
@@ -32,7 +32,7 @@ static int valid(const char *format, int size, char *table, char *flag)
 		if (format[i] == '%')
 		{
 			i ++;
-			if (format[i] != '%' && !table[(unsigned char) format[i]])
+			if (valid_cond_printf(format, type, flag, &i))
 				return (1);
 		}
 		i ++;

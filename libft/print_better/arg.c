@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   arg_mand.c                                         :+:      :+:    :+:   */
+/*   arg.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 01:08:20 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/03 02:05:26 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/03 06:49:47 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	int		flag;
 
 	(void) q;
-	flag = (n < 0);
+	flag = (n < 0 && q->flags && !q->flags->plus_space);
 	t = 1;
 	i = 1 + flag;
 	if (n < 0)
