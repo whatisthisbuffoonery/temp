@@ -28,14 +28,12 @@ static int	printf_write(char *ret, t_list *null)
 	int		i;
 	int		start;
 	t_list	*curr;
-	t_list	*last;
 
 	i = 0;
 	start = 0;
 	curr = null;
 	while (curr)
 	{
-		last = curr;
 		while (i < *(int *) curr->content)
 			i ++;
 		if (i > start)
