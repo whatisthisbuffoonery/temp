@@ -23,7 +23,6 @@ char	*char_op(unsigned int c, t_queue *q, t_list **null, int index)
 	char	*ret;
 	int		i;
 
-	(void) q;
 	i = 0;//init here
 	null_index = malloc(sizeof(int));
 	ret = handle_flag(2 * sizeof(char), q, &i);
@@ -61,7 +60,6 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 
 	t = 1;
 	i = 1;
-	(void) q;
 	base = 16 - (6 * (type == 'u'));//still accurate in bonus
 	while (n / t >= base && ++i)
 		t *= base;
@@ -88,7 +86,6 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	int		t;
 	int		flag;
 
-	(void) q;
 	flag = (n < 0 && q->flags && !q->flags->plus_space);
 	t = 1;
 	i = 1 + flag;
@@ -106,7 +103,6 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 		ret[i++] = (((n / t) % 10) + '0');
 		t /= 10;
 	}
-	//ret[i] = '\0';// handle_flag will terminate
 	return (ret);
 }
 
@@ -116,12 +112,11 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	char	*ret;
 	char	*s;
 
+	if (type == 'p')
+		return (uint_op(src, type, q));
 	s = (char *) src;
 	if (!s)
 		return (NULL);
-	if (type == 'p')
-		return (uint_op(src, type, q));
-	(void) q;
 	i = 0;
 	while (s[i])
 		i ++;
