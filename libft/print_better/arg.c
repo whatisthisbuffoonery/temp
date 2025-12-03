@@ -120,7 +120,7 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	if (!s)
 		return (NULL);
 	if (type == 'p')
-		return (uint_op((uintptr_t) s, type, q));
+		return (uint_op(src, type, q));
 	(void) q;
 	i = 0;
 	while (s[i])
