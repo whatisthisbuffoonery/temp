@@ -15,13 +15,18 @@ void ft_putnbr(int n)
 	}
 }
 
+void ft_putchar(unsigned int n)
+{
+	write(1, &n, 1);
+}
+
 void control(int a, int b, int c, int d)
 {
 	write(1, "control: ", 9);
-	ft_putnbr(a);
-	ft_putnbr(b);
-	ft_putnbr(c);
-	ft_putnbr(d);
+	ft_putchar(a);
+	ft_putchar(b);
+	ft_putchar(c);
+	ft_putchar(d);
 	write(1, "\n", 1);
 }
 
@@ -30,20 +35,20 @@ void test(int a, ...)
 	va_list va;
 	va_start(va, a);
 	write(1, "test: ", 6);
-	ft_putnbr(a);
-	ft_putnbr(va_arg(va, int));
-	ft_putnbr(va_arg(va, int));
-	ft_putnbr(va_arg(va, int));
+	ft_putchar(a);
+	ft_putchar(va_arg(va, int));
+	ft_putchar(va_arg(va, int));
+	ft_putchar(va_arg(va, int));
 	write(1, "\n", 1);
 }
 
 
 int main(void)
 {
-	int a = 1;
-	int b = 2;
-	int c = 3;
-	int d = 4;
+	char a = '1';
+	char b = '2';
+	char c = '3';
+	char d = '4';
 
 	control(a, b, c, d);
 	test(a, b, c, d);
