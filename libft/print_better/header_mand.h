@@ -48,7 +48,7 @@ int		enq(t_queue **q, t_queue *new);
 t_queue	*q_new(void);
 void	clear_q(t_queue **q, char *ret);
 char	*char_op(unsigned int c, t_queue *q, t_list **null, int index);
-char	*ptr_op(char *p, char type, t_queue *q);
+char	*ptr_op(uintptr_t src, char type, t_queue *q);
 char	*uint_op(uintptr_t n, char type, t_queue *q);
 char	*int_op(long long n, t_queue *q);
 

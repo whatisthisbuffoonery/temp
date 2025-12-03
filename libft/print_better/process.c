@@ -14,7 +14,7 @@ static char	*grab(t_queue *q, va_list va, t_list **null, int index)
 		if (cmp == 'c')
 			return (char_op(va_arg(va, int), q, null, index));
 		else if (cmp == 's' || cmp == 'p')
-			return (ptr_op(va_arg(va, char *), cmp, q));
+			return (ptr_op(va_arg(va, uintptr_t), cmp, q));
 		else if (cmp == 'd' || cmp == 'i')
 			return (int_op(va_arg(va, int), q));
 		else if (cmp == 'u' || cmp == 'x' || cmp == 'X')

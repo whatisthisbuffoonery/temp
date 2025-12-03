@@ -110,11 +110,13 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	return (ret);
 }
 
-char	*ptr_op(char *s, char type, t_queue *q)
+char	*ptr_op(uintptr_t src, char type, t_queue *q)
 {
 	int		i;
 	char	*ret;
+	char	*s;
 
+	s = (char *) src;
 	if (!s)
 		return (NULL);
 	if (type == 'p')
