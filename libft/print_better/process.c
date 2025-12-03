@@ -2,7 +2,7 @@
 
 //shove arg node in thru here
 
-static char	*grab(t_queue *q, va_list va, t_list **null, int index)
+static char	*grab(t_queue *q, va_list *va, t_list **null, int index)
 {
 	char	cmp;
 
@@ -12,13 +12,13 @@ static char	*grab(t_queue *q, va_list va, t_list **null, int index)
 	{
 		cmp = q->arg;
 		if (cmp == 'c')
-			return (char_op(va_arg(va, int), q, null, index));
+			return (char_op(va_arg(*va, int), q, null, index));
 		else if (cmp == 's' || cmp == 'p')
-			return (ptr_op(va_arg(va, uintptr_t), cmp, q));
+			return (ptr_op(va_arg(*va, uintptr_t), cmp, q));
 		else if (cmp == 'd' || cmp == 'i')
-			return (int_op(va_arg(va, int), q));
+			return (int_op(va_arg(*va, int), q));
 		else if (cmp == 'u' || cmp == 'x' || cmp == 'X')
-			return (uint_op(va_arg(va, unsigned int), cmp, q));
+			return (uint_op(va_arg(*va, unsigned int), cmp, q));
 		write(1, &cmp, 1);
 		write(1, "	<--  who put this here\n", 25);
 	}
@@ -59,7 +59,7 @@ static void	*tantrum_boogaloo(char *new, char *tmp, t_queue *f)
 	return (NULL);
 }
 
-char	*process(t_queue *q, va_list va, t_list **null)
+char	*process(t_queue *q, va_list *va, t_list **null)
 {
 	t_queue	*f;
 	char	*ret;

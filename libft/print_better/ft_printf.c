@@ -13,7 +13,7 @@
 #include "header_mand.h"
 
 void	printf_tokens(const char *format, t_queue **q, int size);
-char	*process(t_queue *q, va_list va, t_list **null);
+char	*process(t_queue *q, va_list *va, t_list **null);
 
 static void	printf_init(t_queue **q, t_list **null, int *return_value, char **ret)
 {
@@ -60,7 +60,7 @@ int	ft_printf(const char *format, ...)//actual string production TBA
 	va_start(va, format);
 	printf_tokens(format, &q, ft_strlen(format));//signal: q == null
 	if (q)
-		ret = process(q, va, &null_list);//signal: ret == null, maybe needs a crash flag
+		ret = process(q, &va, &null_list);//signal: ret == null, maybe needs a crash flag
 	if (ret)
 		return_value = printf_write(ret, null_list);
 //	else if (ft_strlen(format) > 0)
