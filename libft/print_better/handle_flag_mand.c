@@ -17,10 +17,10 @@ char	*handle_flag(size_t size, t_queue *q, int *index)
 	char	*ret;
 
 	(void) q;
-	ret = malloc(size);
+	ret = malloc(size + 1);
 	if (!ret)
 		return (NULL);
-	ret[size - 1] = '\0';
+	ret[size] = '\0';
 	*index = 0;//pretend there was prefix work here
 	return (ret);
 }

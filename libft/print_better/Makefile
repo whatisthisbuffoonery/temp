@@ -13,7 +13,8 @@ LIBFT_LIB := libft
 SRC := ft_printf.c arg.c process.c token.c token_call.c \
 	   q_func.c
 
-SRC_MAND := tabler_mand.c type_bus_mand.c handle_flag_mand.c
+SRC_MAND := tabler_mand.c type_bus_mand.c handle_flag_mand.c \
+			arg_help_mand.c
 
 OBJ := $(SRC:.c=.o)
 

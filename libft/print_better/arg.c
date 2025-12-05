@@ -14,7 +14,7 @@
 
 //all these take an arg node now, AND they call handle_flag for the malloc
 
-
+int	uint_help(char *ret, int flag, int *i);
 char	*handle_flag(size_t size, t_queue *q, int *index);
 
 char	*char_op(unsigned int c, t_queue *q, t_list **null, int index)
@@ -25,29 +25,18 @@ char	*char_op(unsigned int c, t_queue *q, t_list **null, int index)
 
 	i = 0;//init here
 	null_index = malloc(sizeof(int));
-	ret = handle_flag(2 * sizeof(char), q, &i);
+	ret = handle_flag(1 * sizeof(char), q, &i);
 	if (!ret || !null_index)//omlllllllllll
 		return (NULL);
 	*null_index = index;
 	ret[i] = c;
-	if (!c)//to insert arg node here
-		ft_lstadd_back(null, ft_lstnew(null_index, NULL));
+	if (!c)//I should really insert ret here shouldnt i, make a dummy str to preserve index value
+		ft_lstadd_back(null, ft_lstnew(null_index, q->flags));//oml what if this malloc fails
+												//answer: make this a monad, signal with ret = null
+	//what the hell, its three lines to see if the malloc failed, just do lstnew here
 	else
 		free(null_index);
 	return (ret);
-}
-
-static int	uint_help(char *ret, int flag, int *i)
-{
-	if (!ret)
-		return (1);
-	if (flag)
-	{
-		ret[*i] = '0';
-		ret[*i + 1] = 'x';
-	}
-	*i += flag;//handle_flag placed it after flag requirements, used to be i = flag
-	return (0);
 }
 
 char	*uint_op(uintptr_t n, char type, t_queue *q)
@@ -64,7 +53,7 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 	while (n / t >= base && ++i)
 		t *= base;
 	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));//plzz unset hex if type not x or X
-	ret = handle_flag((i + 1 + flag) * sizeof(char), q, &i); //2 * type == p was here// 3 lines too smol, suppose repurposing uint helper to take #X
+	ret = handle_flag((i + flag) * sizeof(char), q, &i); //2 * type == p was here// 3 lines too smol, suppose repurposing uint helper to take #X
 																//does not write 0x prefix
 	if (uint_help(ret, flag, &i))
 		return (NULL);
@@ -86,18 +75,18 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	int		t;
 	int		flag;
 
-	flag = (n < 0 && q->flags && !q->flags->plus_space);
+	flag = (n < 0);
 	t = 1;
-	i = 1 + flag;
+	i = 1 + (flag && !(q->flags && q->flags->plus_space));
 	if (n < 0)
 		n = 0 - n;
 	while (n / t >= 10 && ++i)
 		t *= 10;
-	ret = handle_flag((i + 1) * sizeof(char), q, &i);//handles i = flag
+	ret = handle_flag(i * sizeof(char), q, &i);//handles i = flag
 	if (!ret)
 		return (NULL);
 	if (flag)
-		ret[i++] = '-';
+		ret[i++] = '-';//int helper here
 	while (t)
 	{
 		ret[i++] = (((n / t) % 10) + '0');
@@ -120,7 +109,7 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	i = 0;
 	while (s[i])
 		i ++;
-	ret = handle_flag((i + 1) * sizeof(char), q, &i);
+	ret = handle_flag(i * sizeof(char), q, &i);
 	if (!ret)
 		return (NULL);
 	i --;//was i = -1 before

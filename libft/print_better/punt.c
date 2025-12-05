@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("%.8da\n", 33);
+	printf("%8ca\n", 0);
 }
