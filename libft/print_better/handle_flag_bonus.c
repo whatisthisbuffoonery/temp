@@ -11,7 +11,7 @@ static int muh_max(int a, int b, int c)
 	return (a);
 }
 
-static char	*handle_flag_init(size_t, size, t_queue, *q, int *len)//plan to set some flags to 0
+static char	*handle_flag_init(size_t, size, t_queue, *q, int *len)
 {
 	char	a;
 	int		curr;
@@ -30,9 +30,9 @@ static char	*handle_flag_init(size_t, size, t_queue, *q, int *len)//plan to set 
 				q->flags->minus_zero = 0;
 			q->flags->precision = 0;
 		}
-		q->flags->precision += 2 * (q->flags->hex > 0);
+		q->flags->precision += 2 * (q->flags->hex > 0)
+		q->flags->precision += (q->flags->plus_space > 0);//same logic as 0x prefix
 		curr = muh_max(size, q->flags->precision, q->flags->width);
-		curr += (q->flags->plus_space > 0);//remember the null terminator..wait do we need this
 	}
 	ret = malloc((curr + 1) * sizeof(char));
 	if (ret)

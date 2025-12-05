@@ -16,6 +16,7 @@
 
 int	uint_help(char *ret, int flag, int *i);
 char	*handle_flag(size_t size, t_queue *q, int *index);
+void	int_op_help(char *ret, int flag, t_queue *q, int *index);
 
 char	*char_op(unsigned int c, t_queue *q, t_list **null, int index)
 {
@@ -52,10 +53,10 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 	base = 16 - (6 * (type == 'u'));//still accurate in bonus
 	while (n / t >= base && ++i)
 		t *= base;
-	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));//plzz unset hex if type not x or X
+	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));//actually malloc count is ok
 	ret = handle_flag((i + flag) * sizeof(char), q, &i); //2 * type == p was here// 3 lines too smol, suppose repurposing uint helper to take #X
 																//does not write 0x prefix
-	if (uint_help(ret, flag, &i))
+	if (uint_help(ret, flag, &i, q->arg))//capital X
 		return (NULL);
 	while (t)
 	{
@@ -77,7 +78,7 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 
 	flag = (n < 0);
 	t = 1;
-	i = 1 + (flag && !(q->flags && q->flags->plus_space));
+	i = 1 + (flag || (q->flags && q->flags->plus_space));//changed to ||
 	if (n < 0)
 		n = 0 - n;
 	while (n / t >= 10 && ++i)
@@ -85,8 +86,9 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	ret = handle_flag(i * sizeof(char), q, &i);//handles i = flag
 	if (!ret)
 		return (NULL);
-	if (flag)
-		ret[i++] = '-';//int helper here
+	//if (flag)
+	//	ret[i++] = '-';//int helper here
+	int_op_helper(ret, flag, q, &i);
 	while (t)
 	{
 		ret[i++] = (((n / t) % 10) + '0');

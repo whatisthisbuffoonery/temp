@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("%8ca\n", 0);
+	printf("%4pa\n", (void *) 5);
 }
