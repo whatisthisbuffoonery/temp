@@ -53,7 +53,7 @@ int main(void)
 	ft_printf("%c%c%c%c", '\n', 0, 0, '\n');
 	ft_printf("\nhere --> %c\n", 0);
 */
-
+/*
 	write(1, "mine\n", 5);
 	ft_printf("|%+8d|%+8d|%+.3d|\n", 42, -42, 42);
 	write(1, "theirs\n", 7);
@@ -66,13 +66,26 @@ int main(void)
 	ft_printf("|%08d|%08d|%0.3d|\n", 42, -42, 42);
 	write(1, "theirs\n", 7);
 	printf("|%08d|%08d|%0.3d|\n", 42, -42, 42);
-//	write(1, "mine\n", 5);
-//	ft_printf("|%#8d|%#8d|%#.3d|\n", 42, -42, 42);
-//	write(1, "theirs\n", 7);
-//	printf("|%#8d|%#8d|%#.3d|\n", 42, -42, 42);
 	write(1, "mine\n", 5);
 	ft_printf("|% 8d|% 8d|% .3d|\n", 42, -42, 42);
 	write(1, "theirs\n", 7);
 	printf("|% 8d|% 8d|% .3d|\n", 42, -42, 42);
+*/
+/*
+	write(1, "mine\n", 5);
+	ft_printf("|%+8.3d| |%+8.3i| |%8.3u| |%#8.3x| |%#8.3X| |%8p|\n",42, 42, 42, 42, 42, (void*)0xABCD);
+	write(1, "theirs\n", 7);
+	printf("|%+8.3d| |%+8.3i| |%8.3u| |%#8.3x| |%#8.3X| |%8p|\n",42, 42, 42, 42, 42, (void*)0xABCD);
+*/
+/*
+	write(1, "mine\n", 5);
+	ft_printf("|%8.3s| |%-8.3s| |%8c| |%-8c|\n","hi","hi", 'A', 'A');
+	write(1, "theirs\n", 7);
+	printf("|%8.3s| |%-8.3s| |%8c| |%-8c|\n","hi","hi", 'A', 'A');
+*/
 
+	write(1, "mine\n", 5);
+	ft_printf("|%.0d| |%+.0d| |%#0.0x| |%.1s| |%.0s|\n", 0, 0, 0, "hi", "hi");
+	write(1, "theirs\n", 7);
+	printf("|%.0d| |%+.0d| |%#0.0x| |%.1s| |%.0s|\n", 0, 0, 0, "hi", "hi");
 }

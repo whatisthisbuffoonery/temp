@@ -14,28 +14,24 @@
 
 //all these take an arg node now, AND they call handle_flag for the malloc
 
+void rundown(t_queue *q);
+
 int	uint_help(char *ret, int flag, int *i, char arg);
 char	*handle_flag(size_t size, t_queue *q, int *index);
 void	int_help(char *ret, int flag, t_queue *q, int *index);
 
 char	*char_op(unsigned int c, t_queue *q)
 {
-//	t_list	*tmp;
-//	int		*null_index;
 	char	*ret;
 	int		i;
 
 	i = 0;//init here
-//	null_index = malloc(sizeof(int));
 	ret = handle_flag(1 * sizeof(char), q, &i);
 	if (!ret)//omlllllllllll
 		return (NULL);
-	//*null_index = index;
 	ret[i] = c;
 	if (!c)//I should really insert ret here shouldnt i, make a dummy str to preserve index value
 		q->arg = '0';//toss around a calculated strlen
-//	else
-//		free(null_index);
 	return (ret);
 }
 
@@ -85,8 +81,6 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	ret = handle_flag(i * sizeof(char), q, &i);//handles i = flag
 	if (!ret)
 		return (NULL);
-	//if (flag)
-	//	ret[i++] = '-';//int helper here
 	int_help(ret, flag, q, &i);
 	while (t)
 	{
@@ -96,12 +90,26 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	return (ret);
 }
 
+int	str_min(int size, t_queue *q)
+{
+	if (!q->flags)
+		return (size);
+	if (!q->flags->precision_set)
+		q->flags->precision = size;
+	if (size =< q->flags->precision)
+		return (size);
+	return (q->flags->precision);
+}
+
 char	*ptr_op(uintptr_t src, char type, t_queue *q)
 {
 	int		i;
+	int		k;
+	int		min;
 	char	*ret;
 	char	*s;
 
+//	rundown(q);
 	if (type == 'p')
 		return (uint_op(src, type, q));
 	s = (char *) src;
@@ -110,11 +118,12 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	i = 0;
 	while (s[i])
 		i ++;
-	ret = handle_flag(i * sizeof(char), q, &i);
+	min = str_min(i, q);
+	ret = handle_flag(min * sizeof(char), q, &i);
 	if (!ret)
 		return (NULL);
-	i --;//was i = -1 before
-	while (s[++i])
-		ret[i] = s[i];
+	k = -1;//was i = -1 before
+	while (++k < min)
+		ret[i + k] = s[k];
 	return (ret);
 }

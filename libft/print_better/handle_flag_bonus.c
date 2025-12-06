@@ -2,13 +2,22 @@
 //flag null check maybe done before this//nah the init will do it
 
 static int muh_max(int a, int b, int c)
-
 {
 	if (a < b)
 		a = b;
 	if (a < c)
 		a = c;
 	return (a);
+}
+
+void	probe(char *a, char flag)
+{
+	int i = 0;
+	while (a[i])
+		i ++;
+	write(1, a, i);
+	write(1, &flag, 1);
+	write(1, "'\n", 2);
 }
 
 static char	*handle_flag_init(size_t size, t_queue *q, int *len)
@@ -24,14 +33,14 @@ static char	*handle_flag_init(size_t size, t_queue *q, int *len)
 			q->flags->hex = 0;//that uint malloc doesnt look good
 		if (a != 'd' && a != 'i')
 			q->flags->plus_space = 0;
-		if (a == 'c' || a == 's' || a == 'p')
-		{
-			if (q->flags->minus_zero == '0')
-				q->flags->minus_zero = 0;
+		if ((a == 'c' || a == 's' || a == 'p') && q->flags->minus_zero == '0')
+			q->flags->minus_zero = 0;
+		if (a == 'c')
 			q->flags->precision = 0;
-		}
 		q->flags->precision += 2 * (q->flags->hex > 0);
 		q->flags->precision += (q->flags->plus_space > 0);//same logic as 0x prefix
+		if (q->flags->precision < 0)
+			q->flags->precision = size;
 		*len = muh_max(size, q->flags->precision, q->flags->width);
 	}
 	ret = malloc((*len + 1) * sizeof(char));
@@ -44,11 +53,34 @@ static void	width_fill(char *ret, int start, int width, char flag)
 {
 	char	c;
 
+//	probe("my flag is '", flag);
 	c = ' ';
 	if (flag == '0')
 		c = '0';
 	while (start < width)
 		ret[start++] = c;
+}//can be compressed for a func slot, or toss some more lines in here
+
+int	set_index(int size, int prec, int width, char flag)
+{
+	int	i;
+
+	if (flag == '-')
+		i = prec - size;
+	else
+		i = muh_max(width, prec, 0) - size;
+	if (i < 0)
+		i = 0;
+	return (i);
+}
+
+void yeet_it(int len, int index)
+{
+	write(1, "len: ", 5);
+	ft_putnbr_fd(len, 1);
+	write(1, "\nindex: ", 8);
+	ft_putnbr_fd(index, 1);
+	write(1, "\n\n", 2);
 }
 
 char	*handle_flag(size_t size, t_queue *q, int *index)//I just have to take out 0x first dont i//or pass the prefix flag in here, that works
@@ -70,9 +102,7 @@ char	*handle_flag(size_t size, t_queue *q, int *index)//I just have to take out 
 	width = q->flags->width;
 	prec = q->flags->precision;
 	ft_memset(ret, '0', len);//fuck cares about precision check
-	*index = muh_max(width, prec, 0) - size;
-	if (*index < 0 || q->flags->minus_zero == '-')
-		*index = 0;
+	*index = set_index(size, prec, width, q->flags->minus_zero);
 	if (width > muh_max(size, prec, 0))
 	{
 		start = 0;
@@ -81,12 +111,13 @@ char	*handle_flag(size_t size, t_queue *q, int *index)//I just have to take out 
 		width -= muh_max(size, prec, 0) * !start;
 		width_fill(ret, start, width, q->flags->minus_zero);
 	}
+//	yeet_it(len, *index);
 	//ret[len - 1] = '\0';//terminator now lives in init
 	return (ret);
 }
 
 int	valid_cond_printf(const char *format, char *type, char *flag, int *index)//line up the names after
-{
+{//duplicate flags allowed ig
 	int	i;
 
 	i = *index;

@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("|%-.3d|\n", 42);
+	printf("|%+8.d|\n", 0);
 }

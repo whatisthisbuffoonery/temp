@@ -1,5 +1,8 @@
 #include "header_mand.h"
 
+int	edge_case(char *ret, int flag, int *i, t_queue *q)
+{
+
 int	uint_help(char *ret, int flag, int *i, char arg)
 {
 	int	k;
@@ -34,13 +37,18 @@ void	int_help(char *ret, int flag, t_queue *q, int *index)
 
 	i = 0;
 	has_sign = (q->flags && q->flags->plus_space > 0);
+	if (flag || has_sign)
+	{
+		while (i < *index && ret[i] == ' ')
+			i ++;
+	}
 	if (flag)
-		ret[i++] = '-';
+		ret[i] = '-';
 	else if (has_sign)
 	{
 		c = q->flags->plus_space;
-		ret[i++] = c;
+		ret[i] = c;
 	}
-	if (i)
+	if (flag || has_sign)
 		*index += 1;
 }

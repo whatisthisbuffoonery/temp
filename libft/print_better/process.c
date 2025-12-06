@@ -6,6 +6,10 @@ static char	*grab(t_queue *q, va_list *va)
 {
 	char	cmp;
 
+//	if (!q->flags)
+//		write(1, "NOO\n", 4);
+//	else
+//		write(1, "hm?\n", 4);
 	if (q->type == str)
 		return (q->str);
 	else if (q->type == op)
@@ -23,7 +27,7 @@ static char	*grab(t_queue *q, va_list *va)
 		write(1, "	<--  who put this here\n", 25);
 	}
 	else
-		write(1, "nil type in queue???\n", 22);
+		write(1, "nil type in queue LO???\n", 25);
 	return (NULL);
 }
 

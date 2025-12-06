@@ -1,5 +1,5 @@
 CC := clang
-CC_FLAGS := -Wall -Wextra -Werror -c
+CC_FLAGS := -Wall -Wextra -Werror -fsanitize=address -c
 
 AR := ar
 AR_FLAGS := rcs
