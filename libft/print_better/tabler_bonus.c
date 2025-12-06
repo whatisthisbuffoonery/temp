@@ -18,5 +18,6 @@ void	tabler(char *type, char *flag, int *a, int *b)
 	flag['0'] = 1;
 	flag['+'] = 1;
 	flag[' '] = 1;
+	flag['#'] = 1;
 }
-//# . and % left out
+//. and % left out

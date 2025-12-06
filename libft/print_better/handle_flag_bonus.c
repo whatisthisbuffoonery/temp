@@ -11,33 +11,33 @@ static int muh_max(int a, int b, int c)
 	return (a);
 }
 
-static char	*handle_flag_init(size_t, size, t_queue, *q, int *len)
+static char	*handle_flag_init(size_t size, t_queue *q, int *len)
 {
 	char	a;
-	int		curr;
+	char	*ret;
 
 	a = q->arg;
-	curr = size;
+	*len = size;
 	if (q->flags)
 	{
 		if (a != 'x' && a != 'X')
 			q->flags->hex = 0;//that uint malloc doesnt look good
 		if (a != 'd' && a != 'i')
-			a->flags->plus_space = 0;
+			q->flags->plus_space = 0;
 		if (a == 'c' || a == 's' || a == 'p')
 		{
 			if (q->flags->minus_zero == '0')
 				q->flags->minus_zero = 0;
 			q->flags->precision = 0;
 		}
-		q->flags->precision += 2 * (q->flags->hex > 0)
+		q->flags->precision += 2 * (q->flags->hex > 0);
 		q->flags->precision += (q->flags->plus_space > 0);//same logic as 0x prefix
-		curr = muh_max(size, q->flags->precision, q->flags->width);
+		*len = muh_max(size, q->flags->precision, q->flags->width);
 	}
-	ret = malloc((curr + 1) * sizeof(char));
+	ret = malloc((*len + 1) * sizeof(char));
 	if (ret)
-		ret[curr] = '\0';
-	return ((*len = curr), ret);
+		ret[*len] = '\0';
+	return (ret);
 }
 
 static void	width_fill(char *ret, int start, int width, char flag)
@@ -76,11 +76,32 @@ char	*handle_flag(size_t size, t_queue *q, int *index)//I just have to take out 
 	if (width > muh_max(size, prec, 0))
 	{
 		start = 0;
-		if (q->flags->minus_space == '-')
+		if (q->flags->minus_zero == '-')
 			start = muh_max(size, prec, 0);
-		width -= muh_max(size, perc, 0) * !start;
+		width -= muh_max(size, prec, 0) * !start;
 		width_fill(ret, start, width, q->flags->minus_zero);
 	}
 	//ret[len - 1] = '\0';//terminator now lives in init
 	return (ret);
+}
+
+int	valid_cond_printf(const char *format, char *type, char *flag, int *index)//line up the names after
+{
+	int	i;
+
+	i = *index;
+	if (format[i] == '%')
+		return (0);
+	while (flag[(unsigned char) format[i]])//put hex back in damn you
+		i ++;
+	while (format[i] >= '0' && format[i] <= '9')
+		i ++;
+	if (format[i] == '.')
+	{
+		i ++;
+		while (format[i] >= '0' && format[i] <= '9')
+			i ++;
+	}
+	*index = i;
+	return (!type[(unsigned char) format[i]]);
 }

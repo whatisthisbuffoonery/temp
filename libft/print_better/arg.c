@@ -14,29 +14,28 @@
 
 //all these take an arg node now, AND they call handle_flag for the malloc
 
-int	uint_help(char *ret, int flag, int *i);
+int	uint_help(char *ret, int flag, int *i, char arg);
 char	*handle_flag(size_t size, t_queue *q, int *index);
-void	int_op_help(char *ret, int flag, t_queue *q, int *index);
+void	int_help(char *ret, int flag, t_queue *q, int *index);
 
-char	*char_op(unsigned int c, t_queue *q, t_list **null, int index)
+char	*char_op(unsigned int c, t_queue *q)
 {
-	int		*null_index;
+//	t_list	*tmp;
+//	int		*null_index;
 	char	*ret;
 	int		i;
 
 	i = 0;//init here
-	null_index = malloc(sizeof(int));
+//	null_index = malloc(sizeof(int));
 	ret = handle_flag(1 * sizeof(char), q, &i);
-	if (!ret || !null_index)//omlllllllllll
+	if (!ret)//omlllllllllll
 		return (NULL);
-	*null_index = index;
+	//*null_index = index;
 	ret[i] = c;
 	if (!c)//I should really insert ret here shouldnt i, make a dummy str to preserve index value
-		ft_lstadd_back(null, ft_lstnew(null_index, q->flags));//oml what if this malloc fails
-												//answer: make this a monad, signal with ret = null
-	//what the hell, its three lines to see if the malloc failed, just do lstnew here
-	else
-		free(null_index);
+		q->arg = '0';//toss around a calculated strlen
+//	else
+//		free(null_index);
 	return (ret);
 }
 
@@ -88,7 +87,7 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 		return (NULL);
 	//if (flag)
 	//	ret[i++] = '-';//int helper here
-	int_op_helper(ret, flag, q, &i);
+	int_help(ret, flag, q, &i);
 	while (t)
 	{
 		ret[i++] = (((n / t) % 10) + '0');

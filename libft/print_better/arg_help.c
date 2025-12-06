@@ -1,6 +1,6 @@
 #include "header_mand.h"
 
-int	uint_help(char *ret, int flag, int *i)
+int	uint_help(char *ret, int flag, int *i, char arg)
 {
 	int	k;
 
@@ -30,12 +30,12 @@ void	int_help(char *ret, int flag, t_queue *q, int *index)
 {
 	int	i;
 	int	c;
-	int	has_sign
+	int	has_sign;
 
 	i = 0;
 	has_sign = (q->flags && q->flags->plus_space > 0);
 	if (flag)
-		ret[i++] = -1;
+		ret[i++] = '-';
 	else if (has_sign)
 	{
 		c = q->flags->plus_space;

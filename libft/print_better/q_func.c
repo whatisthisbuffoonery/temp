@@ -13,6 +13,8 @@ void	clear_q(t_queue **q, char *ret)
 		tmp = f->next;
 		if (f->str && f->str != ret)//mmmmm
 			free(f->str);
+		if (f->flags)
+			free (f->flags);
 		free(f);
 		f = tmp;
 	}

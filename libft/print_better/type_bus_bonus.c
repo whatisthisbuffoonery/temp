@@ -33,10 +33,7 @@ static int	bus_helper(t_queue *q, t_flags *ret, const char *format, int i)
 {
 	char	a;
 
-	if (!i)
-		free(ret);
-	else
-		q->flags = ret;
+	q->flags = ret;
 	a = format[i];
 	if (a == '.' || (a >= '0' && a <= '9'))
 		i += printf_len(ret, &format[i]);
@@ -81,7 +78,7 @@ int	type_bus(t_queue *q, const char *format, char *type)
 		else if (a == '-' || (a == '0' && !ret->minus_zero))
 			ret->minus_zero = a;
 		else if (a == '#')
-			ret->hex == '#';
+			ret->hex = '#';
 	}
 	return (bus_helper(q, ret, format, i));//not enuf lines
 }

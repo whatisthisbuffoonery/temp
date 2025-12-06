@@ -13,15 +13,16 @@
 #include "header_mand.h"
 
 void	printf_tokens(const char *format, t_queue **q, int size);
-char	*process(t_queue *q, va_list *va, t_list **null);
+char	*process(t_queue *q, va_list *va, int *len);
 
-static void	printf_init(t_queue **q, t_list **null, int *return_value, char **ret)
+static void	printf_init(t_queue **q, int *return_value, char **ret)
 {
 	*return_value = 0;
 	*q = NULL;
-	*null = NULL;
 	*ret = NULL;
 }
+
+/*
 //handle the flag thingy later. t_list has the arg node in content2
 static int	printf_write(char *ret, t_list *null)
 {
@@ -46,28 +47,26 @@ static int	printf_write(char *ret, t_list *null)
 	i = ft_strlen(ret);
 	return (i + ft_lstsize(null));
 }
-
+*/
 
 int	ft_printf(const char *format, ...)//actual string production TBA
 {
 	va_list	va;
 	char	*ret;
 	t_queue	*q;
-	t_list	*null_list;
 	int		return_value;
 
-	printf_init(&q, &null_list, &return_value, &ret);
+	printf_init(&q, &return_value, &ret);
 	va_start(va, format);
 	printf_tokens(format, &q, ft_strlen(format));//signal: q == null
 	if (q)
-		ret = process(q, &va, &null_list);//signal: ret == null, maybe needs a crash flag
+		ret = process(q, &va, &return_value);//signal: ret == null, maybe needs a crash flag
 	if (ret)
-		return_value = printf_write(ret, null_list);
+		write(1, ret, return_value);
 //	else if (ft_strlen(format) > 0)
 //		write(1, "where ret\n", 10);
 	clear_q(&q, ret);
 	free(ret);
 	va_end(va);
-	ft_lstclear(&null_list, free);
 	return (return_value);
 }

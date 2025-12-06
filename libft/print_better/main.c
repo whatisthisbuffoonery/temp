@@ -1,9 +1,10 @@
 #include "header_mand.h"
 #include <limits.h>
+#include <stdio.h>
 
 int main(void)
 {
-
+/*
 	ft_printf("%c\n", 'a');
 	ft_printf("%s\n", "hello");
 	ft_printf("%p\n", (void *) 0x123);
@@ -51,5 +52,27 @@ int main(void)
 	ft_printf("%c%c%c%c", 'a', 'a', 0, 0);
 	ft_printf("%c%c%c%c", '\n', 0, 0, '\n');
 	ft_printf("\nhere --> %c\n", 0);
+*/
+
+	write(1, "mine\n", 5);
+	ft_printf("|%+8d|%+8d|%+.3d|\n", 42, -42, 42);
+	write(1, "theirs\n", 7);
+	printf("|%+8d|%+8d|%+.3d|\n", 42, -42, 42);
+	write(1, "mine\n", 5);
+	ft_printf("|%-8d|%-8d|%-.3d|\n", 42, -42, 42);
+	write(1, "theirs\n", 7);
+	printf("|%-8d|%-8d|%-.3d|\n", 42, -42, 42);
+	write(1, "mine\n", 5);
+	ft_printf("|%08d|%08d|%0.3d|\n", 42, -42, 42);
+	write(1, "theirs\n", 7);
+	printf("|%08d|%08d|%0.3d|\n", 42, -42, 42);
+//	write(1, "mine\n", 5);
+//	ft_printf("|%#8d|%#8d|%#.3d|\n", 42, -42, 42);
+//	write(1, "theirs\n", 7);
+//	printf("|%#8d|%#8d|%#.3d|\n", 42, -42, 42);
+	write(1, "mine\n", 5);
+	ft_printf("|% 8d|% 8d|% .3d|\n", 42, -42, 42);
+	write(1, "theirs\n", 7);
+	printf("|% 8d|% 8d|% .3d|\n", 42, -42, 42);
 
 }

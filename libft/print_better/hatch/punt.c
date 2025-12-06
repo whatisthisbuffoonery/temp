@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("%4pa\n", (void *) 5);
+	printf("|%-.3d|\n", 42);
 }

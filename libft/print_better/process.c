@@ -2,7 +2,7 @@
 
 //shove arg node in thru here
 
-static char	*grab(t_queue *q, va_list *va, t_list **null, int index)
+static char	*grab(t_queue *q, va_list *va)
 {
 	char	cmp;
 
@@ -12,7 +12,7 @@ static char	*grab(t_queue *q, va_list *va, t_list **null, int index)
 	{
 		cmp = q->arg;
 		if (cmp == 'c')
-			return (char_op(va_arg(*va, int), q, null, index));
+			return (char_op(va_arg(*va, int), q));
 		else if (cmp == 's' || cmp == 'p')
 			return (ptr_op(va_arg(*va, uintptr_t), cmp, q));
 		else if (cmp == 'd' || cmp == 'i')
@@ -27,26 +27,48 @@ static char	*grab(t_queue *q, va_list *va, t_list **null, int index)
 	return (NULL);
 }
 
-static char	*print_strjoin(char *dst, char *src, t_queue *f)
+static int	print_strlen(char *a, t_queue *q)
+{
+	int	i;
+
+	i = 0;
+	if (!a)
+		return (0);
+	while (a[i])
+		i ++;
+	if (q->arg == '0')
+	{
+		q->arg = 'c';
+		i ++;
+		while (a[i])
+			i ++;
+	}
+	return (i);
+}
+
+static char	*print_strjoin(char *dst, char *src, t_queue *f, int *len)
 {
 	char	*ret;
 	int		i;
 	int		k;
+	int		src_len;
 
 	if (!dst || !src)
 		return (NULL);//derail char op here. output of three nulls needs to show up as three nulls
-	ret = malloc((ft_strlen(dst) + ft_strlen(src) + 1) * sizeof(char));
+	src_len = print_strlen(src, f);
+	ret = malloc((*len + src_len + 1) * sizeof(char));
 	if (!ret)
 		return (NULL);
 	i = -1;
 	k = -1;
-	while (dst[++i])
+	while (++i < *len)
 		ret[i] = dst[i];
-	while (src[++k])
+	while (++k < src_len)
 		ret[i + k] = src[k];
 	ret[i + k] = '\0';
 	if (f->type == op)
 		free(src);
+	*len += src_len;
 	return (ret);
 }
 
@@ -59,7 +81,7 @@ static void	*tantrum_boogaloo(char *new, char *tmp, t_queue *f)
 	return (NULL);
 }
 
-char	*process(t_queue *q, va_list *va, t_list **null)
+char	*process(t_queue *q, va_list *va, int *len)
 {
 	t_queue	*f;
 	char	*ret;
@@ -67,13 +89,14 @@ char	*process(t_queue *q, va_list *va, t_list **null)
 	char	*new;
 
 	f = q->next;
-	ret = grab(q, va, null, 0);
+	ret = grab(q, va);
 	if (!ret)
 		return (NULL);
+	*len = print_strlen(ret, q);
 	while (f)
 	{
-		new = grab(f, va, null, ft_strlen(ret));
-		tmp = print_strjoin(ret, new, f);
+		new = grab(f, va);
+		tmp = print_strjoin(ret, new, f, len);
 		if (ret != q->str)
 			free(ret);
 		if (!tmp || !new)
