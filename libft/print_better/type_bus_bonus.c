@@ -27,7 +27,7 @@ static int	printf_len(t_flags *ret, const char *format)
 	if (format[i] == '.')
 	{
 		ret->precision = printf_atoi(&format[++i], &i);
-		q->flags->precision_set = 1;
+		ret->precision_set = 1;
 	}
 	return (i);
 }
@@ -44,6 +44,10 @@ void rundown(t_queue *q)
 	write(1, "\n", 1);
 	if (q->flags)
 	{
+		if (q->flags->precision_set)
+			write(1, "precision set\n", 14);
+		else
+			write(1, "not set\n", 8);
 		write(1, "precision: ", 11);
 		ft_putnbr_fd(q->flags->precision, 1);
 		write(1, "\nwidth: ", 8);
@@ -83,7 +87,7 @@ static t_flags	*printf_new_flag_node(void)
 	a->hex = 0;
 	a->width = 0;
 	a->precision = 0;//damn you printf
-	a->nil_precision = 0;
+	a->precision_set = 0;
 	return (a);
 }
 

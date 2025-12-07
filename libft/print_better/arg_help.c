@@ -2,29 +2,38 @@
 
 int	prec_help(char *ret, t_queue *q, int n)
 {
-	int	width;
+	int	i;
 
-	if (!q->flags || n)
+	i = 0;
+//	if (!q->flags->precision_set)
+//		write(1, "wtf\n", 4);
+	if (n || !q->flags || !q->flags->precision_set)
 		return (0);
-	if (!q->flags->precision && q->flags->precision_set)
+	q->flags->precision -= 2 * (q->flags->hex > 0);
+	q->flags->precision -= (q->flags->plus_space > 0);
+//	write(1, "prec: ", 6);
+//	ft_putnbr_fd(q->flags->precision, 1);
+//	write(1, "\n", 1);
+	if (!q->flags->precision)
 	{
-		width = q->flags->width;
-		width += (q->flags->plus_space == '+') * !width
-		ft_memset(ret, ' ', width);
-		ret[width] = '\0';
-		if (q->flags->plus_space == '+')
-			ret[width - 1] = '+';
+//		write(1, "here\n", 5);
+		if (q->flags->plus_space)
+			ret[i++] = q->flags->plus_space;
+		ret[i] = '\0';
 		return (1);
 	}
 	return (0);
 }
 
-int	uint_help(char *ret, int flag, int *i, char arg)
+int	uint_help(char *ret, int flag, t_queue *q, int *i)
+								// char arg, int *i
 {
-	int	k;
+	int		k;
+	char	arg;
 
 	if (!ret)
 		return (1);
+	arg = q->arg;
 	if (flag)
 	{
 		k = 0;
@@ -45,12 +54,14 @@ int	uint_help(char *ret, int flag, int *i, char arg)
 //if flag, follow the above to place prefix and then add 2 to *i regardless what the other circumstances are
 //if !flag, do nothing
 
-void	int_help(char *ret, int flag, t_queue *q, int *index)
+int	int_help(char *ret, int flag, t_queue *q, int *index)
 {
 	int	i;
 	int	c;
 	int	has_sign;
 
+	if (!ret)
+		return (1);
 	i = 0;
 	has_sign = (q->flags && q->flags->plus_space > 0);
 	if (flag || has_sign)
@@ -67,4 +78,5 @@ void	int_help(char *ret, int flag, t_queue *q, int *index)
 	}
 	if (flag || has_sign)
 		*index += 1;
+	return (0);
 }

@@ -52,6 +52,11 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));//actually malloc count is ok
 	ret = handle_flag((i + flag) * sizeof(char), q, &i); //2 * type == p was here// 3 lines too smol, suppose repurposing uint helper to take #X
 																//does not write 0x prefix
+//	rundown(q);
+//	if (flag)
+//		write(1, "yes\n", 4);
+//	else
+//		write(1, "no\n", 3);
 	if (uint_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0)))//capital X
 		return (ret);
 	while (t)
@@ -94,9 +99,9 @@ int	str_min(int size, t_queue *q)
 {
 	if (!q->flags)
 		return (size);
-	if (!q->flags->precision_set)
+	if (!q->flags->precision_set || q->flags->precision > size)
 		q->flags->precision = size;
-	if (size =< q->flags->precision)
+	if (size <= q->flags->precision)
 		return (size);
 	return (q->flags->precision);
 }

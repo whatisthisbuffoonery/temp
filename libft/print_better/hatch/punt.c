@@ -17,5 +17,5 @@
 
 int main(void)
 {
-	printf("|%+8.d|\n", 0);
+	printf("|% .0d|\n", 0);
 }
