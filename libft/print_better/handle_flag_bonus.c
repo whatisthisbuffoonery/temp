@@ -39,8 +39,6 @@ static char	*handle_flag_init(size_t size, t_queue *q, int *len)
 			q->flags->precision = 0;
 		q->flags->precision += 2 * (q->flags->hex > 0);
 		q->flags->precision += (q->flags->plus_space > 0);//same logic as 0x prefix
-		if (q->flags->precision < 0)
-			q->flags->precision = size;
 		*len = muh_max(size, q->flags->precision, q->flags->width);
 	}
 	ret = malloc((*len + 1) * sizeof(char));

@@ -16,9 +16,10 @@
 
 void rundown(t_queue *q);
 
-int	uint_help(char *ret, int flag, int *i, char arg);
+int	uint_help(char *ret, int flag, t_queue *q, int *i);
+int	int_help(char *ret, int flag, t_queue *q, int *index);
+int	prec_help(char *ret, t_queue *q, int n);
 char	*handle_flag(size_t size, t_queue *q, int *index);
-void	int_help(char *ret, int flag, t_queue *q, int *index);
 
 char	*char_op(unsigned int c, t_queue *q)
 {
@@ -51,8 +52,8 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));//actually malloc count is ok
 	ret = handle_flag((i + flag) * sizeof(char), q, &i); //2 * type == p was here// 3 lines too smol, suppose repurposing uint helper to take #X
 																//does not write 0x prefix
-	if (uint_help(ret, flag, &i, q->arg))//capital X
-		return (NULL);
+	if (uint_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0)))//capital X
+		return (ret);
 	while (t)
 	{
 		ret[i] = "0123456789abcdef"[((n / t) % base)];
@@ -79,9 +80,8 @@ char	*int_op(long long n, t_queue *q)//propose checking hex flag in caller
 	while (n / t >= 10 && ++i)
 		t *= 10;
 	ret = handle_flag(i * sizeof(char), q, &i);//handles i = flag
-	if (!ret)
-		return (NULL);
-	int_help(ret, flag, q, &i);
+	if (int_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0)))
+		return (ret);
 	while (t)
 	{
 		ret[i++] = (((n / t) % 10) + '0');

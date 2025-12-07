@@ -1,7 +1,23 @@
 #include "header_mand.h"
 
-int	edge_case(char *ret, int flag, int *i, t_queue *q)
+int	prec_help(char *ret, t_queue *q, int n)
 {
+	int	width;
+
+	if (!q->flags || n)
+		return (0);
+	if (!q->flags->precision && q->flags->precision_set)
+	{
+		width = q->flags->width;
+		width += (q->flags->plus_space == '+') * !width
+		ft_memset(ret, ' ', width);
+		ret[width] = '\0';
+		if (q->flags->plus_space == '+')
+			ret[width - 1] = '+';
+		return (1);
+	}
+	return (0);
+}
 
 int	uint_help(char *ret, int flag, int *i, char arg)
 {
