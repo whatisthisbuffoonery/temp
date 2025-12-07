@@ -18,6 +18,8 @@ int	get_strjoin(char **dst, char *b, ssize_t i, ssize_t k)
 	char	*a;
 
 	a = *dst;
+	i = 0;
+	k = 0;
 	while (a[i])
 		i ++;
 	while (b[k])
@@ -31,8 +33,8 @@ int	get_strjoin(char **dst, char *b, ssize_t i, ssize_t k)
 		while (i--)
 			ret[i] = a[i];
 	}
-	free(a);
-	free(b);
+	free(a);//OH POINTERS
+	free(b);//oh pointers
 	*dst = ret;
 	return (!ret);
 }
