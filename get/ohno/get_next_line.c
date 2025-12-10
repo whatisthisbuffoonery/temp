@@ -60,12 +60,12 @@ char	*read_buf(t_var *file, int fd, int *done)
 	if (file->count >= file->lim || fd != file->fd)
 		refresh_buffer(file, fd);
 	if (file->lim < 1)
-		return (NULL);
+		return ((*done = 1), NULL);//really should retrieve fd for err
 	i = file->count;
 	while (file->count < file->lim && file->buf[file->count] != '\n')
 		file->count ++;
-	*done = (file->count < file->lim && file->buf[file->count] == '\n');
-	file->count += *done;
+	*done = (file->count < file->lim && file->buf[file->count] == '\n');//merge !read
+	file->count += *done;//exclude !read
 	ret = malloc(((file->count - i) + 1) * sizeof(char));
 	if (!ret)
 	{
@@ -81,24 +81,20 @@ char	*read_buf(t_var *file, int fd, int *done)
 
 char	*get_next_line(int fd)
 {
-	static t_var	file;
+	static t_var	file;//you wanna just do the static arr for mand? 
+	t_list			*list;
+	t_list			*tmp;
 	char			*ret;
-	char			*tmp;
 	int				done;
 
 	done = 0;
-	ret = read_buf(&file, fd, &done);
-	while (ret && !done && file.lim > 0)
+	while (!done)// no more var space, -1 is err
 	{
-		tmp = read_buf(&file, fd, &done);
-		if (!tmp)
-		{
-			if (file.lim == 0)
-				break ;
-			free(ret);
-			return (NULL);
-		}
-		done += get_strjoin(&ret, tmp, 0, 0);//try to phase out for a faster solution
+		ret = read_buf(&file, fd, &done);//set done on \n or !read pls	
+		if (!ret)
+			break ;
+		tmp = ft_lstnew(ret);//change it later and move this up two lines
+		ft_lstadd_back(&list, tmp);//consider add front instead
 	}
 	return (ret);
 }
