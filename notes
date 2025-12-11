@@ -1,7 +1,30 @@
-%char not working for some reason, it works on my end
+francinette dont work. use the tester in temp/uwu
 need to accept null %s as "    (null)" (lowercase)
 ^if prec < 6, print none of "(null)" and use width instead
 ^needs logic edge case
 need bigger %p container
+^ULONGMAX edge case noted in comment
 %p uses (nil) for NULL
+other failed tests:
 
+TEST(29, print(" %-1p %-2p ", 0, 0));//size = 6 * (q->flags && !q->flags->set)//strmin has to handle this
+TEST(11, print(" %.2d ", -1));
+TEST(24, print(" %.3d ", -11));
+TEST(25, print(" %.4d ", -14));
+TEST(28, print(" %.3d ", -99));
+TEST(30, print(" %.4d ", -101));
+TEST(33, print(" %.10d ", LONG_MAX));
+TEST(35, print(" %.12d ", UINT_MAX));
+TEST(36, print(" %.13d ", ULONG_MAX));
+TEST(37, print(" %.14d ", 9223372036854775807LL));//wtf
+TEST(38, print(" %.8d %.9d %.10d %.11d %.12d %.13d %.14d", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42));
+^^^%i uses the same tests
+
+TEST(1, print(" %#x ", 0));
+TEST(25, print(" %#x ", LONG_MIN));
+TEST(55, print(" %#X ", LONG_MIN));
+TEST(59, print(" %#X %#X %#X %#X %#X %#X %#X", INT_MAX, INT_MIN, LONG_MAX, LONG_MIN, ULONG_MAX, 0, -42));//I WONDER WHICH ONE HUH//actually theres a 0 in there
+
+note I changed t in uint op to be ulong instead uint. you know that wont fix it
+
+also also learn git submodules
