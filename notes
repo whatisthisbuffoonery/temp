@@ -1,0 +1,7 @@
+%char not working for some reason, it works on my end
+need to accept null %s as "    (null)" (lowercase)
+^if prec < 6, print none of "(null)" and use width instead
+^needs logic edge case
+need bigger %p container
+%p uses (nil) for NULL
+

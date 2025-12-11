@@ -1,4 +1,0 @@
-when something uses libft, copy that archive to $(NAME), then merge the other objs into that
-ask tmr if printf needs to error check
-vimtutor
-what include name for printf libft, ../?
