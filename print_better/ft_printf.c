@@ -10,7 +10,8 @@
 /*																			  */
 /* ************************************************************************** */
 
-#include "header_mand.h"
+
+#include "ft_printf.h"
 
 void	printf_tokens(const char *format, t_queue **q, int size);
 char	*process(t_queue *q, va_list *va, int *len);

@@ -1,4 +1,4 @@
-#include "header_mand.h"
+#include "ft_printf.h"
 
 int	type_bus(t_queue *q, const char *format, char *type);
 

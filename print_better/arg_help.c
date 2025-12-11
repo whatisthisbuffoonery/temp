@@ -1,4 +1,4 @@
-#include "header_mand.h"
+#include "ft_printf.h"
 
 int	prec_help(char *ret, t_queue *q, int n)
 {

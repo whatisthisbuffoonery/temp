@@ -1,5 +1,5 @@
 CC := clang
-CC_FLAGS := -Wall -Wextra -Werror -fsanitize=address -c
+CC_FLAGS := -Wall -Wextra -Werror -c
 
 AR := ar
 AR_FLAGS := rcs
@@ -7,7 +7,7 @@ AR_FLAGS := rcs
 NAME := libftprintf.a
 FULL := full.a
 
-LIBFT_DIR := ..
+LIBFT_DIR := libft
 LIBFT_LIB := libft
 
 SRC := ft_printf.c arg.c process.c token.c token_call.c \

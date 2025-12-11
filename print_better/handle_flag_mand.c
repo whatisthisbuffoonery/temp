@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header_mand.h"
+#include "ft_printf.h"
 
 char	*handle_flag(size_t size, t_queue *q, int *index)
 {
@@ -20,7 +20,7 @@ char	*handle_flag(size_t size, t_queue *q, int *index)
 	ret = malloc(size + 1);
 	if (!ret)
 		return (NULL);
-	ret[size] = '\0';
+	ft_memset(ret, 0, size + 1);
 	*index = 0;//pretend there was prefix work here
 	return (ret);
 }

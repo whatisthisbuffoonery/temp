@@ -1,4 +1,4 @@
-#include "header_mand.h"
+#include "ft_printf.h"
 
 void	tabler(char *type, char *flag, int *a, int *b)
 {

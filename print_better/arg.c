@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header_mand.h"
+#include "ft_printf.h"
 
 //all these take an arg node now, AND they call handle_flag for the malloc
 

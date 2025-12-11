@@ -1,4 +1,4 @@
-#include "header_mand.h"
+#include "ft_printf.h"
 
 static int	printf_atoi(const char *format, int *index)
 {

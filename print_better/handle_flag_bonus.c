@@ -1,4 +1,4 @@
-#include "header_mand.h"
+#include "ft_printf.h"
 //flag null check maybe done before this//nah the init will do it
 
 static int muh_max(int a, int b, int c)
