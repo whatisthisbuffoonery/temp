@@ -1,3 +1,6 @@
 [submodule "uwu/print_better/tests"]
 	path = uwu/print_better/tests
 	url = https://github.com/Tripouille/printfTester
+[submodule "get/ohno/gnlTester"]
+	path = get/ohno/gnlTester
+	url = https://github.com/Tripouille/gnlTester.git
