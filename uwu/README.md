@@ -23,11 +23,11 @@ This project aims to emulate the printf function from \<stdio.h\>.
   
 ```  
 	- width means the minimum string length that an item should take up  
-		-	if the argument is shorter in length than the given width \(0 if unset\), it is padded with trailing spaces to meet the minimum length  
+		-	if the argument is shorter in length than the given width (0 if unset), it is padded with trailing spaces to meet the minimum length  
 	- precision:  
-		-	for numbers \(decimal or hex\), it means the minimum number of digits it should take up. Leading zeros are used to pad if needed  
+		-	for numbers (decimal or hex), it means the minimum number of digits it should take up. Leading zeros are used to pad if needed  
 		-	for strings, it means the maximum number of characters to print.  
-			-		for "\(null\)", nothing is printed when precision is set and below 6 \("%s", NULL\)  
+			-		for "(null)", nothing is printed when precision is set and below 6 ("%s", NULL)  
 ```  
   
 #### Supported flags are:  
@@ -35,7 +35,7 @@ This project aims to emulate the printf function from \<stdio.h\>.
 ```
 	0		(fills width space with 0s instead of spaces)  
 	-		(left justifies content, instead of the default right justify)  
-	\#		alternate hex form (just puts a prefix, really)  
+	#		alternate hex form (just puts a prefix, really)  
 	' '		uses a leading space to indicate a positive decimal number (including 0)  
 	+		overrides the space flag to use a + to indicate a positive number  
 ```  
@@ -46,13 +46,13 @@ This project aims to emulate the printf function from \<stdio.h\>.
   
 ```  
 	- using the space flag and setting width is not a good idea. It might as well be a conflict but, as with the standard printf, it is not  
-	- the built\-in printf enjoys many benefits from being a special function that receives extra care from the compiler. It can detect:  
+	- the built-in printf enjoys many benefits from being a special function that receives extra care from the compiler. It can detect:  
 		-	an improper amount of arguments for a given format string  
 		-	type mismatches  
-		-	the original base system \(decimal, octal, hex\) of a number \(not in string format\) to be considered when parsing %i  
+		-	the original base system (decimal, octal, hex) of a number (not in string format) to be considered when parsing %i  
 		-	conflicting flags  
 		-	conflicting flags and types  
-	- we the programmer cannot hope to do most of these items within the pace 8 deadline.  
+	- we the programmer cannot hope to do half of these items while following standard printf usage.  
 	- to implement error highlighting for flags would be inconsistent with the rest of the caveats, where we cannot do much  
 	- instead, we ignore flags and try to print the string anyway:  
 ```  
@@ -143,7 +143,7 @@ First, the string length is calculated from max\(width, precision, size\)
 		-	for numbers, precision should not consider prefixes for padding leading 0s  
 		-	for strings, precision is reduced to size if larger  
 	- for chars and pointer values, precision is disregarded  
-	- max\(width, precision, size\) is saved as len  
+	- max(width, precision, size) is saved as len  
 ```  
 Then, the string is initialised to hold '0' in all spaces  
 	- for non\-numbers, precision would be equal to or smaller than size, and this has no effect  
@@ -153,8 +153,8 @@ Width is then considered to fill the spaces that precision and size do not occup
 ```
 	- if the 0 flag is in effect, we do not have to do anything  
 	- remaining spaces are calulated with start and end bounds  
-		-	for left\-justify, start: max\(size, precision\), end: width  
-		-	for right\-justify, start: 0, end: width \- max\(size, precision\)  
+		-	for left-justify, start: max(size, precision), end: width  
+		-	for right-justify, start: 0, end: width - max(size, precision)  
 ```  
 Index is set according to the following:  
 	- for left\-justify, precision \- size  
