@@ -1,0 +1,9 @@
+git submodule update --init --recursive
+
+#pls dont delete .gitmodules
+
+cd printfTester
+git checkout master  # or main
+git pull origin master
+
+
