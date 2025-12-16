@@ -34,6 +34,7 @@ typedef struct s_gnlnode
 {
 	char				*str;
 	struct s_gnlnode	*next;
+	int					str_len;
 }						t_gnlnode;
 
 typedef struct s_gnllist
@@ -41,7 +42,6 @@ typedef struct s_gnllist
 	t_gnlnode			*head;
 	t_gnlnode			*tail;
 	int					node_count;
-	int					last_str;
 }						t_gnllist;
 
 char	*get_next_line(int fd);

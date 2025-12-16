@@ -50,6 +50,10 @@ void	refresh_buffer(t_var *file, int fd)
 		file->lim = read(fd, file->buf, BUFFER_SIZE);
 	i = 0;
 	file->count = 0;
+	if (file->lim > 0)
+		write(1, "1", 1);
+	else
+		write(1, "0", 1);
 	if (fd < 0)
 		file->lim = -1;
 	while ((file->lim < 1) && i < BUFFER_SIZE)

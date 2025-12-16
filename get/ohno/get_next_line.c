@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/25 17:34:37 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 02:59:14 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ char	*read_buf(t_var *file, int fd, int *done)
 	return (ret);
 }
 
+void gnl_test(char *a, int i)
+{
+	write(1, " | ", 3);
+	if (a && a[0])
+		write(1, a, i);
+	if (!a)
+		write(1, "(null)", 6);
+	if (!a[0])
+		write(1, "(empty)", 7);
+	write(1, " | ", 3);
+}
+
 int	gnl_new(t_gnllist **lst, char *ret, int *done)
 {
 	t_gnlnode	*new;
@@ -63,9 +75,10 @@ int	gnl_new(t_gnllist **lst, char *ret, int *done)
 		(*lst)->head = new;
 		(*lst)->node_count = 0;
 	}
-	(*lst)->last_str = i;
+	(new)->str_len = i;
 	(*lst)->node_count += 1;
 	(*lst)->tail = new;
+	gnl_test(ret, i);
 	return (0);
 }
 
@@ -77,7 +90,12 @@ int	gnl_shove(t_gnllist *lst, char **ret)
 
 	*ret = NULL;
 	curr = lst->head;
-	i = lst->last_str + ((lst->node_count - 1) * BUFFER_SIZE);
+	i = 0;
+	while (curr)
+	{
+		i += curr->str_len;
+		curr = curr->next;
+	}
 	*ret = malloc((i + 1) * sizeof(char));
 	if (!*ret)
 		return (-1);
@@ -95,13 +113,23 @@ int	gnl_shove(t_gnllist *lst, char **ret)
 	return (1);
 }
 
-void	gnl_cleanup(t_gnllist *lst, char **ret, int done)
+void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 {
 	t_gnlnode	*curr;
 	t_gnlnode	*tmp;
 
-	if (!lst || !done)
+	if (!lst)
+	{
+		if (done < 0)
+		{
+			if (*ret)
+				free(*ret);
+			file->count = 0;
+			file->lim = 0;
+			*ret = NULL;
+		}
 		return ;
+	}
 	curr = lst->head;
 	while (curr)
 	{
@@ -111,9 +139,12 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, int done)
 		free(curr);
 		curr = tmp;
 	}
-	if (done < 0 && *ret)
+	if (done < 0)
 	{
-		free(*ret);
+		if (*ret)
+			free(*ret);
+		file->count = 0;
+		file->lim = 0;
 		*ret = NULL;
 	}
 	free(lst);
@@ -137,7 +168,7 @@ char	*get_next_line(int fd)
 	}
 	if (done == 1 && lst)
 		done = gnl_shove(lst, &ret);
-	gnl_cleanup(lst, &ret, done);//can be shoved in here...?
+	gnl_cleanup(lst, &ret, &file, done);//can be shoved in here...?
 	return (ret);
 }
 /*

@@ -2,8 +2,22 @@ git submodule update --init --recursive
 
 #pls dont delete .gitmodules
 
+----
+
 cd printfTester
 git checkout master  # or main
 git pull origin master
 
+----
 
+or 
+
+----
+
+git branch -avvv --contain HEAD
+cd path/to/your/submodule
+git checkout -b branch --track origin/branch
+
+git submodule update --init --recursive --remote
+
+----

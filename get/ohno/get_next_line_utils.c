@@ -50,6 +50,8 @@ void	refresh_buffer(t_var *file, int fd)
 		file->lim = read(fd, file->buf, BUFFER_SIZE);//reads 42 or less
 	i = 0;
 	file->count = 0;
+	if (file->lim > 0)
+		write(1, " | yay | ", 9);
 	if (fd < 0)
 		file->lim = -1;//schizo
 	while ((file->lim < 1) && i < BUFFER_SIZE)//panic again

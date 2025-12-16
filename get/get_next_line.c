@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/25 17:34:37 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 03:00:28 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 	if (file->count >= file->lim || fd != file->fd)
 		refresh_buffer(file, fd);
 	if (file->lim < 1)
-		return (NULL);
+		return ((*done = file->lim + !file->lim), NULL);
 	i = file->count;
 	while (file->count < file->lim && file->buf[file->count] != '\n')
 		file->count ++;
@@ -96,13 +96,15 @@ char	*get_next_line(int fd)
 			if (file.lim == 0)
 				break ;
 			free(ret);
+			file.lim = 0;
+			file.count = 0;
 			return (NULL);
 		}
 		done += get_strjoin(&ret, tmp, 0, 0);//try to phase out for a faster solution
 	}
 	return (ret);
 }
-
+/*
 #include <fcntl.h>
 
 void ft_putstr(char *a, int flag)
@@ -195,4 +197,4 @@ int main(int c, char **v)
 	close(fd);
 //	write(1, "\n", 1);
 }
-
+*/
