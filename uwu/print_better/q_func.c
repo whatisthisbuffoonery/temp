@@ -6,13 +6,13 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 17:28:11 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/11 17:28:13 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/16 22:32:25 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	clear_q(t_queue **q, char *ret)
+void	clear_q(t_queue **q)
 {
 	t_queue	*f;
 	t_queue	*tmp;
@@ -23,7 +23,7 @@ void	clear_q(t_queue **q, char *ret)
 	while (f)
 	{
 		tmp = f->next;
-		if (f->str && f->str != ret)
+		if (f->str)
 			free(f->str);
 		if (f->flags)
 			free (f->flags);
@@ -57,7 +57,7 @@ int	enq(t_queue **q, t_queue *new)
 		return (1);
 	if (!new)
 	{
-		clear_q(q, 0);
+		clear_q(q);
 		return (1);
 	}
 	if (!*q)

@@ -23,7 +23,7 @@ OBJ_MAND := $(SRC_MAND:.c=.o)
 
 OBJ_BONUS := $(SRC_BONUS:.c=.o)
 
-all: $(NAME)
+all: bonus
 
 bonus: $(FULL)
 

@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 17:28:03 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/16 23:47:30 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/11 19:23:14 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*grab(t_queue *q, va_list *va)
 	return (NULL);
 }
 
-int	print_strlen(char *a, t_queue *q)
+static int	print_strlen(char *a, t_queue *q)
 {
 	int	i;
 
@@ -46,6 +46,7 @@ int	print_strlen(char *a, t_queue *q)
 		i ++;
 	if (q->arg == '0')
 	{
+		q->arg = 'c';
 		i ++;
 		while (a[i])
 			i ++;
@@ -53,19 +54,65 @@ int	print_strlen(char *a, t_queue *q)
 	return (i);
 }
 
-int	process(t_queue *q, va_list *va)
+static char	*print_strjoin(char *dst, char *src, t_queue *f, int *len)
+{
+	char	*ret;
+	int		i;
+	int		k;
+	int		src_len;
+
+	if (!dst || !src)
+		return (NULL);
+	src_len = print_strlen(src, f);
+	ret = malloc((*len + src_len + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	i = -1;
+	k = -1;
+	while (++i < *len)
+		ret[i] = dst[i];
+	while (++k < src_len)
+		ret[i + k] = src[k];
+	ret[i + k] = '\0';
+	if (f->type == op)
+		free(src);
+	*len += src_len;
+	return (ret);
+}
+
+static void	*tantrum_boogaloo(char *new, char *tmp, t_queue *f)
+{
+	if (new && f->type == op)
+		free(new);
+	if (tmp)
+		free(tmp);
+	return (NULL);
+}
+
+char	*process(t_queue *q, va_list *va, int *len)
 {
 	t_queue	*f;
+	char	*ret;
+	char	*tmp;
 	char	*new;
 
-	f = q;
+	f = q->next;
+	ret = grab(q, va);
+	if (!ret)
+	{
+		return (NULL);
+	}
+	*len = print_strlen(ret, q);
 	while (f)
 	{
 		new = grab(f, va);
-		if (!new)
-			return (1);
-		f->str = new;
+		tmp = print_strjoin(ret, new, f, len);
+		if (ret != q->str)
+			free(ret);
+		if (!tmp || !new)
+			return (tantrum_boogaloo(new, tmp, f));
 		f = f->next;
+		ret = tmp;
 	}
-	return (0);
+	return (ret);
 }

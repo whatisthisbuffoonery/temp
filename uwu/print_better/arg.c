@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 01:08:20 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/11 19:22:35 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 00:06:57 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ char	*uint_op(unsigned long n, char type, t_queue *q)
 char	*int_op(int num, t_queue *q)
 {
 	char			*ret;
+	int				flag;
+	int				i;
 	unsigned int	n;
 	unsigned int	t;
-	int				i;
-	int				flag;
 
 	flag = (num < 0);
 	t = 1;

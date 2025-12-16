@@ -4,7 +4,7 @@
 
 int main(void)
 {
-/*
+
 	ft_printf("%c\n", 'a');
 	ft_printf("%s\n", "hello");
 	ft_printf("%p\n", (void *) 0x123);
@@ -55,8 +55,8 @@ int main(void)
 	ft_printf("%c%c%c%c", 'a', 'a', 0, 0);
 	ft_printf("%c%c%c%c", '\n', 0, 0, '\n');
 	ft_printf("\nhere --> %c\n", 0);
-*/
-/*
+
+
 	write(1, "mine\n", 5);
 	ft_printf("|%+8d|%+8d|%+.3d|\n", 42, -42, 42);
 	write(1, "theirs\n", 7);
@@ -91,16 +91,16 @@ int main(void)
 	ft_printf("|%.0d| |%+.0d| |%#0.0x| |%.1s| |%.0s|\n", 0, 0, 0, "hi", "hi");
 	write(1, "theirs\n", 7);
 	printf("|%.0d| |%+.0d| |%#0.0x| |%.1s| |%.0s|\n", 0, 0, 0, "hi", "hi");
-*/
 
-//	ft_printf("|%#0.0x|\n", 0);
-//	void *p = (void *) 0x557;
-/*
+
+	ft_printf("|%#0.0x|\n", 0);
+	void *p = (void *) 0x557;
+
 	ft_printf("%-9p, %-10p", LONG_MIN, LONG_MAX);
 	write(1, "\n", 1);
 	printf("%-9p, %-10p\n", LONG_MIN, LONG_MAX);
-*/
-/*
+
+
 	ft_printf("%.5s\n", NULL);
 	printf("%.5s\n", (char *) NULL);
 	ft_printf("%.6s\n", NULL);
@@ -109,7 +109,7 @@ int main(void)
 	printf("%p\n", NULL);
 	ft_printf("%.4p\n", NULL);
 	printf("%p\n", NULL);
-*/
+
 //	ft_printf("%#x\n", 0);
 //	ft_printf("%#x\n", LONG_MIN);
 //	ft_printf("%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%", 'A', "42", 42, 42 ,42 , 42, 42, 'B', "-42", -42, -42 ,-42 ,-42, 42, 'C', "0", 0, 0 ,0 ,0, 42, 0);
@@ -128,8 +128,19 @@ int main(void)
 	printf("%08.5i\n", 43);
 */
 
-	ft_printf("%5.0i", 0);
-	write(1, "\n", 1);
-	printf("%5.0i\n", 0);
+//	ft_printf("%5.0i", 0);
+//	write(1, "\n", 1);
+//	printf("%5.0i\n", 0);
 
+/*
+	ft_printf("%p\n", (void *) 0);
+	ft_printf("%#x\n", 0);
+	ft_printf("%x\n", 0);
+*/
+	int a = INT_MIN;
+//	unsigned int c = 0 - a;
+	int b = 0 - a;
+	ft_printf("%u\n", UINT_MAX);
+	printf("%d\n", b);
+	//ft_printf("%p", (void *) ULONG_MAX);
 }

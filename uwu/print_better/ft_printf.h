@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 06:06:53 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/11 19:23:03 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/16 22:28:13 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		ft_printf(const char *format, ...);
 
 int		enq(t_queue **q, t_queue *new);
 t_queue	*q_new(void);
-void	clear_q(t_queue **q, char *ret);
+void	clear_q(t_queue **q);
 char	*percent_op(t_queue *q);
 char	*char_op(unsigned int c, t_queue *q);
 char	*ptr_op(uintptr_t src, char type, t_queue *q);

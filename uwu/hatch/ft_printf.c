@@ -13,39 +13,33 @@
 #include "ft_printf.h"
 
 void	printf_tokens(const char *format, t_queue **q, int size);
-int		process(t_queue *q, va_list *va);
-int		print_strlen(char *a, t_queue *q);
+char	*process(t_queue *q, va_list *va, int *len);
 
-static int	print_the_printf(t_queue *q)
+static void	printf_init(t_queue **q, int *return_value, char **ret)
 {
-	int	total;
-	int	curr;
-
-	total = 0;
-	while (q)
-	{
-		curr = print_strlen(q->str, q);
-		write(1, q->str, curr);
-		total += curr;
-		q = q->next;
-	}
-	return (total);
+	*return_value = 0;
+	*q = NULL;
+	*ret = NULL;
 }
 
 int	ft_printf(const char *format, ...)
 {
 	va_list	va;
+	char	*ret;
 	t_queue	*q;
 	int		return_value;
 
-	q = NULL;
+	printf_init(&q, &return_value, &ret);
 	va_start(va, format);
 	printf_tokens(format, &q, ft_strlen(format));
 	if (q)
-		return_value = process(q, &va);
-	if (q && !return_value)
-		return_value = print_the_printf(q);
-	clear_q(&q);
+		ret = process(q, &va, &return_value);
+	clear_q(&q, ret);
+	if (ret)
+	{
+		write(1, ret, return_value);
+		free(ret);
+	}
 	va_end(va);
 	return (return_value);
 }
