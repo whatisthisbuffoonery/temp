@@ -30,11 +30,19 @@ typedef struct s_var
 	int		fd;
 }			t_var;
 
-typedef struct s_getnode
+typedef struct s_gnlnode
 {
 	char				*str;
-	struct s_getnode	*next;
+	struct s_gnlnode	*next;
 }						t_gnlnode;
+
+typedef struct s_gnllist
+{
+	t_gnlnode			*head;
+	t_gnlnode			*tail;
+	int					node_count;
+	int					last_str;
+}						t_gnllist;
 
 char	*get_next_line(int fd);
 int		get_strjoin(char **a, char *b, ssize_t i, ssize_t k);

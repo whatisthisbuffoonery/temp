@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+/*
 int	get_strjoin(char **dst, char *b, ssize_t i, ssize_t k)
 {
 	char	*ret;
@@ -38,21 +38,21 @@ int	get_strjoin(char **dst, char *b, ssize_t i, ssize_t k)
 	*dst = ret;
 	return (!ret);
 }
-
+*/
 void	refresh_buffer(t_var *file, int fd)
 {
 	ssize_t	i;
 
 	i = 0;
-	while ((fd != file->fd || fd < 0) && i < BUFFER_SIZE)
+	while ((fd != file->fd || fd < 0) && i < BUFFER_SIZE)//panic
 		file->buf[i++] = '\0';
-	if (fd >= 0)
-		file->lim = read(fd, file->buf, BUFFER_SIZE);
+	if (fd >= 0)//on call
+		file->lim = read(fd, file->buf, BUFFER_SIZE);//reads 42 or less
 	i = 0;
 	file->count = 0;
 	if (fd < 0)
-		file->lim = -1;
-	while ((file->lim < 1) && i < BUFFER_SIZE)
+		file->lim = -1;//schizo
+	while ((file->lim < 1) && i < BUFFER_SIZE)//panic again
 		file->buf[i++] = '\0';
-	file->fd = fd;
+	file->fd = fd;//single fd system
 }

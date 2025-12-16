@@ -11,45 +11,10 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-/*
-void	probe(char *a, int b, ssize_t c, ssize_t e)
-{
-	char d;
-	if (a)
-		write(1, " ye a ", 5);
-	if (b)
-		write(1, " ye b ", 5);
-	ssize_t t = 1;
-	if (c < 0)
-	{
-		write(1, "-", 1);
-		c = 0 - c;
-	}
-	while (c / t > 9)
-		t *= 10;
-	while (t)
-	{
-		d = ((c / t) % 10) + 48;
-		write(1, &d, 1);
-		t /= 10;
-	}
-	t = 1;
-	write(1, " | ", 3);
-	if (e < 0)
-	{
-		write(1, "-", 1);
-		e = 0 - e;
-	}
-	while (e / t > 9)
-		t *= 10;
-	while (t)
-	{
-		d = ((e / t) % 10) + 48;
-		write(1, &d, 1);
-		t /= 10;
-	}
-}
-*/
+//#include <unistd.h>
+
+//void ft_putnbr(int n);
+
 char	*read_buf(t_var *file, int fd, int *done)
 {
 	ssize_t	i;
@@ -57,45 +22,122 @@ char	*read_buf(t_var *file, int fd, int *done)
 	char	*ret;
 
 	k = -1;
-	if (file->count >= file->lim || fd != file->fd)
+	if (file->count >= file->lim || fd != file->fd)//if buffer used or file change
 		refresh_buffer(file, fd);
-	if (file->lim < 1)
-		return ((*done = 1), NULL);//really should retrieve fd for err
-	i = file->count;
-	while (file->count < file->lim && file->buf[file->count] != '\n')
+	if (file->lim < 1)//err or eof
+		return ((*done = file->lim + !file->lim), NULL);//if 0, 1. if -1, -1
+	i = file->count;//41 or less
+	while (file->count < file->lim && file->buf[file->count] != '\n')//hm
 		file->count ++;
-	*done = (file->count < file->lim && file->buf[file->count] == '\n');//merge !read
+	*done = (file->count < file->lim && file->buf[file->count] == '\n');//if count == 42, not done
 	file->count += *done;//exclude !read
 	ret = malloc(((file->count - i) + 1) * sizeof(char));
 	if (!ret)
-	{
-		file->count = i;
-		file->lim = -1;
-		return (NULL);
-	}
+		return ((*done = -1), NULL);
 	while (i + ++k < file->count)
 		ret[k] = file->buf[i + k];
 	ret[k] = '\0';
 	return (ret);
 }
 
+int	gnl_new(t_gnllist **lst, char *ret, int *done)
+{
+	t_gnlnode	*new;
+	int			i;
+
+	new = malloc(sizeof(t_gnlnode));
+	if (!new)
+		return ((*done = -1), 0);
+	new->str = ret;
+	new->next = NULL;
+	i = 0;
+	while (ret[i])
+		i ++;
+	if (*lst)
+		(*lst)->tail->next = new;
+	if (!*lst)
+	{
+		*lst = malloc(sizeof(t_gnllist));
+		if (!*lst)
+			return ((*done = -1), 0);
+		(*lst)->head = new;
+		(*lst)->node_count = 0;
+	}
+	(*lst)->last_str = i;
+	(*lst)->node_count += 1;
+	(*lst)->tail = new;
+	return (0);
+}
+
+int	gnl_shove(t_gnllist *lst, char **ret)
+{
+	int			i;
+	int			k;
+	t_gnlnode	*curr;
+
+	*ret = NULL;
+	curr = lst->head;
+	i = lst->last_str + ((lst->node_count - 1) * BUFFER_SIZE);
+	*ret = malloc((i + 1) * sizeof(char));
+	if (!*ret)
+		return (-1);
+	i = 0;
+	curr = lst->head;
+	while (curr)
+	{
+		k = -1;
+		while (curr->str[++k])
+			(*ret)[i + k] = curr->str[k];
+		i += k;
+		curr = curr->next;
+	}
+	(*ret)[i] = '\0';
+	return (1);
+}
+
+void	gnl_cleanup(t_gnllist *lst, char **ret, int done)
+{
+	t_gnlnode	*curr;
+	t_gnlnode	*tmp;
+
+	if (!lst || !done)
+		return ;
+	curr = lst->head;
+	while (curr)
+	{
+		if (curr->str && curr->str != *ret)
+			free(curr->str);
+		tmp = curr->next;
+		free(curr);
+		curr = tmp;
+	}
+	if (done < 0 && *ret)
+	{
+		free(*ret);
+		*ret = NULL;
+	}
+	free(lst);
+}
 char	*get_next_line(int fd)
 {
 	static t_var	file;//you wanna just do the static arr for mand? 
-	t_list			*list;
-	t_list			*tmp;
+	t_gnllist		*lst;
 	char			*ret;
 	int				done;
 
 	done = 0;
+	lst = NULL;
+	ret = NULL;
 	while (!done)// no more var space, -1 is err
 	{
 		ret = read_buf(&file, fd, &done);//set done on \n or !read pls	
 		if (!ret)
 			break ;
-		tmp = ft_lstnew(ret);//change it later and move this up two lines
-		ft_lstadd_back(&list, tmp);//consider add front instead
+		gnl_new(&lst, ret, &done);//change it later and move this up two lines
 	}
+	if (done == 1 && lst)
+		done = gnl_shove(lst, &ret);
+	gnl_cleanup(lst, &ret, done);//can be shoved in here...?
 	return (ret);
 }
 /*
@@ -111,6 +153,9 @@ void ft_putstr(char *a, int flag)
 	}
 	while (a[i])
 		i ++;
+	if (a[i - 1])
+		;
+	ft_putnbr(i);
 	write(1, a, i);
 	if (flag)
 	{

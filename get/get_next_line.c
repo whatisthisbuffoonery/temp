@@ -102,7 +102,7 @@ char	*get_next_line(int fd)
 	}
 	return (ret);
 }
-/*
+
 #include <fcntl.h>
 
 void ft_putstr(char *a, int flag)
@@ -195,4 +195,4 @@ int main(int c, char **v)
 	close(fd);
 //	write(1, "\n", 1);
 }
-*/
+
