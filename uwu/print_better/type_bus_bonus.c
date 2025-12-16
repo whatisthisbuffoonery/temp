@@ -40,6 +40,8 @@ static int	printf_len(t_flags *ret, const char *format)
 	{
 		ret->precision = printf_atoi(&format[++i], &i);
 		ret->precision_set = 1;
+		if (ret->minus_zero == '0')
+			ret->minus_zero = 0;
 	}
 	return (i);
 }

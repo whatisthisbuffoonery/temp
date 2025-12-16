@@ -28,5 +28,5 @@ char	*handle_flag(size_t size, t_queue *q, int *index)
 int	valid_cond_printf(const char *format, char *type, char *flag, int *i)
 {
 	(void) flag;
-	return (format[*i] != '%' && !type[(unsigned char) format[*i]]);
+	return (type[(unsigned char) format[*i]]);
 }

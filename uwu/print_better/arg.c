@@ -12,10 +12,11 @@
 
 #include "ft_printf.h"
 
+int		uint_init(int *i, unsigned long *t);
 int		uint_help(char *ret, int flag, t_queue *q, int *i);
 int		int_help(char *ret, int flag, t_queue *q, int *index);
-int		prec_help(char *ret, t_queue *q, int n);
-int		str_min(int size, t_queue *q);
+int		prec_help(char *ret, t_queue *q, int n, int index);
+int		str_min(char **s, int size, t_queue *q);
 char	*handle_flag(size_t size, t_queue *q, int *index);
 
 char	*percent_op(t_queue *q)
@@ -49,22 +50,22 @@ char	*char_op(unsigned int c, t_queue *q)
 	return (ret);
 }
 
-char	*uint_op(uintptr_t n, char type, t_queue *q)
+char	*uint_op(unsigned long n, char type, t_queue *q)
 {
 	char			*ret;
 	int				i;
 	int				flag;
-	unsigned int	t;
+	unsigned long	t;
 	unsigned int	base;
 
-	t = 1;
-	i = 1;
-	base = 16 - (6 * (type == 'u'));
+	base = uint_init(&i, &t) - (6 * (type == 'u'));
 	while (n / t >= base && ++i)
 		t *= base;
+	if (!n && q->flags)
+		q->flags->hex = 0;
 	flag = 2 * (type == 'p' || (q->flags && q->flags->hex));
 	ret = handle_flag((i + flag) * sizeof(char), q, &i);
-	if (uint_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0)))
+	if (uint_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0), i))
 		return (ret);
 	while (t)
 	{
@@ -77,22 +78,26 @@ char	*uint_op(uintptr_t n, char type, t_queue *q)
 	return (ret);
 }
 
-char	*int_op(long long n, t_queue *q)
+char	*int_op(int num, t_queue *q)
 {
-	char	*ret;
-	int		i;
-	int		t;
-	int		flag;
+	char			*ret;
+	unsigned int	n;
+	unsigned int	t;
+	int				i;
+	int				flag;
 
-	flag = (n < 0);
+	flag = (num < 0);
 	t = 1;
 	i = 1 + (flag || (q->flags && q->flags->plus_space));
-	if (n < 0)
-		n = 0 - n;
+	if (flag && q->flags && q->flags->precision_set)
+		q->flags->precision += 1;
+	n = num;
+	if (num < 0)
+		n = 0 - num;
 	while (n / t >= 10 && ++i)
 		t *= 10;
 	ret = handle_flag(i * sizeof(char), q, &i);
-	if (int_help(ret, flag, q, &i) || prec_help(ret, q, (n != 0)))
+	if (int_help(ret, flag, q, &i) || prec_help(ret, q, n, i))
 		return (ret);
 	while (t)
 	{
@@ -110,15 +115,13 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	char	*ret;
 	char	*s;
 
-	if (type == 'p')
-		return (uint_op(src, type, q));
+	if (type == 'p' && src)
+		return (uint_op((unsigned long) src, type, q));
 	s = (char *) src;
-	if (!s)
-		return (NULL);
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 		i ++;
-	min = str_min(i, q);
+	min = str_min(&s, i, q);
 	ret = handle_flag(min * sizeof(char), q, &i);
 	if (!ret)
 		return (NULL);

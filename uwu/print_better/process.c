@@ -99,7 +99,9 @@ char	*process(t_queue *q, va_list *va, int *len)
 	f = q->next;
 	ret = grab(q, va);
 	if (!ret)
+	{
 		return (NULL);
+	}
 	*len = print_strlen(ret, q);
 	while (f)
 	{

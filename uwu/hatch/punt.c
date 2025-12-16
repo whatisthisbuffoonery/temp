@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <limits.h>
 // + ' ' - 0 #
 // + > ' '
 // - > 0
@@ -17,5 +18,6 @@
 
 int main(void)
 {
-	printf("|%.6s|\n", (char *) NULL);
+//	printf("|%lu|\n", (unsigned long) LONG_MIN);
+	printf("|% 5d|\n", 0);
 }

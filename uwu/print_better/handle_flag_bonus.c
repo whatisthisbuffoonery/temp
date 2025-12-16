@@ -36,7 +36,7 @@ static char	*handle_flag_init(size_t size, t_queue *q, int *len)
 			q->flags->plus_space = 0;
 		if ((a == 'c' || a == 's' || a == 'p') && q->flags->minus_zero == '0')
 			q->flags->minus_zero = 0;
-		if (a == 'c')
+		if (a == 'c' || a == 'p')
 			q->flags->precision = 0;
 		q->flags->precision += 2 * (q->flags->hex > 0);
 		q->flags->precision += (q->flags->plus_space > 0);
@@ -93,8 +93,6 @@ int	valid_cond_printf(const char *format, char *type, char *flag, int *index)
 	int	i;
 
 	i = *index;
-	if (format[i] == '%')
-		return (0);
 	while (flag[(unsigned char) format[i]])
 		i ++;
 	while (format[i] >= '0' && format[i] <= '9')
@@ -106,5 +104,5 @@ int	valid_cond_printf(const char *format, char *type, char *flag, int *index)
 			i ++;
 	}
 	*index = i;
-	return (!type[(unsigned char) format[i]]);
+	return (type[(unsigned char) format[i]]);
 }

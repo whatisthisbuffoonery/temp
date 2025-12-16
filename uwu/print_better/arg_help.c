@@ -12,23 +12,32 @@
 
 #include "ft_printf.h"
 
-int	prec_help(char *ret, t_queue *q, int n)
+int	prec_help(char *ret, t_queue *q, int n, int index)
 {
 	int	i;
 
-	i = 0;
 	if (n || !q->flags || !q->flags->precision_set)
 		return (0);
+	i = q->flags->width;
 	q->flags->precision -= 2 * (q->flags->hex > 0);
 	q->flags->precision -= (q->flags->plus_space > 0);
 	if (!q->flags->precision)
 	{
+		ret[index] = ' ';
 		if (q->flags->plus_space)
-			ret[i++] = q->flags->plus_space;
+			ret[0] = q->flags->plus_space;
+		i += (!i && q->flags->plus_space);
 		ret[i] = '\0';
 		return (1);
 	}
 	return (0);
+}
+
+int	uint_init(int *i, unsigned long *t)
+{
+	*i = 1;
+	*t = 1;
+	return (16);
 }
 
 int	uint_help(char *ret, int flag, t_queue *q, int *i)
@@ -80,8 +89,22 @@ int	int_help(char *ret, int flag, t_queue *q, int *index)
 	return (0);
 }
 
-int	str_min(int size, t_queue *q)
+int	str_min(char **s, int size, t_queue *q)
 {
+	if (!*s)
+	{
+		size = 6;
+		*s = "(null)";
+		if (q->arg == 'p')
+		{
+			*s = "(nil)";
+			size = 5;
+			if (q->flags)
+				q->flags->precision_set = 0;
+		}
+		if (q->flags && q->flags->precision_set && q->flags->precision < size)
+			size = 0;
+	}
 	if (!q->flags)
 		return (size);
 	if (!q->flags->precision_set || q->flags->precision > size)

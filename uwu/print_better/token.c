@@ -23,22 +23,20 @@ static int	valid(const char *format, int size, char *type, char *flag)
 
 	i = 0;
 	if (!format || !format[0] || size <= 0)
-		return (1);
+		return (0);
 	if (size == 1 && format[0] == '%')
-		return (1);
-//	if (size > 1 && format[size - 2] != '%' && format[size - 1] == '%')
-//		return (1);
+		return (0);
 	while (i + 1 < size)
 	{
 		if (format[i] == '%')
 		{
 			i ++;
-			if (valid_cond_printf(format, type, flag, &i))
-				return (1);
+			if (!valid_cond_printf(format, type, flag, &i))
+				return (0);
 		}
 		i ++;
 	}
-	return (0);
+	return (1);
 }
 
 void	printf_tokens(const char *format, t_queue **q, int size)
@@ -50,13 +48,13 @@ void	printf_tokens(const char *format, t_queue **q, int size)
 	t_queue	*tmp;
 
 	tabler(type, flag, &i, &start);
-	if (valid(format, size, type, flag))
+	if (!valid(format, size, type, flag))
 		return ;
 	while (i < size)
 	{
 		while (i < size && format[i] != '%')
 			i ++;
-		if (format[start] == '%' && format[start + 1] != '%')//fuckshit
+		if (format[start] == '%' && format[start + 1] != '%')
 			tmp = new_op(&format[i], &i, type);
 		else if (format[start])
 			tmp = new_str(format, start, &i);

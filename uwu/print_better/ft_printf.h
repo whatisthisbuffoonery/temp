@@ -51,7 +51,7 @@ void	clear_q(t_queue **q, char *ret);
 char	*percent_op(t_queue *q);
 char	*char_op(unsigned int c, t_queue *q);
 char	*ptr_op(uintptr_t src, char type, t_queue *q);
-char	*uint_op(uintptr_t n, char type, t_queue *q);
-char	*int_op(long long n, t_queue *q);
+char	*uint_op(unsigned long n, char type, t_queue *q);
+char	*int_op(int n, t_queue *q);
 
 #endif
