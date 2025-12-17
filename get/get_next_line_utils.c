@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 02:10:01 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/25 17:34:49 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 13:00:05 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,6 @@ void	refresh_buffer(t_var *file, int fd)
 		file->lim = read(fd, file->buf, BUFFER_SIZE);
 	i = 0;
 	file->count = 0;
-	if (file->lim > 0)
-		write(1, "1", 1);
-	else
-		write(1, "0", 1);
 	if (fd < 0)
 		file->lim = -1;
 	while ((file->lim < 1) && i < BUFFER_SIZE)

@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 03:00:28 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 14:02:55 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,23 @@ char	*read_buf(t_var *file, int fd, int *done)
 	return (ret);
 }
 
+void ret_emit(char *ret)
+{
+	int i;
+
+	i = 0;
+	if (ret)
+	{
+		write(1, "[", 1);
+		while (ret[i])
+			i ++;
+		write(1, ret, i);
+		write(1, "]", 1);
+	}
+	else
+		write(1, "n", 1);
+}
+
 char	*get_next_line(int fd)
 {
 	static t_var	file;
@@ -102,6 +119,7 @@ char	*get_next_line(int fd)
 		}
 		done += get_strjoin(&ret, tmp, 0, 0);//try to phase out for a faster solution
 	}
+	ret_emit(ret);
 	return (ret);
 }
 /*

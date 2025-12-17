@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 14:09:41 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 18:34:09 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,19 @@
 
 //void ft_putnbr(int n);
 
+char	*gnl_set(t_var *file)
+{
+	int	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE)
+		file->buf[i++] = '\0';
+	return (NULL);
+}
+
 char	*read_buf(t_var *file, int fd, int *done)
 {
+	static char	buf[2][BUFFER_SIZE];//partial reads reeeee//one arr will have the content 
 	ssize_t	i;
 	ssize_t	k;
 	char	*ret;
@@ -25,7 +36,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 	if (file->count >= file->lim || fd != file->fd)//if buffer used or file change
 		refresh_buffer(file, fd, done);
 	if (file->lim < 1)//err or eof
-		return (NULL);//if 0, 1. if -1, -1
+		return (gnl_set(buf));//
 	i = file->count;//41 or less
 	while (file->count < file->lim && file->buf[file->count] != '\n')//hm
 		file->count ++;
@@ -33,7 +44,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 	file->count += *done;//exclude !read
 	ret = malloc(((file->count - i) + 1) * sizeof(char));
 	if (!ret)
-		return ((*done = -1), NULL);
+		return ((*done = -1), gnl_set(buf));
 	while (i + ++k < file->count)
 		ret[k] = file->buf[i + k];
 	ret[k] = '\0';
@@ -116,20 +127,14 @@ int	gnl_shove(t_gnllist *lst, char **ret)
 	return (1);
 }
 
-void	gnl_set(t_var *file)
-{
-	int i = 0;
-	while (i < BUFFER_SIZE)
-		file->buf[i++] = '\0';
-}
-
 void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 {
 	t_gnlnode	*curr;
 	t_gnlnode	*tmp;
 
-	if (!lst)
-	{
+//	if (!lst)
+//	{
+		/*
 		if (done < 0)
 		{
 			if (*ret)
@@ -138,17 +143,26 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 			file->lim = 0;
 			*ret = NULL;
 		}
-		return ;
-	}
-	curr = lst->head;
-	while (curr)
+		*/
+	//	return ;
+//	}
+
+	if (lst)
 	{
-		if (curr->str && curr->str != *ret)
-			free(curr->str);
-		tmp = curr->next;
-		free(curr);
-		curr = tmp;
+		curr = lst->head;
+		while (curr)
+		{
+			if (curr->str && curr->str != *ret)
+				free(curr->str);
+			tmp = curr->next;
+			free(curr);
+			curr = tmp;
+		}
 	}
+	if (done < 0 && *ret)
+		free(*ret);
+	*ret = NULL;
+	/*
 	if (done < 0)
 	{
 		if (*ret)
@@ -157,9 +171,11 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 		file->lim = 0;
 		*ret = NULL;
 	}
+	*/
 	free(lst);
 }
 
+/*
 void emit (int done)
 {
 	if (done < 0)
@@ -185,10 +201,11 @@ void ret_emit(char *ret)
 	else
 		write(1, "n", 1);
 }
+*/
 
 char	*get_next_line(int fd)
 {
-	static t_var	file;//you wanna just do the static arr for mand? 
+	t_var			file;//you wanna just do the static arr for mand? 
 	t_gnllist		*lst;
 	char			*ret;
 	int				done;
@@ -196,13 +213,15 @@ char	*get_next_line(int fd)
 	done = 0;
 	lst = NULL;
 	ret = NULL;
+	file.lim = 0;
+	file.count = 0;
 	while (!done)// no more var space, -1 is err
 	{
 		ret = read_buf(&file, fd, &done);//set done on \n or !read pls	
 		if (!ret)
 		{
-			if (!done)
-				write(1, "what", 4);
+	//		if (!done)
+	//			write(1, "what", 4);
 			break ;
 		}
 		gnl_new(&lst, ret, &done);//change it later and move this up two lines
@@ -210,7 +229,7 @@ char	*get_next_line(int fd)
 //	emit(done);
 	if (done == 1 && lst)
 		done = gnl_shove(lst, &ret);
-	gnl_cleanup(lst, &ret, &file, done);//can be shoved in here...?
+	gnl_cleanup(lst, &ret, done);//can be shoved in here...?
 	if (done != 1)
 		gnl_set(&file);
 //	ret_emit(ret);
