@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 14:09:41 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/17 19:44:54 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 	if (file->count >= file->lim || fd != file->fd)//if buffer used or file change
 		refresh_buffer(file, fd, done);
 	if (file->lim < 1)//err or eof
-		return (NULL);//if 0, 1. if -1, -1
+		return (NULL);
 	i = file->count;//41 or less
 	while (file->count < file->lim && file->buf[file->count] != '\n')//hm
 		file->count ++;
@@ -128,26 +128,17 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 	t_gnlnode	*curr;
 	t_gnlnode	*tmp;
 
-	if (!lst)
+	if (lst)
 	{
-		if (done < 0)
+		curr = lst->head;
+		while (curr)
 		{
-			if (*ret)
-				free(*ret);
-			file->count = 0;
-			file->lim = 0;
-			*ret = NULL;
+			if (curr->str && curr->str != *ret)
+				free(curr->str);
+			tmp = curr->next;
+			free(curr);
+			curr = tmp;
 		}
-		return ;
-	}
-	curr = lst->head;
-	while (curr)
-	{
-		if (curr->str && curr->str != *ret)
-			free(curr->str);
-		tmp = curr->next;
-		free(curr);
-		curr = tmp;
 	}
 	if (done < 0)
 	{
