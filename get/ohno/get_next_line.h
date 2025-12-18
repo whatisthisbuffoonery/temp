@@ -41,11 +41,9 @@ typedef struct s_gnllist
 {
 	t_gnlnode			*head;
 	t_gnlnode			*tail;
-	int					node_count;
+	int					total;
 }						t_gnllist;
 
 char	*get_next_line(int fd);
-//int		get_strjoin(char **a, char *b, ssize_t i, ssize_t k);
-void	refresh_buffer(t_var *file, int fd, int *done);
 
 #endif

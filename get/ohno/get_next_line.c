@@ -11,175 +11,15 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-//#include <unistd.h>
 
-//void ft_putnbr(int n);
-
-char	*read_buf(t_var *file, int fd, int *done)
-{
-	ssize_t	i;
-	ssize_t	k;
-	char	*ret;
-
-	k = -1;
-	if (file->count >= file->lim || fd != file->fd)//if buffer used or file change
-		refresh_buffer(file, fd, done);
-	if (file->lim < 1)//err or eof
-		return (NULL);
-	i = file->count;//41 or less
-	while (file->count < file->lim && file->buf[file->count] != '\n')//hm
-		file->count ++;
-	*done = (file->count < file->lim && file->buf[file->count] == '\n');//if count == 42, not done
-	file->count += *done;//exclude !read
-	ret = malloc(((file->count - i) + 1) * sizeof(char));
-	if (!ret)
-		return ((*done = -1), NULL);
-	while (i + ++k < file->count)
-		ret[k] = file->buf[i + k];
-	ret[k] = '\0';
-	return (ret);
-}
-
-void gnl_test(char *a, int i)
-{
-	write(1, " | ", 3);
-	if (a && a[0])
-		write(1, a, i);
-	if (!a)
-		write(1, "(null)", 6);
-	if (!a[0])
-		write(1, "(empty)", 7);
-	write(1, " | ", 3);
-}
-
-int	gnl_new(t_gnllist **lst, char *ret, int *done)
-{
-	t_gnlnode	*new;
-	int			i;
-
-	new = malloc(sizeof(t_gnlnode));
-	if (!new)
-		return ((*done = -1), 0);
-	new->str = ret;
-	new->next = NULL;
-	i = 0;
-	while (ret[i])
-		i ++;
-	if (*lst)
-		(*lst)->tail->next = new;
-	if (!*lst)
-	{
-		*lst = malloc(sizeof(t_gnllist));
-		if (!*lst)
-		{
-			free(new);
-			return ((*done = -1), 0);
-		}
-		(*lst)->head = new;
-		(*lst)->node_count = 0;
-	}
-	(new)->str_len = i;
-	(*lst)->node_count += 1;
-	(*lst)->tail = new;
-//	gnl_test(ret, i);
-	return (0);
-}
-
-int	gnl_shove(t_gnllist *lst, char **ret)
-{
-	int			i;
-	int			k;
-	t_gnlnode	*curr;
-
-	*ret = NULL;
-	curr = lst->head;
-	i = 0;
-	while (curr)
-	{
-		i += curr->str_len;
-		curr = curr->next;
-	}
-	*ret = malloc((i + 1) * sizeof(char));
-	if (!*ret)
-		return (-1);
-	i = 0;
-	curr = lst->head;
-	while (curr)
-	{
-		k = -1;
-		while (curr->str[++k])
-			(*ret)[i + k] = curr->str[k];
-		i += k;
-		curr = curr->next;
-	}
-	(*ret)[i] = '\0';
-	return (1);
-}
-
-void	gnl_set(t_var *file)
-{
-	int i = 0;
-	while (i < BUFFER_SIZE)
-		file->buf[i++] = '\0';
-}
-
-void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
-{
-	t_gnlnode	*curr;
-	t_gnlnode	*tmp;
-
-	if (lst)
-	{
-		curr = lst->head;
-		while (curr)
-		{
-			if (curr->str && curr->str != *ret)
-				free(curr->str);
-			tmp = curr->next;
-			free(curr);
-			curr = tmp;
-		}
-	}
-	if (done < 0)
-	{
-		if (*ret)
-			free(*ret);
-		file->count = 0;
-		file->lim = 0;
-		*ret = NULL;
-	}
-	free(lst);
-}
-
-void emit (int done)
-{
-	if (done < 0)
-	{
-		write(1, "-", 1);
-		done = 0 - done;
-	}
-	done += '0';
-	write(1, &done, 1);
-}
-
-void ret_emit(char *ret)
-{
-	int i = 0;
-	if (ret)
-	{
-		write(1, "[", 1);
-		while (ret[i])
-			i ++;
-		write(1, ret, i);
-		write(1, "]", 1);
-	}
-	else
-		write(1, "n", 1);
-}
+int		gnl_new(t_gnllist **lst, char *ret, int i);
+void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done);
+char	*gnl_shove(t_gnllist *lst);
+char	*read_buf(t_var *file, int fd, int *done);
 
 char	*get_next_line(int fd)
 {
-	static t_var	file;//you wanna just do the static arr for mand? 
+	static t_var	file;
 	t_gnllist		*lst;
 	char			*ret;
 	int				done;
@@ -187,26 +27,20 @@ char	*get_next_line(int fd)
 	done = 0;
 	lst = NULL;
 	ret = NULL;
-	while (!done)// no more var space, -1 is err
+	while (!done)
 	{
-		ret = read_buf(&file, fd, &done);//set done on \n or !read pls	
+		ret = read_buf(&file, fd, &done);
 		if (!ret)
-		{
-			if (!done)
-				write(1, "what", 4);
 			break ;
-		}
-		gnl_new(&lst, ret, &done);//change it later and move this up two lines
+		if (gnl_new(&lst, ret, 0))
+			done = -1;
 	}
-//	emit(done);
 	if (done == 1 && lst)
-		done = gnl_shove(lst, &ret);
-	gnl_cleanup(lst, &ret, &file, done);//can be shoved in here...?
-	if (done != 1)
-		gnl_set(&file);
-//	ret_emit(ret);
+		ret = gnl_shove(lst);
+	gnl_cleanup(lst, &ret, &file, done);
 	return (ret);
 }
+
 /*
 #include <fcntl.h>
 

@@ -11,52 +11,125 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-/*
-int	get_strjoin(char **dst, char *b, ssize_t i, ssize_t k)
-{
-	char	*ret;
-	char	*a;
 
-	a = *dst;
-	i = 0;
-	k = 0;
-	while (a[i])
-		i ++;
-	while (b[k])
-		k ++;
-	ret = malloc((i + k + 1) * sizeof(char));
-	if (ret)
-	{
-		ret[i + k] = '\0';
-		while (k--)
-			ret[i + k] = b[k];
-		while (i--)
-			ret[i] = a[i];
-	}
-	free(a);//OH POINTERS
-	free(b);//oh pointers
-	*dst = ret;
-	return (!ret);
-}
-*/
-void	refresh_buffer(t_var *file, int fd, int *done)
+static void	refresh_buffer(t_var *file, int fd, int *done)
 {
-//	ssize_t	i;
-
-	//while ((fd != file->fd || fd < 0) && i < BUFFER_SIZE)//panic
-	//	file->buf[i++] = '\0';
-	if (fd >= 0)//on call
-		file->lim = read(fd, file->buf, BUFFER_SIZE);//reads 42 or less
+	if (fd >= 0)
+		file->lim = read(fd, file->buf, BUFFER_SIZE);
 	file->count = 0;
 	if (fd < 0 || file->lim < 0)
 	{
 		*done = -1;
-		file->lim = 0;//schizo
+		file->lim = 0;
 		file->fd = -1;
 	}
 	else if (!file->lim)
 		*done = 1;
-	//while ((file->lim < 1) && i < BUFFER_SIZE)//panic again
-	//	file->buf[i++] = '\0';
-	file->fd = fd;//single fd system
+	file->fd = fd;
+}
+
+char	*read_buf(t_var *file, int fd, int *done)
+{
+	ssize_t	i;
+	ssize_t	k;
+	char	*ret;
+
+	k = -1;
+	if (file->count >= file->lim || fd != file->fd)
+		refresh_buffer(file, fd, done);
+	if (file->lim < 1)
+		return (NULL);
+	i = file->count;
+	while (file->count < file->lim && file->buf[file->count] != '\n')
+		file->count ++;
+	*done = (file->count < file->lim && file->buf[file->count] == '\n');
+	file->count += *done;
+	ret = malloc(((file->count - i) + 1) * sizeof(char));
+	if (!ret)
+		return ((*done = -1), NULL);
+	while (i + ++k < file->count)
+		ret[k] = file->buf[i + k];
+	ret[k] = '\0';
+	return (ret);
+}
+
+int	gnl_new(t_gnllist **lst, char *ret, int i)
+{
+	t_gnlnode	*new;
+
+	new = malloc(sizeof(t_gnlnode));
+	if (!new)
+		return (1);
+	new->str = ret;
+	new->next = NULL;
+	if (*lst)
+		(*lst)->tail->next = new;
+	if (!*lst)
+	{
+		*lst = malloc(sizeof(t_gnllist));
+		if (!*lst)
+			return ((free(new)), 1);
+		(*lst)->total = 0;
+		(*lst)->head = new;
+	}
+	while (ret[i])
+		i ++;
+	(new)->str_len = i;
+	(*lst)->tail = new;
+	(*lst)->total += i;
+	return (0);
+}
+
+char	*gnl_shove(t_gnllist *lst)
+{
+	int			i;
+	int			k;
+	int			count;
+	t_gnlnode	*curr;
+	char		*ret;
+
+	curr = lst->head;
+	i = 0;
+	ret = malloc((lst->total + 1) * sizeof(char));
+	if (!ret)
+		return (NULL);
+	while (curr)
+	{
+		k = -1;
+		count = curr->str_len;
+		while (++k < count)
+			ret[i + k] = curr->str[k];
+		i += k;
+		curr = curr->next;
+	}
+	ret[i] = '\0';
+	return (ret);
+}
+
+void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
+{
+	t_gnlnode	*curr;
+	t_gnlnode	*tmp;
+
+	if (lst)
+	{
+		curr = lst->head;
+		while (curr)
+		{
+			if (curr->str && curr->str != *ret)
+				free(curr->str);
+			tmp = curr->next;
+			free(curr);
+			curr = tmp;
+		}
+	}
+	if (done < 0)
+	{
+		if (*ret)
+			free(*ret);
+		file->count = 0;
+		file->lim = 0;
+		*ret = NULL;
+	}
+	free(lst);
 }
