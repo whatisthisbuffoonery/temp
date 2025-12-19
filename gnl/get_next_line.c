@@ -44,29 +44,6 @@ char	*get_next_line(int fd)
 /*
 #include <fcntl.h>
 
-void ft_putstr(char *a, int flag)
-{
-	int i = 0;
-	if (!a)
-	{
-		ft_putstr("(null)\n", 0);
-		return ;
-	}
-	while (a[i])
-		i ++;
-	if (a[i - 1])
-		;
-	ft_putnbr(i);
-	write(1, a, i);
-	if (flag)
-	{
-		if (a[i - 1] == '\n')
-			write(1, "nl\n", 3);
-		else
-			write(1, "empty\n", 6);
-	}
-}
-
 void ft_putnbr(int n)
 {
 	int t = 1;
@@ -80,6 +57,26 @@ void ft_putnbr(int n)
 		t /= 10;
 	}
 	write(1, "\n", 1);
+}
+
+void ft_putstr(char *a, int flag)
+{
+	int i = 0;
+	if (!a)
+	{
+		ft_putstr("(null)\n", 0);
+		return ;
+	}
+	while (a[i])
+		i ++;
+	write(1, a, i);
+	if (flag)
+	{
+		if (a[i - 1] == '\n')
+			write(1, "nl\n", 3);
+		else
+			write(1, "|eof|\n", 6);
+	}
 }
 
 int ft_strlen(char *a)

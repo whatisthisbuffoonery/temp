@@ -12,6 +12,8 @@
 
 #include "get_next_line.h"
 
+//void	ft_putnbr(int n);
+
 static void	refresh_buffer(t_var *file, int fd, int *done)
 {
 	if (fd >= 0)
@@ -52,6 +54,15 @@ char	*read_buf(t_var *file, int fd, int *done)
 	ret[k] = '\0';
 	return (ret);
 }
+
+/*
+static void probe(int n)
+{	
+	write(1, "node: ", 6);
+	ft_putnbr(i);
+	write(1, "\n", 1);
+}
+*/
 
 int	gnl_new(t_gnllist **lst, char *ret, int i)
 {
