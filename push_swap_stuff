@@ -1,0 +1,7 @@
+how about dont lag the cpu with is_sorted
+
+why the fuck does v2 work
+
+and oh, we can actually fully mask shifting 1 to the bottom now...?
+
+actually, no, but we are close. radix for general push decision but ai says we can do heuristics

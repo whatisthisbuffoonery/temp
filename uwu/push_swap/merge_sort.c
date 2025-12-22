@@ -88,7 +88,7 @@ static void	place_help(t_stack *a, t_list *sort, t_list *send)
 	int		i;
 	t_list	*curr;
 
-	i = 1;
+	i = 0;
 	curr = sort;
 	while (curr)
 	{
