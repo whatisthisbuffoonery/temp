@@ -125,31 +125,47 @@ void	push_back(t_stack *a, t_stack *b)//, int *prev_bound)
 		ps_rotate(a, b, B);
 }
 
-void	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
+int	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
 {
 	int	i;
+	int	min;
 
+	min = find_min(b) - 1;
+	i = b->top;
 	//used to be an if cond and return when done
-	while (sorted(a, 0) && b->top >= 0 && a->arr[a->top] > b->arr[b->top])
-		ps_push(a, b, A);
+	while (sorted(a, 0) && i-- >= 0 && a->arr[a->top] > b->arr[b->top])
+	{
+		if (b->arr[b->top] <= min)
+			ps_rotate(a, b, B);
+		else
+			ps_push(a, b, A);
+	}
 	i = b->top;
 	while (i >= 0)
 	{
-		if (b->arr[b->top] & bit)
+		if (b->arr[b->top] & bit && b->arr[b->top] > min)
 			ps_push(a, b, A);
 		else
 			ps_rotate(a, b, B);
 		i --;
 	}
+//	i = b->top;
+//	if (b->arr[0] == 0)
+//		i = 0;
+//	while (min >= 0 && b->arr[i] != 0)
+//		i --;
+//	if (b->arr[0] != 0)
+//		i = (b->top + 1) - i;
+	return (i);
 }
 
 void	ps_sort(t_stack *a, t_stack *b, int max)
 {
 	int	bit;
-//	int	prev;
+	int	share;
 	int	i;
 
-//	prev = 0;
+	share = 0;
 	bit = 1;//get_max(max);
 	//ps_show(a);
 	//ft_putnbr_fd(bit, 1);
@@ -167,7 +183,7 @@ void	ps_sort(t_stack *a, t_stack *b, int max)
 			if (!(a->arr[a->top] & bit))
 				ps_push(a, b, B);
 			else
-				ps_rotate(a, b, A);//conditionally init R, i, mov, lim at start of each loop
+				ps_rotate(a, b, A);// | (B && (share-- > 0)));//conditionally init R, i, mov, lim at start of each loop
 			i --;
 		}
 //		ps_show(b);
@@ -175,12 +191,15 @@ void	ps_sort(t_stack *a, t_stack *b, int max)
 //			ps_push(a, b, A);
 //		write(1, "hm\n", 3);
 //		ps_show(b);
+//		write(1, "start\n", 6);
+//		ps_show(b);
 		bit *= 2;
 		if (b->top >= 0 && bit <= max)
 			push_back_v2(a, b, bit);//, &prev);
+//		write(1, "end\n", 4);
 //		ps_show(b);
 	}
 	while (b->top >= 0)
 		ps_push(a, b, A);
-//	ps_show(a);
+	ps_show(a);
 }

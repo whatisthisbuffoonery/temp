@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 02:10:01 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 13:35:39 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/22 21:40:04 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 			free(curr);
 			curr = tmp;
 		}
+		free(lst);
 	}
 	if (done < 0)
 	{
@@ -142,5 +143,4 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 		file->lim = 0;
 		*ret = NULL;
 	}
-	free(lst);
 }

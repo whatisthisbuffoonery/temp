@@ -1,3 +1,13 @@
+!!!remi says minishell wont need you to parse backslashes in special manner
+remi also says leave disk size at 5gb and not 30gb, sgoinfre base size is 500gb per person
+
+/sgoinfre/goinfre/Perso/dthoo
+
+d1s1smaiencryptiOn///
+				^capital o
+
+zxcvbnM11
+
 root list
 
 AppArmor needs to run at startup
@@ -12,7 +22,6 @@ UFW (firewall)
 
 hostname login42 
 ^^^user needs to be in user42 and sudo groups
-
 
 
 password must expire every 30 days

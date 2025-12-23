@@ -15,7 +15,7 @@ cc -Wall -Wextra -Werror get\_next\_line.c get\_next\_line\_utils.c
 ### Resources  
   
 None, really  
-I did prompt AI to get the bonus started but  I thought that the constraint made this project not worth it  
+I did prompt AI to get the bonus started but I thought that the constraint made this project not worth it  
   
 ### How it works  
   
