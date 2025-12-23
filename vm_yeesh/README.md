@@ -16,7 +16,7 @@ Goal: install linux (wooo scary) on a vm:
 		-	cannot contain username  
 		-	cannot have 3 identical characters in a row  
 		-	root and user password obey the above rules  
-		-	user password cannot have less than 7 characters different from the root password  
+		-	user password cannot have less than 7 characters different from the password before changing  
 	- install and configure sudo with strict rules  
 		-	3 attempts to authenticate  
 		-	custom error message on wrong password  
@@ -67,6 +67,13 @@ sudo adduser user group
 ^after changing, sudo service ssh restart  
 sudo service ssh status  
   
+sudo ufw enable  
+sudo ufw allow 4242  
+sudo ufw status  
+  
+sudo configs:  `prefix Defaults`
+	- secure\_path="...": people like to change their $PATH var to look for a trojan ls binary  
+	so, we 'restrict' what paths sudo can take to find binaries  
 ### Informal rant  
   
 The project description is further down, I will just document my insanity here  
@@ -122,3 +129,20 @@ my current sizes for the folders are:
 	- var, 1gb  
 	- var log, 500m  
 	- everything else 100m  
+  
+OH LOOK a technical choice, the sudo logfile in var/log is named sudo\_log and not sudo\_config  
+
+Q: whats requiretty?  
+A: sudo requires user terminal, and refuses scripts, cron jobs, and ... CGI?? `90s common gateway interface for web stuff, like js`
+  
+Q: what do logs do?  
+A: logfile gets readable metadata, log input gets keystrokes, log output stores output to later display with journalctl, and iolog\_dir formats stuff to have shell replay  
+  
+password expiry and strength policies in /etc/login.defs  
+package just has to be libpam pwquality  
+/etc/pam.d is modern config, pam.config is legacy  
+	- pam.d has several config files, legacy has one. we use common-password  
+  
+### SSH  
+  
+the vm has to be running when you prod it from host os, do `ssh dthoo@localhost -p 4242`  
