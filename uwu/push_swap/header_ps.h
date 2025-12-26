@@ -23,6 +23,9 @@ typedef struct s_cost
 	int	total;
 }		t_cost;
 
+void	turk(t_stack *a, t_stack *b, int min);
+void	min_rotate(t_stack *a, t_stack *b);
+
 # define A 2
 # define B 4
 # define R 8

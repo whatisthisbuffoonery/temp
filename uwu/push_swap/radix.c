@@ -3,7 +3,7 @@
 void	ps_push(t_stack *a, t_stack *b, int flag);
 void	ps_rotate(t_stack *a, t_stack *b, int flag);
 
-static int	sorted(t_stack *a, t_stack *b)
+int	sorted(t_stack *a, t_stack *b)
 {
 	int	top;
 	int	i;
@@ -132,15 +132,6 @@ int	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
 
 	min = find_min(b) - 1;
 	i = b->top;
-	//used to be an if cond and return when done
-	while (sorted(a, 0) && i-- >= 0 && a->arr[a->top] > b->arr[b->top])
-	{
-		if (b->arr[b->top] <= min)
-			ps_rotate(a, b, B);
-		else
-			ps_push(a, b, A);
-	}
-	i = b->top;
 	while (i >= 0)
 	{
 		if (b->arr[b->top] & bit && b->arr[b->top] > min)
@@ -149,17 +140,11 @@ int	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
 			ps_rotate(a, b, B);
 		i --;
 	}
-//	i = b->top;
-//	if (b->arr[0] == 0)
-//		i = 0;
-//	while (min >= 0 && b->arr[i] != 0)
-//		i --;
-//	if (b->arr[0] != 0)
-//		i = (b->top + 1) - i;
+	min_rotate(a, b);
 	return (i);
 }
 
-void	ps_sort(t_stack *a, t_stack *b, int max)
+int	ps_radix(t_stack *a, t_stack *b, int max)
 {
 	int	bit;
 	int	share;
@@ -199,7 +184,8 @@ void	ps_sort(t_stack *a, t_stack *b, int max)
 //		write(1, "end\n", 4);
 //		ps_show(b);
 	}
-	while (b->top >= 0)
-		ps_push(a, b, A);
+//	while (b->top >= 0)
+//		ps_push(a, b, A);
 	ps_show(a);
+	return (find_min(b));
 }

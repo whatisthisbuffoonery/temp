@@ -85,7 +85,7 @@ static void	ps_rotate_overhead(t_stack *a, t_stack *b, t_cost cost, int mov)
 	}
 }
 
-int	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src;)
+static int	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src;)
 {
 	int		i;
 	int		src_num;
@@ -113,7 +113,7 @@ int	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src;)
 	ps_rotate_overhead(a, b, cost);
 }
 
-void	turk(t_stack *a, t_stack *b, int min)//oh brother i have to incorporate the previous min
+void	ps_turk(t_stack *a, t_stack *b, int min)
 {
 	int		bound;
 	t_stack	*src;
@@ -138,5 +138,4 @@ void	turk(t_stack *a, t_stack *b, int min)//oh brother i have to incorporate the
 		heuristics(a, b, bound, src);
 		ps_push(a, b, A);
 	}
-	turk_finalise(a, b);
 }

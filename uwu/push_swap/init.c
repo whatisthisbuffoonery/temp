@@ -86,16 +86,3 @@ int	init(int c, char **v, t_stack **a, t_stack **b)
 	(*b)->top = -1;
 	return (0);
 }
-/*
-int runs_init(t_runs **runs, int size)
-{
-	*runs = malloc(sizeof(t_runs));
-	if (!*runs)
-		return (1);
-	(*runs)->start = malloc(size * sizeof(int));
-	(*runs)->len = malloc(size * sizeof(int));
-	if (!(*runs)->start || !(*runs)->len)
-		return (1);
-	return (0);
-}
-*/
