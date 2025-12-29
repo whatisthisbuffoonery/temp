@@ -105,11 +105,11 @@ BOY i SURE HOPE ALL THESE LINK TO SDA AND NOT SDB
   
 from the answer sheet:  
 ```
-◦ Primary: The only partition on which an OS can be installed. There can only be 4 primary partitions per hard drive or 3 primary and one extended.
+- Primary: The only partition on which an OS can be installed. There can only be 4 primary partitions per hard drive or 3 primary and one extended.
 
-◦ Secondary/Extended: It was designed to break the limitation of 4 primary partitions on a single physical disk. There can only be one partition of this type per disk, and it is only used to contain logical partitions.
+- Secondary/Extended: It was designed to break the limitation of 4 primary partitions on a single physical disk. There can only be one partition of this type per disk, and it is only used to contain logical partitions.
 
-◦ Logical: Occupies a portion of the extended/primary partition or its entirety, which has been formatted with a specific type of file system (in our case we will use ext4) and a drive has been assigned to it, thus the system The operating system recognizes the logical partitions or their file system. There can be a maximum of 23 logical partitions in an extended partition, however, Linux, the OS we currently work with, reduces this to 15, more than enough to carry out this project.
+- Logical: Occupies a portion of the extended/primary partition or its entirety, which has been formatted with a specific type of file system (in our case we will use ext4) and a drive has been assigned to it, thus the system The operating system recognizes the logical partitions or their file system. There can be a maximum of 23 logical partitions in an extended partition, however, Linux, the OS we currently work with, reduces this to 15, more than enough to carry out this project.
 ```  
   
 Q: why partition? why not folders?	
@@ -130,10 +130,17 @@ my current sizes for the folders are:
 	- var log, 500m  
 	- everything else 100m  
   
+Q: why does sda2 appear out of nowhere?  
+A: its an extended partition to manage lvg sda5  
+  
 OH LOOK a technical choice, the sudo logfile in var/log is named sudo\_log and not sudo\_config  
-
+  
 Q: whats requiretty?  
 A: sudo requires user terminal, and refuses scripts, cron jobs, and ... CGI?? `90s common gateway interface for web stuff, like js`
+  
+Q: so can I use root over ssh?  
+A: yes, but not by `ssh root@localhost`, I have to su through regular user. this prevents some brute force attacks  
+	- scripts trying to su will bring up interactive password input  
   
 Q: what do logs do?  
 A: logfile gets readable metadata, log input gets keystrokes, log output stores output to later display with journalctl, and iolog\_dir formats stuff to have shell replay  
@@ -143,6 +150,16 @@ package just has to be libpam pwquality
 /etc/pam.d is modern config, pam.config is legacy  
 	- pam.d has several config files, legacy has one. we use common-password  
   
+Q: why count lines for cpu/virtual cpu count?  
+A: because the other fields are for each core, which is different. so the /prod/cpuinfo file will have several of the same fields  
+  
+Q: did you learn shell syntax?  
+A: kind of, I learnt grep, refreshed awk, learnt regular print, 
+  
+Q: no delay on vmstat?  
+A: it helps for acuracy, but my display is left sitting half done for a few seconds. so I didnt do that  
+  
+
 ### SSH  
   
-the vm has to be running when you prod it from host os, do `ssh dthoo@localhost -p 4242`  
+the vm has to be running when you poke it from host os, do `ssh dthoo@localhost -p 4242`  

@@ -37,7 +37,7 @@ static int	bounds_check(char *v)
 	}
 	return (0);
 }
-
+/*
 static int	validate(int c, char **v, int **arr)
 {
 	int		i;
@@ -63,10 +63,51 @@ static int	validate(int c, char **v, int **arr)
 		}
 		if (bounds_check(v[i]))
 			return ((free(*arr)), 1);
-		(*arr)[--count] = ft_atoi(v[i]);
+		(*arr)[--count] = ps_atoi(v[i]);// ./a.out 1 2 "3 4 5" 6 7 must be accepted as 1 2 3 4 5 6 7, and checked
 	}
 	return (dup_check(*arr, c));
 }
+*/
+
+static int	count_all(int c, char **v, int **arr)
+{
+	int	i;
+	int	k;
+	int	count;
+
+	i = -1;
+	count = 0;
+	while (v[++i])
+	{
+		k = -1;
+		if (v[i][0] == '-')
+			k ++;
+		while (v[i][++k])
+		{
+			if (v[i][k] >= '0' && v[i][k] <= '9')
+			{
+				if (v[i][k + 1] == ' ' || v[i][k + 1] == '\0')
+					count ++;
+			}
+			else if (v[i][k] != ' ' || v[i][k] != '\0')
+				return (0);
+		}
+	}
+	if (count)
+		*arr = malloc(count * sizeof(int));
+	return (count);
+}
+
+static int	validate(int c, char **v, int **arr)
+{
+	int		i;
+	int		k;
+	int		count
+	char	a;
+
+	count = count_all(c, v, arr);
+	if (!count || !arr)
+		return (1);
 
 int	init(int c, char **v, t_stack **a, t_stack **b)
 {
