@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 06:06:53 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/16 22:28:13 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/30 18:32:21 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ t_queue	*q_new(void);
 void	clear_q(t_queue **q);
 char	*percent_op(t_queue *q);
 char	*char_op(unsigned int c, t_queue *q);
-char	*ptr_op(uintptr_t src, char type, t_queue *q);
-char	*uint_op(unsigned long n, char type, t_queue *q);
+char	*ptr_op(uintptr_t src, char type, t_queue *q, char *hex);
+char	*uint_op(unsigned long n, char type, t_queue *q, char *hex);
 char	*int_op(int n, t_queue *q);
 
 #endif

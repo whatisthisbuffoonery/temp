@@ -147,10 +147,8 @@ int	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
 int	ps_radix(t_stack *a, t_stack *b, int max)
 {
 	int	bit;
-	int	share;
 	int	i;
 
-	share = 0;
 	bit = 1;//get_max(max);
 	//ps_show(a);
 	//ft_putnbr_fd(bit, 1);

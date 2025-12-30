@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+#include <stdio.h>
 /*
 static int muh_putnbr(int n)
 {
@@ -36,7 +37,7 @@ int main(int c, char **v)
 {
 	if (c < 3)
 		return (1);
-	int fd = open(v[1], O_RDONLY);
+	int fd = 0;//open(v[1], O_RDONLY);
 	if (fd < 0)
 		return ((write(1, "no open\n", 8)), 1);
 	int line = muh_atoi(v[2]);

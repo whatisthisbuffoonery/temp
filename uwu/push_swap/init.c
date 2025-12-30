@@ -18,7 +18,7 @@ static int	dup_check(int *arr, int c)
 	return (0);
 }
 
-static int	bounds_check(char *v)
+static int	bounds_check(char *v)//refactor to have atoi and space tracking
 {
 	int	i;
 	int	a;
@@ -69,7 +69,7 @@ static int	validate(int c, char **v, int **arr)
 }
 */
 
-static int	count_all(int c, char **v, int **arr)
+static void	count_all(int c, char **v, int **arr)//i could limit whitespace chars to single spaces
 {
 	int	i;
 	int	k;
@@ -89,13 +89,13 @@ static int	count_all(int c, char **v, int **arr)
 				if (v[i][k + 1] == ' ' || v[i][k + 1] == '\0')
 					count ++;
 			}
-			else if (v[i][k] != ' ' || v[i][k] != '\0')
-				return (0);
+			else if (v[i][k] != ' ' && v[i][k] != '\0')
+				return ;
 		}
 	}
 	if (count)
 		*arr = malloc(count * sizeof(int));
-	return (count);
+	return ;
 }
 
 static int	validate(int c, char **v, int **arr)
@@ -105,9 +105,23 @@ static int	validate(int c, char **v, int **arr)
 	int		count
 	char	a;
 
-	count = count_all(c, v, arr);
-	if (!count || !arr)
+	count_all(c, v, arr);
+	if (!arr)
 		return (1);
+	i = -1;
+	count = 0;
+	while (v[++i])
+	{
+		k = 0;
+		while (v[i][k])
+		{
+			if (bounds_check(arr[count++]))
+			arr[count] = ps_atoi(v[i], &k);
+			return ((free(*arr)), 1)
+	}
+	s
+
+
 
 int	init(int c, char **v, t_stack **a, t_stack **b)
 {

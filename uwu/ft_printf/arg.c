@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 01:08:20 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 00:06:57 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/30 18:31:57 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*char_op(unsigned int c, t_queue *q)
 	return (ret);
 }
 
-char	*uint_op(unsigned long n, char type, t_queue *q)
+char	*uint_op(unsigned long n, char type, t_queue *q, char *hex)
 {
 	char			*ret;
 	int				i;
@@ -69,7 +69,7 @@ char	*uint_op(unsigned long n, char type, t_queue *q)
 		return (ret);
 	while (t)
 	{
-		ret[i] = "0123456789abcdef"[((n / t) % base)];
+		ret[i] = hex[((n / t) % base)];
 		if (type == 'X' && ret[i] > '9')
 			ret[i] -= 32;
 		i ++;
@@ -107,7 +107,7 @@ char	*int_op(int num, t_queue *q)
 	return (ret);
 }
 
-char	*ptr_op(uintptr_t src, char type, t_queue *q)
+char	*ptr_op(uintptr_t src, char type, t_queue *q, char *hex)
 {
 	int		i;
 	int		k;
@@ -116,7 +116,7 @@ char	*ptr_op(uintptr_t src, char type, t_queue *q)
 	char	*s;
 
 	if (type == 'p' && src)
-		return (uint_op((unsigned long) src, type, q));
+		return (uint_op((unsigned long) src, type, q, hex));
 	s = (char *) src;
 	i = 0;
 	while (s && s[i])

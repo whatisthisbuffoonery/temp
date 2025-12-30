@@ -59,6 +59,7 @@ void	sort_three(t_stack *a)
 
 static void	ps_sort(t_stack *a, t_stack *b, int max)
 {
+	/*
 	int	bit_max;
 	int	min;
 
@@ -83,6 +84,8 @@ static void	ps_sort(t_stack *a, t_stack *b, int max)
 	if (!sorted(a, b))
 		ps_turk(a, b, min);
 	min_rotate(a, b);
+	*/
+	ps_radix(a, b, max);
 }
 
 int	main(int c, char **v)
