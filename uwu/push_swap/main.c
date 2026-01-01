@@ -46,7 +46,8 @@ static void	ps_clear(t_stack *a, t_stack *b)
 //231
 //321
 //312
-void	sort_three(t_stack *a)
+/*
+void	sort_three(t_stack *a, t_stack *b)
 {
 	if (a->arr[2] == 0)
 		ps_rotate(a, b, A);
@@ -56,7 +57,7 @@ void	sort_three(t_stack *a)
 		ps_swap(a, b, A);
 	ps_rotate(a, b, A | R);
 }
-
+*/
 static void	ps_sort(t_stack *a, t_stack *b, int max)
 {
 	/*

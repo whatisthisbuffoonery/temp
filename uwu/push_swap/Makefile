@@ -3,7 +3,7 @@ CC_FLAGS := -Wall -Wextra -Werror
 LIBFT_DIR := ../libft
 LIBFT := libft
 
-SRC := init.c main.c merge_sort.c op.c radix.c turk.c
+SRC := init.c main.c merge_sort.c op.c radix.c #turk.c
 OBJ := $(SRC:.c=.o)
 
 NAME := push_swap

@@ -18,23 +18,31 @@ static int	dup_check(int *arr, int c)
 	return (0);
 }
 
-static int	bounds_check(char *v)//refactor to have atoi and space tracking
+static int	bounds_check(char *v, int *index, int *arr, int *count)//refactor to have atoi and space tracking
 {
 	int	i;
 	int	a;
 	int	tmp;
+	int	flag;
 
-	i = 0;
+	i = *index;
 	a = 0;
-	while (v[i])
+	flag = 1;
+	while (v[i] == ' ')
+		i ++;
+	if (v[i] == '-' && ++i)
+		flag = -1;
+	while (v[i] && v[i] != ' ')
 	{
 		tmp = a * 10;
 		if (a && tmp <= a)
 			return (1);
-		a = tmp;
-		a += v[i] + '0';
+		a = tmp + v[i] + '0';
 		i ++;
 	}
+	arr[*count] = a * flag;
+	if (i != *index)
+	*index = i;
 	return (0);
 }
 /*
@@ -63,13 +71,13 @@ static int	validate(int c, char **v, int **arr)
 		}
 		if (bounds_check(v[i]))
 			return ((free(*arr)), 1);
-		(*arr)[--count] = ps_atoi(v[i]);// ./a.out 1 2 "3 4 5" 6 7 must be accepted as 1 2 3 4 5 6 7, and checked
+		(*arr)[--count] = ft_atoi(v[i]);// ./a.out 1 2 "3 4 5" 6 7 must be accepted as 1 2 3 4 5 6 7, and checked
 	}
 	return (dup_check(*arr, c));
 }
 */
 
-static void	count_all(int c, char **v, int **arr)//i could limit whitespace chars to single spaces
+void	count_all(int c, char **v, int **arr)//i could limit whitespace chars to single spaces
 {
 	int	i;
 	int	k;
@@ -115,11 +123,12 @@ static int	validate(int c, char **v, int **arr)
 		k = 0;
 		while (v[i][k])
 		{
-			if (bounds_check(arr[count++]))
-			arr[count] = ps_atoi(v[i], &k);
-			return ((free(*arr)), 1)
+			if (bounds_check(v[i], &k, *arr, &count))
+				return ((free(*arr)), 1);
 	}
 	s
+	}
+}
 
 
 
@@ -127,6 +136,7 @@ int	init(int c, char **v, t_stack **a, t_stack **b)
 {
 	int	*arr;
 
+	arr = NULL;
 	if (validate(c, v, &arr))
 		return (1);
 	*a = malloc(sizeof(t_stack));
