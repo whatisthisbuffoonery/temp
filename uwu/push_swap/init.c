@@ -1,29 +1,51 @@
 #include "header_ps.h"
 
-static int	dup_check(int *arr, int c)
+/*
+tests:
+-12-34 > alien check
+-- > front flag check
+"- " > back flag check
+*/
+static int	int_count(char *v)//fuck my arse
 {
-	int	i;
-	int	k;
+	int		i;
+	int		flag;
+	int		local_count;
 
-	i = -1;
-	while (++i < c)
+	i = 0;
+	flag = 0;
+	local_count = 0;//behave_digits(v, &local_count);
+	while (v[i])
 	{
-		k = i;
-		while (++k < c)
-		{
-			if (arr[i] == arr[k])
-				return ((free(arr)), 1);
-		}
+		//write(1, "init\n", 5);
+		if (v[i] == '-' && !flag++ && ++i)
+			continue ;
+		else if (v[i] == '-' && flag)
+			return (0);
+		if (v[i] >= '0' && v[i] <= '9' && ++local_count)
+			flag = 0;
+		while (v[i] >= '0' && v[i] <= '9')
+			i ++;
+		if (flag || (v[i] && v[i] != ' '))//should crash out on -12-34
+			return (0);
+		i += (v[i] != '\0');
 	}
-	return (0);
+	return (local_count);
 }
+/*
+i can either make a struct for this int thing
+or i can tolerate ft split making me do double nested iteration
+or i can put a struct on each string and use that
+^^^yea this seems better, int split is close to it
+*/
+//wow we be handling dupes at the last second
 
-static int	bounds_check(char *v, int *index, int *arr, int *count)//refactor to have atoi and space tracking
+static int	iter_atoi(int *index, char *v, int *out, int *iter)//should really go in libft //get this to handle other iteration...?
 {
-	int	i;
-	int	a;
-	int	tmp;
-	int	flag;
+	int		i;
+	int		flag;
+	unsigned int	a;
+	unsigned int	tmp;
 
 	i = *index;
 	a = 0;
@@ -32,112 +54,83 @@ static int	bounds_check(char *v, int *index, int *arr, int *count)//refactor to 
 		i ++;
 	if (v[i] == '-' && ++i)
 		flag = -1;
-	while (v[i] && v[i] != ' ')
+	while (v[i] >= '0' && v[i] <= '9')
 	{
-		tmp = a * 10;
-		if (a && tmp <= a)
+		tmp = (a * 10) + (v[i++] - '0');
+		if (tmp < a || tmp > (((unsigned int) (INT_MAX)) + (flag == -1)))
 			return (1);
-		a = tmp + v[i] + '0';
-		i ++;
+		a = tmp;
 	}
-	arr[*count] = a * flag;
-	if (i != *index)
-	*index = i;
+	while (v[i] == ' ')
+		i ++;
+	*index = i * (v[i] != '\0');
+	*iter += (v[i] == '\0');
+	*out = a * flag;
 	return (0);
 }
-/*
-static int	validate(int c, char **v, int **arr)
-{
-	int		i;
-	int		k;
-	int		count;
-	char	a;
 
-	count = c;
-	*arr = malloc(c * sizeof(int));
-	if (!*arr)
-		return (1);
-	i = -1;
-	while (++i < c)
-	{
-		k = -1;
-		if (v[i][0] == '-')
-			k ++;
-		while (v[i][++k])
-		{
-			a = v[i][k];
-			if (a < '0' || a > '9')
-				return ((free(*arr)), 1);
-		}
-		if (bounds_check(v[i]))
-			return ((free(*arr)), 1);
-		(*arr)[--count] = ft_atoi(v[i]);// ./a.out 1 2 "3 4 5" 6 7 must be accepted as 1 2 3 4 5 6 7, and checked
-	}
-	return (dup_check(*arr, c));
-}
-*/
-
-void	count_all(int c, char **v, int **arr)//i could limit whitespace chars to single spaces
+static int	*make_array(int *ret, char **v, int max)
 {
 	int	i;
-	int	k;
-	int	count;
+	int	cmp;
+	int	ptr_index;
+	int	ret_index;
+	int	str_index;
 
-	i = -1;
-	count = 0;
-	while (v[++i])
+	ptr_index = 0;
+	ret_index = max;
+	str_index = 0;
+	while (v[ptr_index])
 	{
-		k = -1;
-		if (v[i][0] == '-')
-			k ++;
-		while (v[i][++k])
+		if (iter_atoi(&str_index, v[ptr_index], &ret[ret_index], &ptr_index))
+			return ((free(ret)), NULL);
+		i = max;
+		cmp = ret[ret_index];
+		while (i > ret_index)
 		{
-			if (v[i][k] >= '0' && v[i][k] <= '9')
-			{
-				if (v[i][k + 1] == ' ' || v[i][k + 1] == '\0')
-					count ++;
-			}
-			else if (v[i][k] != ' ' && v[i][k] != '\0')
-				return ;
+			if (ret[i--] == cmp)
+				return ((free(ret)), NULL);
 		}
+		ret_index --;
 	}
-	if (count)
-		*arr = malloc(count * sizeof(int));
-	return ;
+	return (ret);
 }
 
-static int	validate(int c, char **v, int **arr)
+static int	*validate(int *c, char **v)//pls v + 1
 {
+	int		tmp;//used to have an array of lengths
+	int		*ret;
 	int		i;
-	int		k;
-	int		count
-	char	a;
+	int		count;
 
-	count_all(c, v, arr);
-	if (!arr)
-		return (1);
 	i = -1;
 	count = 0;
-	while (v[++i])
+	/*
+	arr = malloc(c * sizeof(int));
+	if (!arr)
+		return (NULL);
+	*/
+	while (++i < *c)
 	{
-		k = 0;
-		while (v[i][k])
-		{
-			if (bounds_check(v[i], &k, *arr, &count))
-				return ((free(*arr)), 1);
+		tmp = int_count(v[i]);//arr has length
+	//	write(1, "init ok\n", 8);
+		if (!tmp)
+			return (NULL);
+		count += tmp;
 	}
-	s
-	}
+	ret = malloc((count) * sizeof(int));
+	if (!ret)
+		return (NULL);
+	*c = count;//not terminated
+	return (make_array(ret, v, count - 1));
 }
-
-
 
 int	init(int c, char **v, t_stack **a, t_stack **b)
 {
 	int	*arr;
 
-	arr = NULL;
-	if (validate(c, v, &arr))
+	arr = validate(&c, v);
+	if (!arr)
 		return (1);
 	*a = malloc(sizeof(t_stack));
 	*b = malloc(sizeof(t_stack));

@@ -1,5 +1,8 @@
 #include "header_ps.h"
 
+int		sorted(t_stack *a, t_stack *b);
+void	sort_three(t_stack *a);
+
 static t_cost	cost_overhead(t_stack *a, t_stack *b, t_cost rr)
 {
 	t_cost	ret;
@@ -14,10 +17,10 @@ static t_cost	cost_overhead(t_stack *a, t_stack *b, t_cost rr)
 	if (rrr.b < rrr.a)
 		rrr.total = 0 - rrr.b;
 	ret.a = rr.a;
-	if (rr.a > a->total / 2)
+	if (rr.a > a->top / 2)
 		ret.a = rrr.a;
 	ret.b = rr.b;
-	if (rr.b > b->total / 2)
+	if (rr.b > b->top / 2)
 		ret.b = rrr.b;
 	ret.total = ABS(ret.a) + ABS(ret.b);
 	if (ret.total > rr.total)
@@ -85,7 +88,7 @@ static void	ps_rotate_overhead(t_stack *a, t_stack *b, t_cost cost, int mov)
 	}
 }
 
-static int	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src;)
+static void	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src)
 {
 	int		i;
 	int		src_num;
@@ -110,7 +113,7 @@ static int	heuristics(t_stack *a, t_stack *b, int bound, t_stack *src;)
 		if (bound == 5 && cost.total > i && i >= bound)
 			bound = 10;
 	}
-	ps_rotate_overhead(a, b, cost);
+	ps_rotate_overhead(a, b, cost, 0);
 }
 
 void	ps_turk(t_stack *a, t_stack *b, int min)

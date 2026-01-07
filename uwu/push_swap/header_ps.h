@@ -2,6 +2,7 @@
 # define HEADER_PS_H
 
 # include "libft.h"
+# include <limits.h>
 
 typedef struct s_stack
 {

@@ -1,10 +1,12 @@
 #include "header_ps.h"
 
+void	ps_show(t_stack *a);
 int		init(int c, char **v, t_stack **a, t_stack **b);
 int		ps_placement(t_stack *a);
 int		sorted(t_stack *a, t_stack *b);
 void	ps_radix(t_stack *a, t_stack *b, int max);
 void	ps_turk(t_stack *a, t_stack *b, int min);
+void	ps_swap(t_stack *a, t_stack *b, int flags);
 
 void	min_rotate(t_stack *a, t_stack *b)
 {
@@ -13,7 +15,7 @@ void	min_rotate(t_stack *a, t_stack *b)
 
 	i = 0;
 	median = a->top / 2;
-	while (a->arr[a->top - i] != 0)
+	while (i <= a->top && a->arr[a->top - i] != 0)
 		i ++;
 	if (i > median)
 	{
@@ -31,14 +33,12 @@ void	min_rotate(t_stack *a, t_stack *b)
 
 static void	ps_clear(t_stack *a, t_stack *b)
 {
-	if (a && a->arr)
-		free(a->arr);
-	if (b && b->arr)
-		free(b->arr);
 	if (a)
-		free(a);
+		free(a->arr);
 	if (b)
-		free(b);
+		free(b->arr);
+	free(a);
+	free(b);
 }
 //123
 //132
@@ -46,7 +46,11 @@ static void	ps_clear(t_stack *a, t_stack *b)
 //231
 //321
 //312
-/*
+
+// go thru turk again and make sort 5 //push lowest 2 to b
+// pls handle rr and rrr for radix, use another func
+//make radix not loop thru the min section
+
 void	sort_three(t_stack *a, t_stack *b)
 {
 	if (a->arr[2] == 0)
@@ -57,8 +61,8 @@ void	sort_three(t_stack *a, t_stack *b)
 		ps_swap(a, b, A);
 	ps_rotate(a, b, A | R);
 }
-*/
-static void	ps_sort(t_stack *a, t_stack *b, int max)
+
+void	ps_sort(t_stack *a, t_stack *b, int max)
 {
 	/*
 	int	bit_max;
@@ -87,6 +91,16 @@ static void	ps_sort(t_stack *a, t_stack *b, int max)
 	min_rotate(a, b);
 	*/
 	ps_radix(a, b, max);
+//	ps_turk(a, b, 3);
+}
+
+void	ps_fuck(t_stack *a, t_stack *b)
+{
+	write(1, "a: ", 3);
+	ft_putnbr_fd(a->top, 1);
+	write(1, "\nb: ", 4);
+	ft_putnbr_fd(b->top, 1);
+	write(1, "\n", 1);
 }
 
 int	main(int c, char **v)
@@ -96,12 +110,18 @@ int	main(int c, char **v)
 
 	a = NULL;
 	b = NULL;
-	if (c < 3)
+	if (c < 2)//has to accept 1 arg now
 		return (0);//i wonder
 	c --;
-	if (!init(c, v + 1, &a, &b) && !ps_placement(a))
-		ps_sort(a, b, c);
+	//ft_putnbr_fd(c, 1);
+	//write(1, " start\n", 6);
+	if (!init(c, &v[1], &a, &b) && !ps_placement(a))
+	{
+	//	ps_show(a);
+	//	ps_fuck(a, b);
+		ps_sort(a, b, a->top);
+	}
 	else
-		write(2, "Error\n", 6);
+		write(2, "Error\n", 6);//not visible on output
 	ps_clear(a, b);
 }

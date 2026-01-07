@@ -34,14 +34,13 @@ int	get_max(int max)
 void	ps_show(t_stack *a)
 {
 	int	*arr = a->arr;
-	int i = 0;
-	int top = a->top;
+	int i = a->top;
 
-	while (i <= top)
+	while (i >= 0)
 	{
 		ft_putnbr_fd(arr[i], 1);
 		write(1, " ", 1);
-		i ++;
+		i --;
 	}
 	write(1, "\n", 1);
 }
@@ -149,41 +148,25 @@ int	ps_radix(t_stack *a, t_stack *b, int max)
 	int	bit;
 	int	i;
 
-	bit = 1;//get_max(max);
-	//ps_show(a);
-	//ft_putnbr_fd(bit, 1);
-	//write(1, "\n", 1);
+	bit = 1;
 	while (bit <= max && !sorted(a, b))
 	{
 		i = a->top;
 		while (i >= 0)
 		{
-		//	ps_show(a);
-		//	ft_putnbr_fd(a->arr[a->top], 1);
-		//	write(1, " | ", 3);
-		//	ft_putnbr_fd(bit, 1);
-		//	write(1, "\n", 1);
 			if (!(a->arr[a->top] & bit))
 				ps_push(a, b, B);
 			else
-				ps_rotate(a, b, A);// | (B && (share-- > 0)));//conditionally init R, i, mov, lim at start of each loop
+				ps_rotate(a, b, A);
 			i --;
 		}
-//		ps_show(b);
-//		while (b->top >= 0)
-//			ps_push(a, b, A);
-//		write(1, "hm\n", 3);
-//		ps_show(b);
-//		write(1, "start\n", 6);
-//		ps_show(b);
 		bit *= 2;
 		if (b->top >= 0 && bit <= max)
-			push_back_v2(a, b, bit);//, &prev);
-//		write(1, "end\n", 4);
-//		ps_show(b);
+			push_back_v2(a, b, bit);
 	}
-//	while (b->top >= 0)
-//		ps_push(a, b, A);
-	ps_show(a);
+	while (b->top >= 0)
+		ps_push(a, b, A);
+	//ps_show(a);
+	//ps_show(b);
 	return (find_min(b));
 }

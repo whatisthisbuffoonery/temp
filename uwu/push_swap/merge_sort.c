@@ -133,5 +133,6 @@ int	ps_placement(t_stack *a)
 	send[size - 1].next = NULL;
 	merge_sort(&sort);
 	place_help(a, sort, send);
+	//write(1, "merge ok\n", 9);
 	return (0);
 }
