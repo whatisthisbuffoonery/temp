@@ -7,16 +7,29 @@ int		sorted(t_stack *a, t_stack *b);
 void	ps_radix(t_stack *a, t_stack *b, int max);
 void	ps_turk(t_stack *a, t_stack *b, int min);
 void	ps_swap(t_stack *a, t_stack *b, int flags);
+int		find_min(t_stack *b);
+int		find_max(t_stack *a);
 
-void	min_rotate(t_stack *a, t_stack *b, int bit)
+int	min_rotate(t_stack *a, t_stack *b, int bit)//, int *max)
 {
-	int	i;
+	int	ret;
+	int	max;
 
-	i = 0;
-	while (b->arr[0] != 0 && !(a->arr[a->top] & bit))
+	if (b->top < 0 || find_min(b) < 0)
+		return (0);
+	ret = 0;
+	max = find_max(a);
+	(void) max;
+	while (b->arr[0] != 0 && (a->arr[a->top] & bit && a->arr))
+	{
+		ret ++;
 		ps_rotate(a, b, A | B);
+	}
+	//while (a->arr[a->top] & bit)
+	//	ps_rotate(a, b, A);
 	while (b->arr[0] != 0)
 		ps_rotate(a, b, B);
+	return (ret);
 }
 
 static void	ps_clear(t_stack *a, t_stack *b)

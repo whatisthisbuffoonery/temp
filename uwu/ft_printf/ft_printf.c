@@ -20,12 +20,15 @@ static int	print_the_printf(t_queue *q)
 {
 	int	total;
 	int	curr;
+	int	written;
 
 	total = 0;
 	while (q)
 	{
 		curr = print_strlen(q->str, q);
-		write(1, q->str, curr);
+		written = 0;
+		while (written < curr)
+			written = write(1, q->str + written, curr - written);
 		total += curr;
 		q = q->next;
 	}

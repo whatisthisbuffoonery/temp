@@ -25,14 +25,15 @@ typedef struct s_cost
 }		t_cost;
 
 void	turk(t_stack *a, t_stack *b, int min);
-void	min_rotate(t_stack *a, t_stack *b, int bit);
 void	ps_rotate(t_stack *a, t_stack *b, int flag);
 void	ps_push(t_stack *a, t_stack *b, int flag);
+
+int		min_rotate(t_stack *a, t_stack *b, int bit);
 
 # define A 2
 # define B 4
 # define R 8
 
-# define ABS(x) ((x * (x > 0)) - (x * (x < 0)))
+# define ABS(x) ((x * (x > 0)) - (x * (x < 0)))// forbidden, make it a proper func
 
 #endif

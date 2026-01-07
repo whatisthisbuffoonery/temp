@@ -105,15 +105,9 @@ static int	*validate(int *c, char **v)//pls v + 1
 
 	i = -1;
 	count = 0;
-	/*
-	arr = malloc(c * sizeof(int));
-	if (!arr)
-		return (NULL);
-	*/
 	while (++i < *c)
 	{
 		tmp = int_count(v[i]);//arr has length
-	//	write(1, "init ok\n", 8);
 		if (!tmp)
 			return (NULL);
 		count += tmp;
