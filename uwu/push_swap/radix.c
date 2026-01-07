@@ -127,19 +127,32 @@ void	push_back(t_stack *a, t_stack *b)//, int *prev_bound)
 int	push_back_v2(t_stack *a, t_stack *b, int bit)//pull min into this too
 {
 	int	i;
+	int	push;
 	int	min;
 
 	min = find_min(b) - 1;
 	i = b->top;
+	push = 0;
 	while (i >= 0)
 	{
-		if (b->arr[b->top] & bit && b->arr[b->top] > min)
-			ps_push(a, b, A);
-		else
-			ps_rotate(a, b, B);
+		if (b->arr[i] & bit && b->arr[i] > min)
+			push ++;
 		i --;
 	}
-	min_rotate(a, b);
+	while (push)
+	{
+		if (b->arr[b->top] & bit && b->arr[b->top] > min)
+		{
+			push --;
+			ps_push(a, b, A);
+		}
+		else
+			ps_rotate(a, b, B);
+	}
+	if (min >= 0)
+		min_rotate(a, b, bit);
+//	while (min >= 0 && b->arr[0] != 0)
+//		ps_rotate(a, b, B);
 	return (i);
 }
 
@@ -166,7 +179,7 @@ int	ps_radix(t_stack *a, t_stack *b, int max)
 	}
 	while (b->top >= 0)
 		ps_push(a, b, A);
-	//ps_show(a);
+	ps_show(a);
 	//ps_show(b);
 	return (find_min(b));
 }

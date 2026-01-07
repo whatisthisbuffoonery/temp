@@ -8,27 +8,15 @@ void	ps_radix(t_stack *a, t_stack *b, int max);
 void	ps_turk(t_stack *a, t_stack *b, int min);
 void	ps_swap(t_stack *a, t_stack *b, int flags);
 
-void	min_rotate(t_stack *a, t_stack *b)
+void	min_rotate(t_stack *a, t_stack *b, int bit)
 {
 	int	i;
-	int	median;
 
 	i = 0;
-	median = a->top / 2;
-	while (i <= a->top && a->arr[a->top - i] != 0)
-		i ++;
-	if (i > median)
-	{
-		while (i <= a->top)
-			ps_rotate(a, b, A | R);
-		i ++;
-	}
-	else
-	{
-		while (i > 0)
-			ps_rotate(a, b, A);
-		i --;
-	}
+	while (b->arr[0] != 0 && !(a->arr[a->top] & bit))
+		ps_rotate(a, b, A | B);
+	while (b->arr[0] != 0)
+		ps_rotate(a, b, B);
 }
 
 static void	ps_clear(t_stack *a, t_stack *b)
