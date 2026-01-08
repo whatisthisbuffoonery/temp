@@ -1,5 +1,11 @@
 #include "header_ps.h"
 
+//top == 2
+//mov == 1
+//lim == top + 1 = 3
+//i == 1
+//tmp == arr[1 - 1 = 0]
+
 static void	rotate_help(t_stack *s, int mov)
 {
 	int	tmp;
@@ -15,6 +21,8 @@ static void	rotate_help(t_stack *s, int mov)
 		lim = s->top + 1;
 		i = 1;
 	}
+//	write(1, "i: ", 3);
+//	ft_putnbr_fd(mov, 1);
 	tmp = s->arr[i - mov];
 	while (i != lim)
 	{
@@ -28,9 +36,12 @@ void	ps_rotate(t_stack *a, t_stack *b, int flag)
 {
 	int	mov;
 
-	mov = (flag & R) - !(flag & R);
+	mov = -1;
 	if (flag & R)
+	{
+		mov = 1;
 		write(1, "r", 1);
+	}
 	if (flag & A && flag & B)
 		write(1, "rr\n", 3);
 	else if (flag & A)

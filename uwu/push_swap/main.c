@@ -8,18 +8,15 @@ void	ps_radix(t_stack *a, t_stack *b, int max);
 void	ps_turk(t_stack *a, t_stack *b, int min);
 void	ps_swap(t_stack *a, t_stack *b, int flags);
 int		find_min(t_stack *b);
-int		find_max(t_stack *a);
+//int		find_max(t_stack *a);
 
 int	min_rotate(t_stack *a, t_stack *b, int bit)//, int *max)
 {
 	int	ret;
-	int	max;
 
 	if (b->top < 0 || find_min(b) < 0)
 		return (0);
 	ret = 0;
-	max = find_max(a);
-	(void) max;
 	while (b->arr[0] != 0 && (a->arr[a->top] & bit && a->arr))
 	{
 		ret ++;
@@ -52,11 +49,20 @@ static void	ps_clear(t_stack *a, t_stack *b)
 // pls handle rr and rrr for radix, use another func
 //make radix not loop thru the min section
 
+//5 items capped at 12 moves
+
 void	sort_three(t_stack *a, t_stack *b)
 {
-	if (a->arr[2] == 0)
+	int	min;
+
+	min = 0;
+	if (a->arr[1] < a->arr[0])
+		min = 1;
+	if (a->arr[2] < a->arr[min])
+		min = 2;
+	if (min == 2)
 		ps_rotate(a, b, A);
-	else if (a->arr[1] == 0)
+	else if (min == 1)
 		ps_rotate(a, b, A | R);
 	if (a->arr[2] > a->arr[1])
 		ps_swap(a, b, A);
@@ -71,14 +77,10 @@ void	ps_sort(t_stack *a, t_stack *b, int max)
 
 	bit_max = 0;
 	min = 0;
+	if (max < 5)
+		sort_five(a, b);
 	if (sorted(a, b))
 		return ;
-	if (max == 1)
-	{
-		if (a->arr[1] > a->arr[0])
-			ps_swap(a, b, A);
-		return ;
-	}
 	if (max >= 100)
 		bit_max = 4;
 	if (max >= 500)
@@ -91,8 +93,13 @@ void	ps_sort(t_stack *a, t_stack *b, int max)
 		ps_turk(a, b, min);
 	min_rotate(a, b);
 	*/
-	ps_radix(a, b, max);
-//	ps_turk(a, b, 3);
+//	ps_radix(a, b, max);
+	while (a->top > 2)
+		ps_push(a, b, B);
+	(void) max;
+	ps_turk(a, b, 3);
+	ps_show(a);
+//	ps_rotate(a, b, A | R);
 }
 
 void	ps_fuck(t_stack *a, t_stack *b)
