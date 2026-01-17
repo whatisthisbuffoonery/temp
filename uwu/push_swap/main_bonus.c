@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/17 12:22:34 by dthoo             #+#    #+#             */
+/*   Updated: 2026/01/17 15:13:06 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header_ps.h"
 
 int	sorted(t_stack *a, t_stack *b)
@@ -41,7 +53,7 @@ void	ps_line(unsigned char *dst, int *flag, int i)
 	}
 	if (lim < 1 || i > 3)
 	{
-		*flag = (lim == 0) - (lim < 0);
+		*flag = ((lim == 0) - (lim < 0)) - (2 * (i > 3));
 		return ;
 	}
 	while (curr < lim && i < 4)
@@ -68,7 +80,7 @@ void	ps_check(t_stack *a, t_stack *b)
 	ps_line(&in[0], &flag, 0);
 	while (flag < 1)
 	{
-		if (flag == -1 || ps_alien(&in[0], table))
+		if (flag < 0 || ps_alien(&in[0], table))
 		{
 			write(2, "Error\n", 6);
 			return ;

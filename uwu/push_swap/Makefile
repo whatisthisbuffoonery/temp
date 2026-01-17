@@ -1,6 +1,9 @@
+NAME := push_swap
+BONUS_NAME := checker
+
 CC := clang
 CC_FLAGS := -Wall -Wextra -Werror
-LIBFT_DIR := ../libft
+LIBFT_DIR := libft
 LIBFT := libft
 LIBFT_NAME := ft
 
@@ -11,12 +14,6 @@ OBJ := $(SRC:.c=.o)
 BONUS_OBJ := $(BONUS_SRC:.c=.o)
 SHARED_OBJ := $(SHARED_SRC:.c=.o)
 
-NAME := push_swap
-BONUS_NAME := checker
-
-#debug: fclean $(LIBFT_DIR)/$(LIBFT).a
-#	$(CC) $(CC_FLAGS) $(SRC) $(LIBFT_DIR)/$(LIBFT).a -o $(NAME)
-
 all: $(NAME)
 
 bonus: $(BONUS_NAME)
@@ -24,7 +21,7 @@ bonus: $(BONUS_NAME)
 $(NAME): $(OBJ) $(SHARED_OBJ) $(LIBFT_DIR)/$(LIBFT).a
 	$(CC) $(CC_FLAGS) $(OBJ) $(SHARED_OBJ) -I $(LIBFT_DIR)/includes -L $(LIBFT_DIR) -l $(LIBFT_NAME) -o $(NAME)
 
-$(BONUS_NAME): $(BONUS_OBJ) $(SHARED_OBJ)
+$(BONUS_NAME): $(BONUS_OBJ) $(SHARED_OBJ) $(LIBFT_DIR)/$(LIBFT).a
 	$(CC) $(CC_FLAGS) $(BONUS_OBJ) $(SHARED_OBJ) -I $(LIBFT_DIR)/includes -L $(LIBFT_DIR) -l $(LIBFT_NAME) -o $(BONUS_NAME)
 
 $(OBJ): %.o: %.c

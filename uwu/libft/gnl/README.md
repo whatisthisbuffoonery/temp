@@ -11,11 +11,11 @@ Buffer size can be changed at compile time
 ### Instructions  
   
 cc -Wall -Wextra -Werror get\_next\_line.c get\_next\_line\_utils.c  
+use -DBUFFER\_SIZE=42, for example
   
 ### Resources  
   
 None, really  
-I did prompt AI to get the bonus started but I thought that the constraint made this project not worth it  
   
 ### How it works  
   
@@ -30,3 +30,7 @@ Partial reads are accounted for
 Occasions where read() reads less then buf\_size before EOF for whatever reason  
 This does not happen very often, but I got to simulate this inadvertently with funny node sizes  
 So, I now count each string length individually  
+  
+### Bonus section  
+  
+I went super lazy mode and added a per fd interface to my t\_var struct, I basically changed nothing  

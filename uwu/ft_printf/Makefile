@@ -1,5 +1,5 @@
 CC := clang
-CC_FLAGS := -Wall -Wextra -Werror -c
+CC_FLAGS := -Wall -Wextra -Werror -c -g
 
 AR := ar
 AR_FLAGS := rcs
@@ -22,6 +22,10 @@ OBJ := $(SRC:.c=.o)
 OBJ_MAND := $(SRC_MAND:.c=.o)
 
 OBJ_BONUS := $(SRC_BONUS:.c=.o)
+
+debug:
+	$(MAKE) -C $(LIBFT_DIR) all
+	$(CC) $(CC_FLAGS) main.c $(SRC) $(SRC_BONUS) $(LIBFT_DIR)/$(LIBFT_LIB).a
 
 all: bonus
 

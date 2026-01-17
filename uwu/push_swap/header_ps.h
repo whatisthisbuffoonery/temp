@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header_ps.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/17 12:23:06 by dthoo             #+#    #+#             */
+/*   Updated: 2026/01/17 16:30:39 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef HEADER_PS_H
 # define HEADER_PS_H
 
 # include "libft.h"
-# include "get_next_line_bonus.h"
 
 typedef struct s_stack
 {

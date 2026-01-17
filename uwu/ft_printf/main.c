@@ -5,6 +5,9 @@
 int main(void)
 {
 
+	ft_printf("% .6d\n", -3);
+	printf("% .6d\n", -3);
+/*
 	ft_printf("%c\n", 'a');
 	ft_printf("%s\n", "hello");
 	ft_printf("%p\n", (void *) 0x123);
@@ -108,7 +111,7 @@ int main(void)
 	printf("%p\n", NULL);
 	ft_printf("%.4p\n", NULL);
 	printf("%p\n", NULL);
-
+*/
 //	ft_printf("%#x\n", 0);
 //	ft_printf("%#x\n", LONG_MIN);
 //	ft_printf("%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%", 'A', "42", 42, 42 ,42 , 42, 42, 'B', "-42", -42, -42 ,-42 ,-42, 42, 'C', "0", 0, 0 ,0 ,0, 42, 0);

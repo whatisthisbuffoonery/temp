@@ -32,9 +32,12 @@ GNL_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(GNL_SRC))
 
 OBJ := $(FT_OBJ) $(GNL_OBJ) 
 
-all: $(NAME)
+all: $(OBJ_DIR) $(NAME)
 
-bonus: $(FULL)
+bonus: $(OBJ_DIR) $(FULL)
+
+$(OBJ_DIR):
+	mkdir $(OBJ_DIR)
 
 $(NAME): $(OBJ)
 	$(AR) $(AR_FLAGS) $@ $^

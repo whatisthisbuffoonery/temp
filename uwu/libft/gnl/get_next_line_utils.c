@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 02:10:01 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/26 18:44:23 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/26 19:42:07 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ static void	refresh_buffer(t_var *file, int fd, int *done)
 	{
 		*done = -1;
 		file->lim = 0;
+		file->fd = -1;
 	}
 	else if (!file->lim)
 		*done = 1;
+	file->fd = fd;
 }
 
 char	*read_buf(t_var *file, int fd, int *done)
@@ -35,7 +37,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 	char	*ret;
 
 	k = -1;
-	if (file->count >= file->lim)
+	if (file->count >= file->lim || fd != file->fd)
 		refresh_buffer(file, fd, done);
 	if (file->lim < 1)
 		return (NULL);
@@ -52,15 +54,6 @@ char	*read_buf(t_var *file, int fd, int *done)
 	ret[k] = '\0';
 	return (ret);
 }
-
-/*
-static void probe(int n)
-{	
-	write(1, "node: ", 6);
-	ft_putnbr(i);
-	write(1, "\n", 1);
-}
-*/
 
 int	gnl_new(t_gnllist **lst, char *ret, int i)
 {
@@ -131,7 +124,6 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 			free(curr);
 			curr = tmp;
 		}
-		free(lst);
 	}
 	if (done < 0)
 	{
@@ -141,4 +133,5 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
 		file->lim = 0;
 		*ret = NULL;
 	}
+	free(lst);
 }

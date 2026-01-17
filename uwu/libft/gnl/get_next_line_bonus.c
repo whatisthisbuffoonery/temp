@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/26 19:22:04 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/26 19:17:51 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@ int		gnl_new(t_gnllist **lst, char *ret, int i);
 void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done);
 char	*gnl_shove(t_gnllist *lst);
 char	*read_buf(t_var *file, int fd, int *done);
+
+static void	gnl_file_management(t_stash *stash, t_var *file, int fd, int flag)
+{
+	if (flag)
+	{
+		file->buf = stash->buf[fd];
+		file->count = stash->count[fd];
+		file->lim = stash->lim[fd];
+	}
+	else
+	{
+		stash->count[fd] = file->count;
+		stash->lim[fd] = file->lim;
+	}
+}
 
 char	*get_next_line(int fd)
 {
@@ -30,9 +45,7 @@ char	*get_next_line(int fd)
 	ret = NULL;
 	if (fd < 0 || fd > 1024)
 		return (NULL);
-	file.buf = stash.buf[fd];
-	file.count = stash.count[fd];
-	file.lim = stash.lim[fd];
+	gnl_file_management(&stash, &file, fd, 1);
 	while (!done)
 	{
 		ret = read_buf(&file, fd, &done);
@@ -44,8 +57,7 @@ char	*get_next_line(int fd)
 	if (done == 1 && lst)
 		ret = gnl_shove(lst);
 	gnl_cleanup(lst, &ret, &file, done);
-	stash.count[fd] = file.count;
-	stash.lim[fd] = file.lim;
+	gnl_file_management(&stash, &file, fd, 0);
 	return (ret);
 }
 

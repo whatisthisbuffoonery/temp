@@ -6,12 +6,12 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 22:15:13 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/17 13:17:16 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/26 18:33:14 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -23,12 +23,18 @@
 
 # endif
 
+typedef struct s_stash
+{
+	char	buf[1025][BUFFER_SIZE];
+	ssize_t	count[1025];
+	ssize_t	lim[1025];
+}			t_stash;
+
 typedef struct s_var
 {
-	char	buf[BUFFER_SIZE];
+	char	*buf;
 	ssize_t	count;
 	ssize_t	lim;
-	int		fd;
 }			t_var;
 
 typedef struct s_gnlnode

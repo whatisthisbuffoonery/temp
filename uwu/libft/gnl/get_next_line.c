@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 23:10:52 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/26 18:48:00 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/26 19:40:09 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ char	*read_buf(t_var *file, int fd, int *done);
 
 char	*get_next_line(int fd)
 {
-	static t_stash	stash;
-	t_var			file;
+	static t_var	file;
 	t_gnllist		*lst;
 	char			*ret;
 	int				done;
@@ -28,11 +27,6 @@ char	*get_next_line(int fd)
 	done = 0;
 	lst = NULL;
 	ret = NULL;
-	if (fd < 0 || fd > 1024)
-		return (NULL);
-	file.buf = stash.buf[fd];
-	file.count = stash.count[fd];
-	file.lim = stash.lim[fd];
 	while (!done)
 	{
 		ret = read_buf(&file, fd, &done);
@@ -44,8 +38,6 @@ char	*get_next_line(int fd)
 	if (done == 1 && lst)
 		ret = gnl_shove(lst);
 	gnl_cleanup(lst, &ret, &file, done);
-	stash.count[fd] = file.count;
-	stash.lim[fd] = file.lim;
 	return (ret);
 }
 
