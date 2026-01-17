@@ -9,7 +9,9 @@ int main(void)
 	int	k;
 	int	sys;
 	char argv[30] = "./push_swap";
+	char exec2[50];
 	char *in[5];
+	char *out[5];
 
 	in[0] = &argv[12];
 	in[1] = &argv[14];
@@ -34,10 +36,61 @@ int main(void)
 		k = 0;
 		while (src[i] < '0' || src[i] > '9')
 			i ++;
+		if (!src[i])
+			break ;
 		while (k < 5)
 			*in[k++] = src[i++];
 		printf("%s\n", argv);
 		sys = system(argv);
+		if (sys < 0)
+			printf("fart\n");
+	}
+	i = 0;
+	out[0] = &exec2[34];
+	out[1] = &exec2[36];
+	out[2] = &exec2[38];
+	out[3] = &exec2[40];
+	out[4] = &exec2[42];
+
+	in[0] = &exec2[12];
+	in[1] = &exec2[14];
+	in[2] = &exec2[16];
+	in[3] = &exec2[18];
+	in[4] = &exec2[20];
+	while (i < 23)
+	{
+		exec2[i] = argv[i];
+		i ++;
+	}
+	while (i < 50)
+		exec2[i++] = ' ';
+	i = 0;
+	exec2[24] = '.';
+	exec2[25] = '/';
+	exec2[26] = 'c';
+	exec2[27] = 'h';
+	exec2[28] = 'e';
+	exec2[29] = 'c';
+	exec2[30] = 'k';
+	exec2[31] = 'e';
+	exec2[32] = 'r';
+	exec2[33] = ' ';
+	exec2[43] = '\0';
+
+	while (src[i])
+	{
+		k = 0;
+		while (src[i] < '0' || src[i] > '9')
+			i ++;
+		if (!src[i])
+			break ;
+		while (k < 5)
+		{
+			*in[k] = src[i];
+			*out[k++] = src[i++];
+		}
+		printf("%s\n", exec2);
+		sys = system(exec2);
 		if (sys < 0)
 			printf("fart\n");
 	}
