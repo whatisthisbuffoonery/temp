@@ -6,7 +6,8 @@ tests:
 -- > front flag check
 "- " > back flag check
 */
-static int	int_count(char *v)//fuck my arse
+
+static int	int_count(char *v)
 {
 	int		i;
 	int		flag;
@@ -14,10 +15,9 @@ static int	int_count(char *v)//fuck my arse
 
 	i = 0;
 	flag = 0;
-	local_count = 0;//behave_digits(v, &local_count);
+	local_count = 0;
 	while (v[i])
 	{
-		//write(1, "init\n", 5);
 		if (v[i] == '-' && !flag++ && ++i)
 			continue ;
 		else if (v[i] == '-' && flag)
@@ -26,24 +26,17 @@ static int	int_count(char *v)//fuck my arse
 			flag = 0;
 		while (v[i] >= '0' && v[i] <= '9')
 			i ++;
-		if (flag || (v[i] && v[i] != ' '))//should crash out on -12-34
+		if (flag || (v[i] && v[i] != ' '))
 			return (0);
 		i += (v[i] != '\0');
 	}
 	return (local_count);
 }
-/*
-i can either make a struct for this int thing
-or i can tolerate ft split making me do double nested iteration
-or i can put a struct on each string and use that
-^^^yea this seems better, int split is close to it
-*/
-//wow we be handling dupes at the last second
 
-static int	iter_atoi(int *index, char *v, int *out, int *iter)//should really go in libft //get this to handle other iteration...?
+static int	iter_atoi(int *index, char *v, int *out, int *iter)
 {
-	int		i;
-	int		flag;
+	int				i;
+	int				flag;
 	unsigned int	a;
 	unsigned int	tmp;
 
@@ -57,7 +50,7 @@ static int	iter_atoi(int *index, char *v, int *out, int *iter)//should really go
 	while (v[i] >= '0' && v[i] <= '9')
 	{
 		tmp = (a * 10) + (v[i++] - '0');
-		if (tmp < a || tmp > (((unsigned int) (INT_MAX)) + (flag == -1)))
+		if (tmp < a || tmp > (((unsigned int)(INT_MAX)) + (flag == -1)))
 			return (1);
 		a = tmp;
 	}
@@ -96,9 +89,9 @@ static int	*make_array(int *ret, char **v, int max)
 	return (ret);
 }
 
-static int	*validate(int *c, char **v)//pls v + 1
+static int	*validate(int *c, char **v)
 {
-	int		tmp;//used to have an array of lengths
+	int		tmp;
 	int		*ret;
 	int		i;
 	int		count;
@@ -107,7 +100,7 @@ static int	*validate(int *c, char **v)//pls v + 1
 	count = 0;
 	while (++i < *c)
 	{
-		tmp = int_count(v[i]);//arr has length
+		tmp = int_count(v[i]);
 		if (!tmp)
 			return (NULL);
 		count += tmp;
@@ -115,7 +108,7 @@ static int	*validate(int *c, char **v)//pls v + 1
 	ret = malloc((count) * sizeof(int));
 	if (!ret)
 		return (NULL);
-	*c = count;//not terminated
+	*c = count;
 	return (make_array(ret, v, count - 1));
 }
 

@@ -72,17 +72,7 @@ static void	merge_sort(t_list **head)
 	}
 	window_shopping(*head, a, b, 0);
 }
-/*
-static void	list_show(t_list *sort)
-{
-	while (sort)
-	{
-		ft_putnbr_fd(sort->num, 1);
-		sort = sort->next;
-	}
-	write(1, "\n", 1);
-}
-*/
+
 static void	place_help(t_stack *a, t_list *sort, t_list *send)
 {
 	int		i;
@@ -104,7 +94,6 @@ static void	place_help(t_stack *a, t_list *sort, t_list *send)
 		curr = curr->next;
 		i ++;
 	}
-//	list_show(send);
 	free(send);
 }
 
@@ -117,7 +106,7 @@ int	ps_placement(t_stack *a)
 
 	i = 0;
 	size = a->top + 1;
-	send = malloc((2 * size) * sizeof(t_list));//losing the malloc pointer LOLOLOLOOOL
+	send = malloc((2 * size) * sizeof(t_list));
 	if (!send)
 		return (1);
 	sort = &send[size];
@@ -133,6 +122,5 @@ int	ps_placement(t_stack *a)
 	send[size - 1].next = NULL;
 	merge_sort(&sort);
 	place_help(a, sort, send);
-	//write(1, "merge ok\n", 9);
 	return (0);
 }

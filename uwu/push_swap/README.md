@@ -17,7 +17,7 @@ me: wtf
   
 ### Description  
   
-My goal: move around the ints in stack a until they are sorted in ascending order  
+My goal: use stack instructions to sort the ints in stack A in ascending order  
 Ascending order means that the lowest int sits at the top  
   
 Seeing as this is a stack organisation excercise, there is a merge sorted duplicate array at the start  

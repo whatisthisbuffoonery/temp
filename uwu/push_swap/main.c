@@ -1,32 +1,21 @@
 #include "header_ps.h"
 
-void	ps_show(t_stack *a);
-int		init(int c, char **v, t_stack **a, t_stack **b);
-int		ps_placement(t_stack *a);
-int		sorted(t_stack *a, t_stack *b);
-void	ps_radix(t_stack *a, t_stack *b, int max);
-void	ps_turk(t_stack *a, t_stack *b, int min);
-void	ps_swap(t_stack *a, t_stack *b, int flags);
-int		find_min(t_stack *b);
-//int		find_max(t_stack *a);
-
-int	min_rotate(t_stack *a, t_stack *b, int bit)//, int *max)
+int	sorted(t_stack *a, t_stack *b)
 {
-	int	ret;
+	int	top;
+	int	i;
 
-	if (b->top < 0 || find_min(b) < 0)
+	if (b && b->top != -1)
 		return (0);
-	ret = 0;
-	while (b->arr[0] != 0 && (a->arr[a->top] & bit && a->arr))
+	top = a->top;
+	i = 0;
+	while (i < top)
 	{
-		ret ++;
-		ps_rotate(a, b, A | B);
+		if (a->arr[i] < a->arr[i + 1])
+			return (0);
+		i ++;
 	}
-	//while (a->arr[a->top] & bit)
-	//	ps_rotate(a, b, A);
-	while (b->arr[0] != 0)
-		ps_rotate(a, b, B);
-	return (ret);
+	return (1);
 }
 
 static void	ps_clear(t_stack *a, t_stack *b)
@@ -38,16 +27,6 @@ static void	ps_clear(t_stack *a, t_stack *b)
 	free(a);
 	free(b);
 }
-//123
-//132
-//213
-//231
-//321
-//312
-
-// go thru turk again and make sort 5 //push lowest 2 to b
-// pls handle rr and rrr for radix, use another func
-//make radix not loop thru the min section
 
 //5 items capped at 12 moves
 
@@ -56,6 +35,10 @@ void	sort_three(t_stack *a, t_stack *b)
 	int	min;
 
 	min = 0;
+	if (a->top == 1 && a->arr[1] > a->arr[0])
+		ps_swap(a, b, A);
+	if (a->top != 2)
+		return ;
 	if (a->arr[1] < a->arr[0])
 		min = 1;
 	if (a->arr[2] < a->arr[min])
@@ -71,65 +54,36 @@ void	sort_three(t_stack *a, t_stack *b)
 
 void	ps_sort(t_stack *a, t_stack *b, int max)
 {
-	/*
-	int	bit_max;
-	int	min;
+	int		bit_max;
 
-	bit_max = 0;
-	min = 0;
-	if (max < 5)
-		sort_five(a, b);
 	if (sorted(a, b))
 		return ;
-	if (max >= 100)
-		bit_max = 4;
-	if (max >= 500)
-		bit_max = 8;
-	if (bit_max)
-		min = ps_radix(a, b, bit_max);
-	if (min < 3)
-		min = 3;
-	if (!sorted(a, b))
-		ps_turk(a, b, min);
-	min_rotate(a, b);
-	*/
-//	ps_radix(a, b, max);
-	while (a->top > 2)
-		ps_push(a, b, B);
-	(void) max;
-	ps_turk(a, b, 3);
-	ps_show(a);
-//	ps_rotate(a, b, A | R);
-}
-
-void	ps_fuck(t_stack *a, t_stack *b)
-{
-	write(1, "a: ", 3);
-	ft_putnbr_fd(a->top, 1);
-	write(1, "\nb: ", 4);
-	ft_putnbr_fd(b->top, 1);
-	write(1, "\n", 1);
+	bit_max = 1;
+	while (bit_max * 2 <= max)
+		bit_max *= 2;
+	if (max + 1 >= 5000)
+	{
+		lsd_radix(a, b, bit_max);
+		return ;
+	}
+	if (max + 1 >= 50)
+		msd_radix(a, b, bit_max, 3);
+	ps_turk(a, b);
 }
 
 int	main(int c, char **v)
 {
-	t_stack	*a;
-	t_stack	*b;
+	t_stack		*a;
+	t_stack		*b;
 
 	a = NULL;
 	b = NULL;
-	if (c < 2)//has to accept 1 arg now
-		return (0);//i wonder
-	c --;
-	//ft_putnbr_fd(c, 1);
-	//write(1, " start\n", 6);
-	if (!init(c, &v[1], &a, &b) && !ps_placement(a))
-	{
-	//	ps_show(a);
-	//	ps_fuck(a, b);
+	if (c < 2)
+		return (0);
+	ps_write("push_swap");
+	if (!init(c - 1, &v[1], &a, &b) && !ps_placement(a))
 		ps_sort(a, b, a->top);
-	}
 	else
-		write(2, "Error\n", 6);//not visible on output
+		write(2, "Error\n", 6);
 	ps_clear(a, b);
 }

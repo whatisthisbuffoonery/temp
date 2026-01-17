@@ -6,6 +6,26 @@
 //i == 1
 //tmp == arr[1 - 1 = 0]
 
+void	ps_write(char *a)
+{
+	int			i;
+	static int	flag;
+
+	if (!flag)
+	{
+		flag = 1;
+		if (a[0] == 'c')
+			flag = -1;
+		return ;
+	}
+	if (flag < 0)
+		return ;
+	i = 0;
+	while (a[i])
+		i ++;
+	write(1, a, i);
+}
+
 static void	rotate_help(t_stack *s, int mov)
 {
 	int	tmp;
@@ -21,8 +41,6 @@ static void	rotate_help(t_stack *s, int mov)
 		lim = s->top + 1;
 		i = 1;
 	}
-//	write(1, "i: ", 3);
-//	ft_putnbr_fd(mov, 1);
 	tmp = s->arr[i - mov];
 	while (i != lim)
 	{
@@ -40,26 +58,26 @@ void	ps_rotate(t_stack *a, t_stack *b, int flag)
 	if (flag & R)
 	{
 		mov = 1;
-		write(1, "r", 1);
+		ps_write("r");
 	}
 	if (flag & A && flag & B)
-		write(1, "rr\n", 3);
+		ps_write("rr\n");
 	else if (flag & A)
-		write(1, "ra\n", 3);
+		ps_write("ra\n");
 	else if (flag & B)
-		write(1, "rb\n", 3);
-	if (flag & A)
+		ps_write("rb\n");
+	if (flag & A && a->top > 0)
 		rotate_help(a, mov);
-	if (flag & B)
+	if (flag & B && b->top > 0)
 		rotate_help(b, mov);
 }
 
 void	ps_push(t_stack *a, t_stack *b, int flag)
 {
 	if (flag & A)
-		write(1, "pa\n", 3);
+		ps_write("pa\n");
 	else if (flag & B)
-		write(1, "pb\n", 3);
+		ps_write("pb\n");
 	if (flag & A && b->top >= 0)
 	{
 		a->top += 1;
@@ -79,12 +97,12 @@ void	ps_swap(t_stack *a, t_stack *b, int flag)
 	int	tmp;
 	int	top;
 
-	if (flag & A && flag & B)
-		write(1, "ss\n", 3);
+	if ((flag & A) && (flag & B))
+		ps_write("ss\n");
 	else if (flag & A)
-		write(1, "sa\n", 3);
+		ps_write("sa\n");
 	else if (flag & B)
-		write(1, "sb\n", 3);
+		ps_write("sb\n");
 	if (flag & A && a->top > 0)
 	{
 		top = a->top;

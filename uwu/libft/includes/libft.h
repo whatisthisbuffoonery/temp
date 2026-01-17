@@ -16,6 +16,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+# define INT_MAX 2147483647
+# define INT_MIN -2147483648
+
 //plez reconfigure lst 
 
 typedef struct s_list

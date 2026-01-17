@@ -6,8 +6,12 @@ AR := ar
 AR_FLAGS := rcs
 HEADER := libft.h
 MAND_AR := mand.a
+INCLUDE_DIR := includes
+OBJ_DIR := obj
+GNL_DIR := gnl
+FT_DIR := ft
 
-SRC := ft_atoi.c ft_bzero.c ft_calloc.c \
+FT_SRC := ft_atoi.c ft_bzero.c ft_calloc.c \
 ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
 ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
 ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_split.c \
@@ -18,9 +22,15 @@ ft_strrchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c
 BONUS_SRC := ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_lstdelone_bonus.c \
 ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c ft_lstsize_bonus.c
 
-OBJ := $(SRC:.c=.o)
+GNL_SRC := get_next_line_bonus.c get_next_line_utils_bonus.c
 
-BONUS_OBJ := $(BONUS_SRC:.c=.o)
+FT_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(FT_SRC))
+
+BONUS_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(BONUS_SRC))
+
+GNL_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(GNL_SRC))
+
+OBJ := $(FT_OBJ) $(GNL_OBJ) 
 
 all: $(NAME)
 
@@ -37,11 +47,14 @@ $(FULL): $(MAND_AR) $(BONUS_OBJ)
 	$(AR) $(AR_FLAGS) $(FULL) $(BONUS_OBJ)
 	cp $(FULL) $(NAME)
 
-$(OBJ): %.o: %.c
-	$(CC) $(CC_FLAGS) $< -o $@
+$(FT_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
+	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
-$(BONUS_OBJ): %.o: %.c
-	$(CC) $(CC_FLAGS) $< -o $@
+$(BONUS_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
+	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
+
+$(GNL_OBJ): $(OBJ_DIR)/%.o: $(GNL_DIR)/%.c
+	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
 clean:
 	rm -f $(OBJ) $(BONUS_OBJ)
