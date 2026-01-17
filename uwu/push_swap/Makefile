@@ -3,7 +3,7 @@ BONUS_NAME := checker
 
 CC := clang
 CC_FLAGS := -Wall -Wextra -Werror
-LIBFT_DIR := libft
+LIBFT_DIR := ../libft
 LIBFT := libft
 LIBFT_NAME := ft
 

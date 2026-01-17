@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:22:50 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/17 12:22:52 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/01/18 01:26:07 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,10 @@ void	ps_turk(t_stack *a, t_stack *b)
 	t_stack	*src;
 
 	src = a;
-	while (a->top > 2)
+	while (a->top > 4)
 		ps_push(a, b, B);
 	if (!sorted(a, 0))
-		sort_three(a, b);
+		sort_small(a, b);
 	src = b;
 	while (b->top >= 0)
 	{

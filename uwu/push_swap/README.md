@@ -18,6 +18,7 @@ me: bruh
 greedy insertion: (https://pure-forest.medium.com/push-swap-turk-algorithm-explained-in-6-steps-4c6650a458c0)  
 greedy insertion optimisation: toss that 'bound' integer out the window and search for candidates from either side of stack b. Automatic butterfly chunking!  
 lsd radix: (https://medium.com/nerd-for-tech/push-swap-tutorial-fa746e6aba1e)  
+lsd radix keep-in-b idea: (https://github.com/hu8813/push_swap/blob/main/src/sort.c)  
 msd radix: my idea actually. It serves as a rather lazy method of chunking that:  
 	- requires no knowledge of what the initial sample size was  
 	- does no delta calculations, almost half of the numbers are in good chunks. The other half is split between the smallest and second smallest number chunks  
@@ -46,5 +47,5 @@ n = 500 benchmark: 3900 ~ 4300
   
 ### Instructions  
   
-`make` builds push\_swap  
-`make bonus` builds the checker  
+'make' builds push\_swap  
+'make bonus' builds the checker  

@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:20:26 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/17 12:22:12 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/01/18 02:29:06 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int	find_b(t_stack *b, int src, t_iter num)
 void	ps_finish(t_stack *a, t_stack *b)
 {
 	int	top;
+	int	flag;
 	int	i;
 	int	*arr;
 
@@ -106,11 +107,9 @@ void	ps_finish(t_stack *a, t_stack *b)
 		i ++;
 	if (i > top)
 		return ;
+	flag = A;
+	if (i <= top / 2)
+		flag |= R;
 	while (arr[top] != 0)
-	{
-		if (i > top / 2)
-			ps_rotate(a, b, A);
-		else
-			ps_rotate(a, b, A | R);
-	}
+		ps_rotate(a, b, flag);
 }

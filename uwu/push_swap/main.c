@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:22:37 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/17 16:02:49 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/01/18 01:54:09 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,17 @@ static void	ps_clear(t_stack *a, t_stack *b)
 
 //5 items capped at 12 moves
 
-void	sort_three(t_stack *a, t_stack *b)
+void	sort_small(t_stack *a, t_stack *b)
 {
 	int	min;
 
 	min = 0;
 	if (a->top == 1 && a->arr[1] > a->arr[0])
 		ps_swap(a, b, A);
-	if (a->top != 2)
+	if (a->top < 2)
 		return ;
+	while (a->top > 2)
+		ps_push(a, b, B);
 	if (a->arr[1] < a->arr[0])
 		min = 1;
 	if (a->arr[2] < a->arr[min])
@@ -60,8 +62,12 @@ void	sort_three(t_stack *a, t_stack *b)
 	else if (min == 1)
 		ps_rotate(a, b, A | R);
 	if (a->arr[2] > a->arr[1])
-		ps_swap(a, b, A);
-	ps_rotate(a, b, A | R);
+	{
+		if (b->top > 0 && b->arr[b->top] < b->arr[b->top - 1])
+			ps_swap(a, b, A | B);
+		else
+			ps_swap(a, b, A);
+	}
 }
 
 void	ps_sort(t_stack *a, t_stack *b, int max)

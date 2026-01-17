@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:23:06 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/17 16:30:39 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/01/18 01:26:27 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_cost
 int		ps_placement(t_stack *a);
 int		init(int c, char **v, t_stack **a, t_stack **b);
 int		sorted(t_stack *a, t_stack *b);
-void	sort_three(t_stack *a, t_stack *b);
+void	sort_small(t_stack *a, t_stack *b);
 
 void	ps_rotate(t_stack *a, t_stack *b, int flag);
 void	ps_push(t_stack *a, t_stack *b, int flag);
