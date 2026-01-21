@@ -1,6 +1,5 @@
 #include "h_pipex.h"
 
-//1, 4 = files, 2, 3 = cmd
 static int	err(int n)
 {
 	if (n < 0)
@@ -8,7 +7,7 @@ static int	err(int n)
 	return (n);
 }
 
-static int	cmd_cleanup(char **cmd)
+static char	**cmd_cleanup(char **cmd)
 {
 	int	i;
 
@@ -16,7 +15,7 @@ static int	cmd_cleanup(char **cmd)
 	while (cmd[i])
 		free(cmd[i++]);
 	free(cmd);
-	return (1);
+	return (NULL);
 }
 //close(-1) is safe
 static void	file_cleanup(int *pfd, int *filefd)
@@ -58,13 +57,29 @@ static int	init(char **v, int *pfd, int *filefd)
 
 static char **prepend_cmd(char *v)
 {
+	int		len;
 	char	**cmd;
 	char	*ret;//have another stack string?
 
 	cmd = ft_split(v, ' ');
 	if (!cmd)
 		return (NULL);
-	ret = malloc(ft_strlen(cmd[0]) + ft_strlen("/usr/")//fuck I have to check sbin too
+	len = ft_strlen(cmd[0]) + ft_strlen("/usr/sbin/");
+	ret = malloc((len + 1) * sizeof(char));//fuck I have to check sbin too
+	if (!ret)
+		return (cmd_cleanup(cmd));
+	ft_strlcpy(ret, "/usr/bin/", len);
+	ft_strlcat(ret, cmd[0], len);
+	if (access(ret, X_OK))
+	{
+		ft_strlcpy(ret, "/usr/sbin/", len);
+		ft_strlcat(ret, cmd[0], len);
+	}
+	if (access(ret, X_OK))
+		return ((free(ret)), cmd_cleanup(cmd));
+	free(cmd[0]);
+	cmd[0] = ret;
+	return (cmd);
 }
 
 static void	fork_handle(char *v, int *pfd, int *filefd, int *cpid)//room for an unset fd func that sets fd pointer to -1
@@ -105,6 +120,7 @@ int	wvalue(int cpid)
 	return (255);
 }
 
+//1, 4 = files, 2, 3 = cmd
 int	main(int c, char **v)
 {
 	//prepend /usr/bin or /usr/sbin //make it a 1kb stack string
@@ -113,7 +129,7 @@ int	main(int c, char **v)
 	pid_t	cpid[2];
 	// also also the process need to link to each other, use dup_uno
 
-	if (c != 5 || !v[1] || !v[2] || !v[3] || !v[4])
+	if (c != 5 || !v[1] || !v[2] || !v[3] || !v[4])//outsource here...
 		return (1);
 	cpid[0] = 0;
 	cpid[1] = 1;

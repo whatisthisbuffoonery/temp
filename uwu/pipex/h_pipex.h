@@ -5,8 +5,20 @@
 # include <stdio.h>
 # include <string.h>
 # include "libft.h"
-//# include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
+
+typedef struct s_pipe
+{
+	struct s_pipe	*next;
+	char			*v;
+	int				pfd[2];
+}					t_pipe;
+
+typedef struct s_chain
+{
+	t_pipe	*head;
+	t_pipe	*tail;
+}			t_chain;
 
 #endif
