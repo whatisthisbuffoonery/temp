@@ -56,6 +56,17 @@ static int	init(char **v, int *pfd, int *filefd)
 }
 //one pipe per command in minishell, here its forks that take from the same pipe- should I handle that in the child?
 
+static char **prepend_cmd(char *v)
+{
+	char	**cmd;
+	char	*ret;//have another stack string?
+
+	cmd = ft_split(v, ' ');
+	if (!cmd)
+		return (NULL);
+	ret = malloc(ft_strlen(cmd[0]) + ft_strlen("/usr/")//fuck I have to check sbin too
+}
+
 static void	fork_handle(char *v, int *pfd, int *filefd, int *cpid)//room for an unset fd func that sets fd pointer to -1
 {
 	int		fd_index;
@@ -65,7 +76,7 @@ static void	fork_handle(char *v, int *pfd, int *filefd, int *cpid)//room for an 
 	*cpid = fork();
 	if (*cpid)
 		return ;
-	cmd = ft_split(v, ' ');
+	cmd = prepend_cmd(v);
 	if (!cmd || err(dup2(filefd[fd_index], pfd[fd_index])) < 0)
 	{
 		file_cleanup(pfd, filefd);
