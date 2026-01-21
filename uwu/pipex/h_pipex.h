@@ -15,10 +15,10 @@ typedef struct s_pipe
 	int				pfd[2];
 }					t_pipe;
 
-typedef struct s_chain
+typedef struct s_pipelist
 {
 	t_pipe	*head;
 	t_pipe	*tail;
-}			t_chain;
+}			t_pipelist;
 
 #endif
