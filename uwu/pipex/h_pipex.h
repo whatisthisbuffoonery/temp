@@ -10,15 +10,14 @@
 
 typedef struct s_pipe
 {
-	struct s_pipe	*next;
 	char			*v;
 	int				pfd[2];
 }					t_pipe;
 
 typedef struct s_pipelist
 {
-	t_pipe	*head;
-	t_pipe	*tail;
+	int		top;
+	t_pipe	*arr;
 }			t_pipelist;
 
 #endif

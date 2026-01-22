@@ -15,8 +15,12 @@ int main(void)
 	b[2] = NULL;
 	pid_t fudge = fork();
 	int fd2 = open("val.c", O_RDONLY);
+	int pfd[2];
+	pipe(pfd);
 	if (!fudge)
 	{
+		dup2(pfd[0], 0);
+		dup2(pfd[1], 1);
 		execve("/usr/bin/wls", b, NULL);
 		//printf("%s\n", strerror(errno));
 		perror(strerror(errno));
@@ -25,6 +29,8 @@ int main(void)
 		exit(0);
 	}
 	int fd = open("waku", O_RDONLY);
+	close(pfd[0]);
+	close(pfd[1]);
 	close(fd2);
 	close(0);
 	close(1);
