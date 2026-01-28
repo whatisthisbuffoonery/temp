@@ -45,6 +45,6 @@ typedef struct s_gnllist
 	int					total;
 }						t_gnllist;
 
-char	*get_next_line(int fd);
+char	*gnl(int fd);
 
 #endif

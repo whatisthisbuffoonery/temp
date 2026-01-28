@@ -16,13 +16,18 @@ void	pipex_exec(t_pipelist *pl, int i, char **cmd)
 		flag = 1;
 	}
 	if (!flag)
+	{
 		execve(cmd[0], cmd, NULL);
+		close(0);
+		close(1);
+	}
 }
 
 int new_pipe(t_pipelist *pl, int i)
 {
 	if (pipe(pl->arr[i].pfd))
 		return (1);
+	pl->arr[i].heredoc_flag = 0;
 	pl->top += 1;
 	return (0);
 }
@@ -44,7 +49,8 @@ int	pipe_cleanup(t_pipelist *pl)
 //file cmd pipe cmd pipe cmd file // c = 6, args 5, args w/ pipes 7, pipes = c - 2 = 4 (2files, 2pipes)
 //c - 2, v inherited, later v + 2 to sync
 //malloc pl elsewhere
-int	make_pipes(int c, t_pipelist *pl, int *filefd)
+
+int	make_pipes(int c, t_pipelist *pl)
 {
 	int	i;
 
@@ -60,10 +66,5 @@ int	make_pipes(int c, t_pipelist *pl, int *filefd)
 			return (pipe_cleanup(pl));
 		i ++;
 	}
-	if (dup2(filefd[0], pl->arr[0].pfd[0])
-		|| dup2(filefd[1], pl->arr[pl->top].pfd[1]))
-		return (pipe_cleanup(pl));
-	close(filefd[0]);//handle in caller
-	close(filefd[1]);
 	return (0);
 }

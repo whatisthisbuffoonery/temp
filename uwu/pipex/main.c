@@ -1,9 +1,14 @@
 #include "h_pipex.h"
 
+//bring over err(), wvalue(), prepend_cmd(), make a cmd file, and rearrange this func vvv
+
 int	edge_init(t_pipelist **pl, int *filefd, char *f1, char *f2)//herdoc condition here
 {
-	if (!strcmp(f1, "heredoc"))
-		filefd[0] = 0;
+	if (!strcmp(f1, "here_doc"))
+	{
+		filefd[0] = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0600);//unlink heredoc here
+		unlink("/tmp/heredoc");
+	}
 	else
 		filefd[0] = open(f1, O_RDONLY);
 	if (filefd[0] < 0)
@@ -15,17 +20,22 @@ int	edge_init(t_pipelist **pl, int *filefd, char *f1, char *f2)//herdoc conditio
 			close(filefd[0]);
 		return (1);
 	}
+	if (dup2(filefd[0], pl->arr[0].pfd[0])
+		|| dup2(filefd[1], pl->arr[pl->top].pfd[1]))
+		return (pipe_cleanup(pl));
+	close(filefd[0]);
+	close(filefd[1]);
 	return (0);
 }
-
-int	valid(int c, char **v)
+//bomb out or accept heredoc as either file. That will have to tokenise v BEFORE THIS POINT and change the func above
+int	valid(int c, char **v)// phase out
 {
 	int	i;
 
 	i = 1;
 	while (i < c)
 	{
-		if (i != 1 && !strcmp(v[i], "heredoc"))
+		if (i != 1 && !strcmp(v[i], "here_doc"))
 			return (0);
 		i ++;
 	}
@@ -39,8 +49,11 @@ int	valid(int c, char **v)
 int	main(int c, char **v)
 {
 	t_pipelist	*pl;
+	int			i;
 	int			filefd[2];
+	pid_t		cpid;
 
+	i = 0;
 	if (c != 5 || !valid(c, v))
 		return (1);
 	pl = malloc(sizeof(t_pipelist));
@@ -52,11 +65,11 @@ int	main(int c, char **v)
 		return (1);
 	}
 	if (!make_pipes(c, pl, filefd))
-		fork_handler(v + 2, pl);//return here on failure
+		cpid = fork_handler(v + 2, pl);//return here on failure
 	pipe_cleanup(pl);
 	free(pl);
 	close(filefd[1]);
-	if (filefd[0] > 0)
-		close(filefd[0]);
+	if (cpid)
+		unlink("/tmp/heredoc"
 	return (1);
 }

@@ -19,3 +19,13 @@ $(OBJ): %.o: %.c
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR) all
+
+clean:
+	rm -rf $(OBJ)
+
+fclean: clean
+	rm -rf $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re

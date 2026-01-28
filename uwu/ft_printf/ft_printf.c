@@ -42,6 +42,7 @@ int	ft_printf(const char *format, ...)
 	int		return_value;
 
 	q = NULL;
+	return_value = -1;
 	va_start(va, format);
 	printf_tokens(format, &q, ft_strlen(format));
 	if (q)

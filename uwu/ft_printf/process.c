@@ -85,7 +85,7 @@ int	process(t_queue *q, va_list *va)
 	{
 		new = grab(f, va);
 		if (!new)
-			return (1);
+			return (-1);
 		f->str = new;
 		f = f->next;
 	}

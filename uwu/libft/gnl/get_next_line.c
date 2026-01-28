@@ -17,7 +17,7 @@ void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done);
 char	*gnl_shove(t_gnllist *lst);
 char	*read_buf(t_var *file, int fd, int *done);
 
-char	*get_next_line(int fd)
+char	*gnl(int fd)
 {
 	static t_var	file;
 	t_gnllist		*lst;

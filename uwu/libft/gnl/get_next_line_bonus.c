@@ -32,7 +32,7 @@ static void	gnl_file_management(t_stash *stash, t_var *file, int fd, int flag)
 	}
 }
 
-char	*get_next_line(int fd)
+char	*gnl_b(int fd)
 {
 	static t_stash	stash;
 	t_var			file;

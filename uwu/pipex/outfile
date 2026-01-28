@@ -1,0 +1,12 @@
+Makefile
+cmd.c
+fork.c
+h_pipex.h
+jail
+kick.c
+list.c
+main.c
+outfile
+pipex
+req
+wa
