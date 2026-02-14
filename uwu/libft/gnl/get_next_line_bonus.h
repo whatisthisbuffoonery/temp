@@ -25,9 +25,9 @@
 
 typedef struct s_stash
 {
-	char	buf[1025][BUFFER_SIZE];
-	ssize_t	count[1025];
-	ssize_t	lim[1025];
+	char	buf[1024][BUFFER_SIZE];
+	ssize_t	count[1024];
+	ssize_t	lim[1024];
 }			t_stash;
 
 typedef struct s_var

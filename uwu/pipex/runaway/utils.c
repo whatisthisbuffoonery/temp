@@ -1,40 +1,60 @@
 #include "h_pipex.h"
 
 //err msg indicator semantics to be confirmed
-int  err(int n)
+
+int	cmd_err(int n, char *str)//rewrite to have this func do ft find char, maybe include "pipex"
 {
+	char	*tmp;
+
+	tmp = NULL;
+	if (errno && str && errno != ENOENT)
+		tmp = ft_strrchr(str, '/');
+	if (tmp)
+		str = tmp;
 	if (n < 0)
-		perror(strerror(errno));
+		perror(str);//strrchr '/' if errno == enoent
 	return (n);
 }
 
-int	wvalue(int cpid)
+int  err(int n, char *str)//rewrite to exclude pipex on occasion
 {
-	int		n;
-	pid_t	w_return;
-
-	if (cpid < 1)
-		return (err(cpid));
-	errno = 0;
-	w_return = waitpid(cpid, &n, 0);//reset errno here? hm
-	while (errno == EINTR && w_return < 0)
+	if (n < 0)
 	{
-		errno = 0;
-		w_return = waitpid(cpid, &n, 0);
+		write(2, "pipex: ", 7);
+		perror(str);
 	}
-	if (w_return < 0)
-		return (err(w_return));
-	else if (WIFEXITED(n))
-		return (err(WEXITSTATUS(n)));
-	return (255);
+	return (n);
 }
+//perror statements everywhere
 
-void	fd_cleanup(int *pfd)
+void	unset(int *fd)
 {
-	close(pfd[0]);
-	close(pfd[1]);
-	close(pfd[2]);
-	close(pfd[3]);
+	if (*fd > 2)
+		close(*fd);
+	*fd = 0;
+}
+//confirm list of fall thru errno
+void	fd_cleanup(int *pfd, int *ffd, char **v)//ffd cleanup in fork()//consider null pointer
+{
+	int	i;
+	int	len;
+
+	len = 0;
+	while (v[len])
+		len ++;
+	len = 2 * ((len - (1 + 1)) - !ft_strcmp(v[1], "here_doc"));
+	i = 0;
+	while (i < len)
+		unset(&pfd[i++]);
+	i = 0;
+	while (ffd && i < len)
+	{
+		if (*ffd == pfd[i])
+			*ffd = -1;
+		i ++;
+	}
+	unset(ffd);
+	free(pfd);
 }
 
 int	cmd_cleanup(char ***cmd)
@@ -47,5 +67,6 @@ int	cmd_cleanup(char ***cmd)
 	while ((*cmd)[i])
 		free((*cmd)[i++]);
 	free(*cmd);
-	*cmd = NULL;
+	*cmd = NULL;//yes.
+	return (-1);
 }

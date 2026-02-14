@@ -17,7 +17,15 @@
 static void	refresh_buffer(t_var *file, int fd, int *done)
 {
 	if (fd >= 0)
+	{
+		errno = 0;
 		file->lim = read(fd, file->buf, BUFFER_SIZE);
+		while (errno == EINTR)
+		{
+			errno = 0;
+			file->lim = read(fd, file->buf, BUFFER_SIZE);
+		}
+	}
 	file->count = 0;
 	if (fd < 0 || file->lim < 0)
 	{

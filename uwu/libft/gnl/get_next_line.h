@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <errno.h>
 
 # ifndef BUFFER_SIZE
 

@@ -10,12 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_strcmp(char *a, char *b)
+int	ft_strpart(char *a, char *b)
 {
 	int	i;
 
 	i = 0;
-	while (a[i] && a[i] == b[i])
+	while (a[i] && b[i] && a[i] == b[i])
 		i ++;
+	if (!a[i] || !b[i])
+		return (0);
 	return ((unsigned char) a[i] - (unsigned char) b[i]);
 }

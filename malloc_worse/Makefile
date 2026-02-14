@@ -1,3 +1,5 @@
+#i wouldnt compile the tester if I were you
+
 CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -c
 COMPILE_SHARED := -fPIC

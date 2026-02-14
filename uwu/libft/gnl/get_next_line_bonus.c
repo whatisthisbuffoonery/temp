@@ -43,7 +43,7 @@ char	*gnl_b(int fd)
 	done = 0;
 	lst = NULL;
 	ret = NULL;
-	if (fd < 0 || fd > 1024)
+	if (fd < 0 || fd > 1023)
 		return (NULL);
 	gnl_file_management(&stash, &file, fd, 1);
 	while (!done)

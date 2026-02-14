@@ -8,22 +8,21 @@
 # include <sys/wait.h>
 # include <errno.h>
 
-typedef struct s_pipe
-{
-	int	v_index;
-	int	heredoc_flag;
-	int	pfd[2];
-}					t_pipe;
+int	ffd_start(char **v, int *i, int *pfd);
+int	ffd_end(char *v, int heredoc_flag);
 
-typedef struct s_pipelist
-{
-	int		top;
-	t_pipe	*arr;
-}			t_pipelist;
+void	child_wait(int cpid);
+void	child_err(char **cmd, int *pfd, int *ffd);
 
-typedef struct s_cmd
-{
-	char	*v;
-	f
+int	pipex_arg(int c);
+int	ffd_heredoc(char **v, int *i, int *pfd);
+int	cmd_init(char **v, int *i, char ***cmd);
+int	fork_handler(char **v, int *i, int *pfd, int *ffd);
+
+int	cmd_err(int n, char *str);
+int	err(int n, char *str);
+void	unset(int *fd);
+void	fd_cleanup(int *pfd, int *ffd, char **v);
+int	cmd_cleanup(char ***cmd);
 
 #endif
