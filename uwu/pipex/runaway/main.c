@@ -66,14 +66,19 @@ int	waiter(void)
 
 //exit code is a race cond make a malloc array of cpids and use waitpid
 //or close the first pipe end and waitpid one at a time
+//this main wait is a new idea, my i increments are fucked
 
 int	main_wait(int *pfd, int i, char **v)
 {
 	int	index;
 
-	index = pfd_grab(i - 1, v);
-	unset(&pfd[index]);
-//	unset(&pfd[index + 1]);
+	i --;
+	if (!v[i + 2])
+		i --;
+	index = pfd_grab(i, v);
+	probe(index, "close_index");
+//	unset(&pfd[index]);
+	unset(&pfd[index + 1]);
 	return (child_wait());
 }
 
