@@ -1,18 +1,21 @@
 #include "h_pipex.h"
 
-void	child_wait(int cpid)
+int	child_wait(void)
 {
 	int		n;
 	pid_t	w_return;
 
 	errno = 0;
-	w_return = waitpid(cpid, &n, 0);
+	w_return = wait(&n);
 	while (errno == EINTR && w_return < 0)
-		w_return = waitpid(cpid, &n, 0);
+		w_return = wait(&n);
+	if (w_return >= 0)
+		return (WEXITSTATUS(n));
+	return (w_return);
 	//no waitpid error msg nor stop logic //n?
 }
 
-void	child_err(char **cmd, char **v, int *pfd, int *ffd)
+void	child_err(char **cmd, char **v, int **pfd, int *ffd)
 {
     if (pfd)
 	    fd_cleanup(pfd, ffd, v);

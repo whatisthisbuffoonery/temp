@@ -1,3 +1,5 @@
+#include "h_pipex.h"
+
 int	heredoc_write(int fd, char *line)
 {
 	int	written;
@@ -25,8 +27,6 @@ int	heredoc_write(int fd, char *line)
 int pipex_cmp(char *line, char *v, int v_len)
 {
 	int		line_len;
-	int		i;
-	char	*tmp;
 
 	line_len = ft_strlen(line);
 	if (line_len != v_len + 1 || line[v_len] != '\n')
@@ -43,12 +43,12 @@ int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)//not considering tokens (n
 	if (*i != 1 || ft_strcmp(v[1], "here_doc"))
 		return (0);
 	len = ft_strlen(v[2]);
-	line = gnl(0);
+	line = gnl_b(0);
 	while (line && pipex_cmp(line, v[2], len))
 	{
 		if (heredoc_write(pfd[1], line))
 			return (-1);
-		line = gnl(0);
+		line = gnl_b(0);
 	}
 	free(line);
 	*i += 2;

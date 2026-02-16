@@ -2,13 +2,24 @@
 
 //swapping out pfd is very painful, we are coding for async stuff. dont close()?
 
-int	pfd_init(int c, char **v, int **pfd)
+int	pfd_len(char **v)
+{
+	int	i;
+
+	i = 0;
+	while (v[i])
+		i ++;
+	return ((i - 1) * 2);
+}
+
+int	pfd_init(char **v, int **pfd)
 {
 	int	len;
 	int	i;
 
 
-	len = 2 * ((c - (1 + 1)) - !ft_strcmp(v[1], "here_doc"));//wrap strcmp for bonus
+	len = pfd_len(v);//wrap strcmp for bonus
+//	probe(len, "malloc");
 	*pfd = malloc(len * sizeof(int));
 	if (!*pfd)
 		return (err(-1, "malloc error"));
@@ -19,9 +30,13 @@ int	pfd_init(int c, char **v, int **pfd)
 	while (i < len)
 	{
 		if (err(pipe(&(*pfd)[i]), "pipe error"))
-			return (fd_cleanup(pfd, c, NULL));
+		{
+			fd_cleanup(pfd, NULL, v);
+			return (1);
+		}
 		i += 2;
 	}
+	return (0);
 }
 
 int	main_init(int **pfd, int *i, int c, char **v)
@@ -29,10 +44,27 @@ int	main_init(int **pfd, int *i, int c, char **v)
 	*i = 1;
 	if (pipex_arg(c))
 		*i = 127;
-	else if (!pfd_init(c, v, pfd))
+	else if (!pfd_init(v, pfd))
 		return (0);
 	return (1);
 }
+
+static int	waiter(void)
+{
+	int	ret;
+	int	tmp;
+
+	ret = child_wait();
+	tmp = child_wait();
+	while (tmp >= 0)
+	{
+		ret = tmp;
+		tmp = child_wait();
+	}
+	return (ret);
+}
+
+//exit code is a race cond make a malloc array of cpids and use waitpid
 
 int	main(int c, char **v)
 {
@@ -41,6 +73,9 @@ int	main(int c, char **v)
 	int		*pfd;
 	pid_t	cpid;
 
+	ft_putstr("test: ");
+	ft_putstr(v[0]);
+	ft_putstr("\n");
 	if (main_init(&pfd, &i, c, v))//bonus diff, pass c
 		return (i);
 	while (i < c - 1)//for basic pipe, c == 5 and last file == 4
@@ -52,8 +87,30 @@ int	main(int c, char **v)
 			cpid = -1;
 		if (cpid < 1)
 			break;
-		child_wait(cpid);
 	}
-	fd_cleanup(pfd, &ffd, v);
-	return ((cpid < 0));
+	fd_cleanup(&pfd, &ffd, v);
+	return (waiter());
 }
+
+/*
+int	main(int c, char **v)
+{
+	int *pfd;
+	int	len;
+
+	if (c != 5)
+		return (1);
+	len = pfd_len(v);
+	pfd = malloc(len * sizeof(int));
+	probe(len, "len");
+	pipe(pfd);
+	pipe(&pfd[2]);
+	pipe(&pfd[4]);
+	pipe(&pfd[6]);
+	fd_cleanup(&pfd, NULL, v);
+	ft_putstr(v[2]);
+	char **cmd = ft_split(v[2], ' ');
+	ft_putnbr(ft_strlen(cmd[0]));
+	cmd_cleanup(&cmd);
+}
+*/

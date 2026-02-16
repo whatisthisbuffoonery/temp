@@ -57,6 +57,10 @@ static int	delimiter_cond(char const *s, char c, int i)
 	return ((s[i] == c && s[i + 1] && s[i + 1] != c) || (!i && s[i] != c));
 }
 
+//paco notes:
+//when s is a delimiter-only string, empty string, or NULL, a malloc-ed string array with just
+//the terminating null string is returned
+
 char	**ft_split(char const *s, char c)
 {
 	char	**ret;

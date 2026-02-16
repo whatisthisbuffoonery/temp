@@ -1,3 +1,5 @@
+#include "h_pipex.h"
+
 //i == 1 condition to change, rest is ok
 //oh my fu I need a new strncmp //then: new read for partial reads and not count \n for limiter
 //new loop for partial reads
@@ -5,18 +7,18 @@
 //heredoc reports its
 
 
-int	ffd_start(char **v, int *i, int *pfd)
+int	ffd_start(char **v, int *i)
 {
 	int	newfd;
 
 	errno = 0;
 	newfd = open(v[1], O_RDONLY);
 	while (newfd < 0 && errno == EINTR)
-		newfd = open(v[i], O_RDONLY);
+		newfd = open(v[*i], O_RDONLY);
 	*i += 1;
-	if (err(newfd, "open error") < 0)//dont, carry thru
-		bomb_out(pfd, 0);
-	return (newfd);
+	//probe(*i, "ffd_init: ");
+	//probe(newfd, "ffd_val: ");
+	return (err(newfd, "open error"));
 }
 
 int	ffd_end(char *v, int heredoc_flag)

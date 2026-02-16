@@ -5,14 +5,14 @@ int	std_dup(int *pfd, int *ffd, int i)
 	int	fd;
 
 	fd = pfd[0];
-	if (ffd && i < 4)
-		fd = ffd;
-	if (dup2(fd, 0))
+	if (i < 4)
+		fd = *ffd;
+	if (dup2(fd, 0) < 0)
 		return (err(-1, "dup2 error"));//bash would not mention dup, consider NULL
 	fd = pfd[3];
-	if (ffd && i >= 4)
-		fd = ffd;
-	if (dup2(fd, 1))
+	if (i >= 4)
+		fd = *ffd;
+	if (dup2(fd, 1) < 0)
 	{
 		close(0);
 		return (err(-1, "dup2 error"));
@@ -20,15 +20,23 @@ int	std_dup(int *pfd, int *ffd, int i)
 	return (0);
 }
 
-int	ffd_init(char **v, int *i, int *pfd, int *ffd)
+int	ffd_init(char **v, int *i, int **pfd, int *ffd)
 {
+	errno = 0;
 	if (*i == 1)
-		*ffd = ffd_start(v, i, pfd);
+		*ffd = ffd_start(v, i);
 	else if (!v[*i + 2])
-		*ffd = ffd_end(v[i + 1], !ft_strcmp(v[1], "here_doc"));//pass strcmp to another wrapper
+		*ffd = ffd_end(v[*i + 1], !ft_strcmp(v[1], "here_doc"));//pass strcmp to another wrapper
 	if (*ffd < 0)
-		fd_cleanup(pfd, ffd);
-	return ((*ffd < 0));
+	{
+		if (errno == ENOENT)
+			*i = 0;
+		else
+			*i = 1;
+		fd_cleanup(pfd, ffd, v);
+		return (1);
+	}
+	return (0);
 }
 
 int	pfd_grab(int i, char **v)
@@ -46,17 +54,24 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	pid_t	cpid;
 	char	**cmd;
 	int		*pfd;
- 
+
 	errno = 0;
 	cpid = fork();
 	if (cpid)
+	{
+		if (*i == 1 || !v[*i + 2])
+			*i += 1;
+		*i += 1;
 		return (err(cpid, "fork"));//just "fork"
-	if (ffd_init(v, i, pfd, ffd))
-		exit(1);
-	pfd = pfd_src[pfd_grab(*i, v)];
+	}
+//	probe(*i, "before: ");
+	if (ffd_init(v, i, &pfd_src, ffd))
+		exit(*i);
+//	probe(*i, "after: ");
+	pfd = &pfd_src[pfd_grab(*i, v)];
 	if(cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i))
-		child_err(cmd, pfd_src, ffd, v);//set ffd to 0 if any match
-	fd_cleanup(pfd, ffd, v);
+		child_err(cmd, v, &pfd_src, ffd);//set ffd to 0 if any match
+	fd_cleanup(&pfd_src, ffd, v);
 	execve(cmd[0], cmd, NULL);//pfd cleanup first
 	cmd_err(-1, cmd[0]);//strrchr '/'
 	close(0);

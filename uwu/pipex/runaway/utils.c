@@ -2,6 +2,14 @@
 
 //err msg indicator semantics to be confirmed
 
+void	probe(int n, char *a)
+{
+	ft_putstr(a);
+	ft_putstr(": ");
+	ft_putnbr(n);
+	write(1, "\n", 1);
+}
+
 int	cmd_err(int n, char *str)//rewrite to have this func do ft find char, maybe include "pipex"
 {
 	char	*tmp;
@@ -12,7 +20,10 @@ int	cmd_err(int n, char *str)//rewrite to have this func do ft find char, maybe 
 	if (tmp)
 		str = tmp;
 	if (n < 0)
+	{
+		ft_putstr("cmd: ");
 		perror(str);//strrchr '/' if errno == enoent
+	}
 	return (n);
 }
 
@@ -34,27 +45,32 @@ void	unset(int *fd)
 	*fd = 0;
 }
 //confirm list of fall thru errno
-void	fd_cleanup(int *pfd, int *ffd, char **v)//ffd cleanup in fork()//consider null pointer
+void	fd_cleanup(int **pfd_src, int *ffd, char **v)//ffd cleanup in fork()//consider null pointer
 {
 	int	i;
 	int	len;
+	int	*pfd;
 
-	len = 0;
-	while (v[len])
-		len ++;
-	len = 2 * ((len - (1 + 1)) - !ft_strcmp(v[1], "here_doc"));
+	pfd = *pfd_src;
+	if (!pfd)
+		return ;
+	len = pfd_len(v);
 	i = 0;
+//	probe(len, "len");
 	while (i < len)
 		unset(&pfd[i++]);
+//	probe(i, "i");
 	i = 0;
-	while (ffd && i < len)
+	while (ffd && *ffd > 2 && i < len)
 	{
 		if (*ffd == pfd[i])
 			*ffd = -1;
 		i ++;
 	}
-	unset(ffd);
+	if (ffd)
+		unset(ffd);
 	free(pfd);
+	*pfd_src = NULL;
 }
 
 int	cmd_cleanup(char ***cmd)
