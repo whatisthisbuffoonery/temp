@@ -19,6 +19,7 @@ int	ffd_end(char *v, int heredoc_flag);
 int	child_wait(void);
 void	child_err(char **cmd, char **v, int **pfd, int *ffd);
 
+int	pfd_grab(int i, char **v);
 int	pipex_arg(int c);
 int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd);
 int	cmd_init(char **v, int *i, char ***cmd);

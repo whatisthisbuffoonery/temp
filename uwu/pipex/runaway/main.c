@@ -49,7 +49,7 @@ int	main_init(int **pfd, int *i, int c, char **v)
 	return (1);
 }
 
-static int	waiter(void)
+int	waiter(void)
 {
 	int	ret;
 	int	tmp;
@@ -65,10 +65,22 @@ static int	waiter(void)
 }
 
 //exit code is a race cond make a malloc array of cpids and use waitpid
+//or close the first pipe end and waitpid one at a time
+
+int	main_wait(int *pfd, int i, char **v)
+{
+	int	index;
+
+	index = pfd_grab(i - 1, v);
+	unset(&pfd[index]);
+//	unset(&pfd[index + 1]);
+	return (child_wait());
+}
 
 int	main(int c, char **v)
 {
 	int		i;
+	int		n;
 	int		ffd;
 	int		*pfd;
 	pid_t	cpid;
@@ -76,6 +88,7 @@ int	main(int c, char **v)
 	ft_putstr("test: ");
 	ft_putstr(v[0]);
 	ft_putstr("\n");
+	n = 0;
 	if (main_init(&pfd, &i, c, v))//bonus diff, pass c
 		return (i);
 	while (i < c - 1)//for basic pipe, c == 5 and last file == 4
@@ -87,9 +100,10 @@ int	main(int c, char **v)
 			cpid = -1;
 		if (cpid < 1)
 			break;
+		n = main_wait(pfd, i, v);
 	}
 	fd_cleanup(&pfd, &ffd, v);
-	return (waiter());
+	return (n);
 }
 
 /*

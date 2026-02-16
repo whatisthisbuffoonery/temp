@@ -49,6 +49,19 @@ int	pfd_grab(int i, char **v)
 //
 //i value without heredoc: 2, 3, 4, 5, ...
 //with: 3, 4, 5, 6, ...
+
+void	print_pfd(int *pfd)
+{
+	ft_putnbr(pfd[0]);
+	ft_putstr("\n");
+	ft_putnbr(pfd[1]);
+	ft_putstr("\n");
+	ft_putnbr(pfd[2]);
+	ft_putstr("\n");
+	ft_putnbr(pfd[3]);
+	ft_putstr("\n");
+}
+
 int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup later
 {
 	pid_t	cpid;
@@ -68,7 +81,9 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	if (ffd_init(v, i, &pfd_src, ffd))
 		exit(*i);
 //	probe(*i, "after: ");
+	probe(pfd_grab(*i, v), "pfd_index");
 	pfd = &pfd_src[pfd_grab(*i, v)];
+	print_pfd(pfd);
 	if(cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i))
 		child_err(cmd, v, &pfd_src, ffd);//set ffd to 0 if any match
 	fd_cleanup(&pfd_src, ffd, v);
