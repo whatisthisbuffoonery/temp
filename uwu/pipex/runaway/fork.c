@@ -72,7 +72,7 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	cpid = fork();
 	if (cpid)
 	{
-		if (*i == 1 || !v[*i + 2])
+		if (*i == 1 || !v[*i + 2])//remove end file cond, adjust loop in main
 			*i += 1;
 		*i += 1;
 		return (err(cpid, "fork"));//just "fork"
