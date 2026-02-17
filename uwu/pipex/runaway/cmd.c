@@ -71,6 +71,6 @@ int	cmd_init(char **v, int *i, char ***cmd)
 		return (err(-1, v[*i]));
 	if (cmd_name(cmd))
 		return (1);
-	*i += 1;
+	//*i += 1;
 	return (0);
 }

@@ -72,12 +72,14 @@ int	main_wait(int *pfd, int i, char **v)
 {
 	int	index;
 
+	probe(i, "i_in");
 	i --;
-	if (!v[i + 2])
-		i --;
 	index = pfd_grab(i, v);
+	probe(i, "i_index");
 	probe(index, "close_index");
+//	(void) pfd;
 //	unset(&pfd[index]);
+	probe(pfd[index + 1], "closed");
 	unset(&pfd[index + 1]);
 	return (child_wait());
 }

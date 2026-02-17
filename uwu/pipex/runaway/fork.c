@@ -1,17 +1,26 @@
 #include "h_pipex.h"
 
-int	std_dup(int *pfd, int *ffd, int i)
+int	std_dup(int *pfd, int *ffd, int i, char **v)
 {
 	int	fd;
 
+	probe(pfd[0], "in");
+	probe(pfd[3], "out");
+	probe(i, "dup_i");
 	fd = pfd[0];
-	if (i < 4)
+	if (*ffd > 2 && i < 3 + !ft_strcmp(v[1], "here_doc"))
+	{
+		probe(*ffd, "!!!ffd_in!!!");
 		fd = *ffd;
+	}
 	if (dup2(fd, 0) < 0)
 		return (err(-1, "dup2 error"));//bash would not mention dup, consider NULL
 	fd = pfd[3];
-	if (i >= 4)
+	if (*ffd > 2 && !v[i + 2])
+	{
+		probe(*ffd, "!!!ffd_out!!!");
 		fd = *ffd;
+	}
 	if (dup2(fd, 1) < 0)
 	{
 		close(0);
@@ -72,9 +81,11 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	cpid = fork();
 	if (cpid)
 	{
-		if (*i == 1 || !v[*i + 2])//remove end file cond, adjust loop in main
+		probe(*i, "i_start");
+		if (*i == 1)//remove end file cond, adjust loop in main
 			*i += 1;
 		*i += 1;
+		probe(*i, "i_ret");
 		return (err(cpid, "fork"));//just "fork"
 	}
 //	probe(*i, "before: ");
@@ -84,7 +95,7 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	probe(pfd_grab(*i, v), "pfd_index");
 	pfd = &pfd_src[pfd_grab(*i, v)];
 	print_pfd(pfd);
-	if(cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i))
+	if(cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i, v))
 		child_err(cmd, v, &pfd_src, ffd);//set ffd to 0 if any match
 	fd_cleanup(&pfd_src, ffd, v);
 	execve(cmd[0], cmd, NULL);//pfd cleanup first
