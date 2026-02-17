@@ -43,25 +43,10 @@ int	main_init(int **pfd, int *i, int c, char **v)
 {
 	*i = 1;
 	if (pipex_arg(c))
-		*i = 127;
+		*i = 0;
 	else if (!pfd_init(v, pfd))
 		return (0);
 	return (1);
-}
-
-int	waiter(void)
-{
-	int	ret;
-	int	tmp;
-
-	ret = child_wait();
-	tmp = child_wait();
-	while (tmp >= 0)
-	{
-		ret = tmp;
-		tmp = child_wait();
-	}
-	return (ret);
 }
 
 //exit code is a race cond make a malloc array of cpids and use waitpid
