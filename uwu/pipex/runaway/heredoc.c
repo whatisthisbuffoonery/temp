@@ -1,20 +1,19 @@
-int ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
+int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
 {
-    (void) v;
-    (void) i;
-    (void) ffd;
-    (void) pfd;
-
-    return (0);
+	(void) v;
+	(void) i;
+	(void) ffd;
+	(void) pfd;
+	return (0);
 }
 
-int heredoc_cond(char **v)
+int	heredoc_cond(char **v)
 {
-    (void) v;
-    return (0);
+	(void) v;
+	return (0);
 }
 
-int pipex_arg(int n)
+int	pipex_arg(int c)
 {
-    return ((n != 5));
+	return ((c != 5));
 }

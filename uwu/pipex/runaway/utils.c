@@ -1,16 +1,6 @@
 #include "h_pipex.h"
 
-//err msg indicator semantics to be confirmed
-
-void	probe(int n, char *a)
-{
-	ft_putstr(a);
-	ft_putstr(": ");
-	ft_putnbr(n);
-	write(1, "\n", 1);
-}
-
-int	cmd_err(int n, char *str)//rewrite to have this func do ft find char, maybe include "pipex"
+int	cmd_err(int n, char *str)
 {
 	char	*tmp;
 
@@ -20,14 +10,11 @@ int	cmd_err(int n, char *str)//rewrite to have this func do ft find char, maybe 
 	if (tmp)
 		str = tmp;
 	if (n < 0)
-	{
-		ft_putstr("cmd: ");
-		perror(str);//strrchr '/' if errno == enoent
-	}
+		perror(str);
 	return (n);
 }
 
-int  err(int n, char *str)//rewrite to exclude pipex on occasion
+int	err(int n, char *str)
 {
 	if (n < 0)
 	{
@@ -36,7 +23,6 @@ int  err(int n, char *str)//rewrite to exclude pipex on occasion
 	}
 	return (n);
 }
-//perror statements everywhere
 
 void	unset(int *fd)
 {
@@ -44,8 +30,8 @@ void	unset(int *fd)
 		close(*fd);
 	*fd = 0;
 }
-//confirm list of fall thru errno
-void	fd_cleanup(int **pfd_src, int *ffd, char **v)//ffd cleanup in fork()//consider null pointer
+
+void	fd_cleanup(int **pfd_src, int *ffd, char **v)
 {
 	int	i;
 	int	len;
@@ -56,10 +42,8 @@ void	fd_cleanup(int **pfd_src, int *ffd, char **v)//ffd cleanup in fork()//consi
 		return ;
 	len = pfd_len(v);
 	i = 0;
-//	probe(len, "len");
 	while (i < len)
 		unset(&pfd[i++]);
-//	probe(i, "i");
 	i = 0;
 	while (ffd && *ffd > 2 && i < len)
 	{
@@ -78,11 +62,12 @@ int	cmd_cleanup(char ***cmd)
 	int	i;
 
 	i = 0;
-	if (!*cmd)
-		return (1);
-	while ((*cmd)[i])
-		free((*cmd)[i++]);
-	free(*cmd);
-	*cmd = NULL;//yes.
-	return (-1);
+	if (*cmd)
+	{
+		while ((*cmd)[i])
+			free((*cmd)[i++]);
+		free(*cmd);
+		*cmd = NULL;
+	}
+	return (1);
 }

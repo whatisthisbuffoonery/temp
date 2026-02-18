@@ -35,7 +35,7 @@ int	heredoc_write(int fd, char *line)
 	return (0);
 }
 
-int pipex_cmp(char *line, char *v, int v_len)
+int	pipex_cmp(char *line, char *v, int v_len)
 {
 	int		line_len;
 
@@ -45,7 +45,9 @@ int pipex_cmp(char *line, char *v, int v_len)
 	return (ft_strncmp(line, v, v_len));
 }
 
-int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)//not considering tokens (not told to accept ">>"), export heredoc flag from fork call
+//not considering tokens (not told to accept ">>")
+
+int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
 {
 	char	*line;
 	int		len;
@@ -69,9 +71,7 @@ int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)//not considering tokens (n
 	return (0);
 }
 
-int pipex_arg(int c)
+int	pipex_arg(int c)
 {
-    if (c < 5)
-        return (1);
-    return (0);
+	return ((c < 5));
 }

@@ -17,8 +17,8 @@ int	child_wait(void)
 
 void	child_err(char **cmd, char **v, int **pfd, int *ffd)
 {
-    if (pfd)
-	    fd_cleanup(pfd, ffd, v);
+	if (pfd)
+		fd_cleanup(pfd, ffd, v);
 	cmd_cleanup(&cmd);
 	if (errno == EACCES || errno == ENOEXEC)
 		exit(126);

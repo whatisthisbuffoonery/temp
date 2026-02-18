@@ -1,12 +1,5 @@
 #include "h_pipex.h"
 
-//i == 1 condition to change, rest is ok
-//oh my fu I need a new strncmp //then: new read for partial reads and not count \n for limiter
-//new loop for partial reads
-//!!pipex uses > TRUNC without heredoc and >> no TRUNC with heredoc
-//heredoc reports its
-
-
 int	ffd_start(char **v, int *i)
 {
 	int	newfd;
@@ -16,10 +9,10 @@ int	ffd_start(char **v, int *i)
 	while (newfd < 0 && errno == EINTR)
 		newfd = open(v[*i], O_RDONLY);
 	*i += 1;
-	//probe(*i, "ffd_init: ");
-	//probe(newfd, "ffd_val: ");
 	return (err(newfd, "open error"));
 }
+
+//!!pipex uses > TRUNC without heredoc and >> no TRUNC with heredoc
 
 int	ffd_end(char *v, int heredoc_flag)
 {
