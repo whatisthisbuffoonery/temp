@@ -5,25 +5,30 @@
 # include <stdio.h>
 # include <string.h>
 # include "libft.h"
+# include "get_next_line.h"
 # include <sys/wait.h>
 # include <errno.h>
 
-typedef struct s_pipe
-{
-	int	v_index;
-	int	heredoc_flag;
-	int	pfd[2];
-}					t_pipe;
+int		pipex_arg(int c);
 
-typedef struct s_pipelist
-{
-	int		top;
-	t_pipe	*arr;
-}			t_pipelist;
+int		pfd_len(char **v);
+int		heredoc_cond(char **v);
+int		ffd_heredoc(char **v, int *i, int *ffd, int *pfd);
 
-typedef struct s_cmd
-{
-	char	*v;
-	f
+int		ffd_start(char **v, int *i);
+int		ffd_end(char *v, int heredoc_flag);
+
+int		child_wait(void);
+void	child_err(char **cmd, char **v, int **pfd, int *ffd);
+
+int		pfd_grab(int i, char **v);
+int		cmd_init(char **v, int *i, char ***cmd);
+int		fork_handler(char **v, int *i, int *pfd, int *ffd);
+
+int		cmd_err(int n, char *str);
+int		err(int n, char *str);
+void	unset(int *fd);
+void	fd_cleanup(int **pfd, int *ffd, char **v);
+int		cmd_cleanup(char ***cmd);
 
 #endif

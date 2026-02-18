@@ -1,35 +1,81 @@
 #include "h_pipex.h"
 
-int	std_dup(int *fd)
+//this is apparently the error msg, nobody can make up their minds what it is
+
+int	std_dup(int *pfd, int *ffd, int i, char **v)
 {
-	if (dup2(fd[0], 0))
-		return (1);
-	if (dup2(fd[1], 1))
+	int	fd;
+
+	fd = pfd[0];
+	if (*ffd > 2 && i < 3 + heredoc_cond(v))
+		fd = *ffd;
+	if (dup2(fd, 0) < 0)
+		return (err(-1, "cannot duplicate fd"));
+	fd = pfd[3];
+	if (*ffd > 2 && !v[i + 2])
+		fd = *ffd;
+	if (dup2(fd, 1) < 0)
 	{
-		if (fd[0] > 0)
-			close(0);
+		close(0);
+		return (err(-1, "cannot duplicate fd"));
+	}
+	return (0);
+}
+
+int	ffd_init(char **v, int *i, int **pfd, int *ffd)
+{
+	errno = 0;
+	if (*i == 1)
+		*ffd = ffd_start(v, i);
+	else if (!v[*i + 2])
+		*ffd = ffd_end(v[*i + 1], heredoc_cond(v));
+	if (*ffd < 0)
+	{
+		if (errno == ENOENT)
+			*i = 0;
+		else
+			*i = 1;
+		fd_cleanup(pfd, ffd, v);
 		return (1);
 	}
 	return (0);
 }
 
-void	fork_handler(char **v, t_pipelist *pl)
+//one for infile, one for argv[0]
+
+int	pfd_grab(int i, char **v)
 {
-	int		fd[2];
-	int		flag;
+	return (2 * (i - (1 + 1 + heredoc_cond(v))));
+}
+
+//i value without heredoc: 2, 3, 4, 5, ...
+//with: 3, 4, 5, 6, ...
+
+int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)
+{
+	pid_t	cpid;
 	char	**cmd;
+	int		*pfd;
 
-	if (err(fork()))
-		return ;
-	fd[0] = pl->arr[i].pfd[0];
-	fd[1] = pl->arr[i + 1].pfd[1];
-	flag = strcmp(v[0], "heredoc");//I have to make the heredoc file in /tmp and parse myself urrhhhhhgggg
-	if (!flag)
-		cmd = ft_split(v[i + 1]);
-	else
-		cmd = ft_split(v[i]);
-	if (!cmd || std_dup(fd))
-		return (cmd_cleanup(cmd));
-	if (!flag)
+	errno = 0;
+	cpid = fork();
+	if (cpid)
 	{
-
+		if (*i == 1)
+			*i += 1;
+		*i += 1;
+		return (err(cpid, "fork"));
+	}
+	if (ffd_init(v, i, &pfd_src, ffd))
+		exit(*i);
+	pfd = &pfd_src[pfd_grab(*i, v)];
+	if (cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i, v))
+		child_err(cmd, v, &pfd_src, ffd);
+	fd_cleanup(&pfd_src, ffd, v);
+	execve(cmd[0], cmd, NULL);
+	cmd_err(-1, cmd[0]);
+	close(0);
+	close(1);
+	child_err(cmd, NULL, NULL, NULL);
+	return (cpid);
+}

@@ -1,75 +1,88 @@
 #include "h_pipex.h"
 
-//bring over err(), wvalue(), prepend_cmd(), make a cmd file, and rearrange this func vvv
-
-int	edge_init(t_pipelist **pl, int *filefd, char *f1, char *f2)//herdoc condition here
-{
-	if (!strcmp(f1, "here_doc"))
-	{
-		filefd[0] = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0600);//unlink heredoc here
-		unlink("/tmp/heredoc");
-	}
-	else
-		filefd[0] = open(f1, O_RDONLY);
-	if (filefd[0] < 0)
-		return (1);
-	filefd[1] = open(f2, O_WRONLY);
-	if (filefd[1] < 0)
-	{
-		if (filefd[0] > 0)
-			close(filefd[0]);
-		return (1);
-	}
-	if (dup2(filefd[0], pl->arr[0].pfd[0])
-		|| dup2(filefd[1], pl->arr[pl->top].pfd[1]))
-		return (pipe_cleanup(pl));
-	close(filefd[0]);
-	close(filefd[1]);
-	return (0);
-}
-//bomb out or accept heredoc as either file. That will have to tokenise v BEFORE THIS POINT and change the func above
-int	valid(int c, char **v)// phase out
+int	pfd_len(char **v)
 {
 	int	i;
 
-	i = 1;
-	while (i < c)
-	{
-		if (i != 1 && !strcmp(v[i], "here_doc"))
-			return (0);
+	i = 0;
+	while (v[i])
 		i ++;
+	return ((i - (1 + heredoc_cond(v))) * 2);
+}
+
+int	pfd_init(char **v, int **pfd)
+{
+	int	len;
+	int	i;
+
+	len = pfd_len(v);
+	*pfd = malloc(len * sizeof(int));
+	if (!*pfd)
+		return (err(-1, "malloc error"));
+	i = 0;
+	while (i < len)
+		(*pfd)[i++] = 0;
+	i = 0;
+	while (i < len)
+	{
+		if (err(pipe(&(*pfd)[i]), "pipe error"))
+		{
+			fd_cleanup(pfd, NULL, v);
+			return (1);
+		}
+		i += 2;
 	}
+	return (0);
+}
+
+int	main_init(int **pfd, int *i, int c, char **v)
+{
+	*i = 1;
+	if (pipex_arg(c))
+		*i = 0;
+	else if (!pfd_init(v, pfd))
+		return (0);
 	return (1);
 }
 
-//scaling this for minishell is gonna involve making a cmd struct with:
-//dedicated fd fields (different pipes)
-//heredoc indicator (to imitate bash, we are using carrots now)
-// cat file | cat file later overrides pipe setup, thankfully we have pipe symbols now
+//exit code is a race cond make a malloc array of cpids and use waitpid
+//or close the first pipe end and waitpid one at a time
+//this main wait is a new idea, my i increments are fucked
+
+int	main_wait(int *pfd, int i, char **v)
+{
+	int	index;
+
+	i --;
+	index = pfd_grab(i, v);
+	unset(&pfd[index + 1]);
+	return (child_wait());
+}
+
+//for basic pipe, c == 5 and last file == 4
+
 int	main(int c, char **v)
 {
-	t_pipelist	*pl;
-	int			i;
-	int			filefd[2];
-	pid_t		cpid;
+	int		i;
+	int		n;
+	int		ffd;
+	int		*pfd;
+	pid_t	cpid;
 
-	i = 0;
-	if (c != 5 || !valid(c, v))
-		return (1);
-	pl = malloc(sizeof(t_pipelist));
-	if (!pl)
-		return (1);
-	if (edge_init(filefd, v[1], v[c - 1]))
+	n = 0;
+	if (main_init(&pfd, &i, c, v))
+		return (i);
+	while (i < c - 1)
 	{
-		free(pl);
-		return (1);
+		ffd = 0;
+		if (!ffd_heredoc(v, &i, &ffd, pfd))
+			cpid = fork_handler(v, &i, pfd, &ffd);
+		else
+			cpid = -1;
+		if (cpid < 1)
+			break ;
+		n = main_wait(pfd, i, v);
 	}
-	if (!make_pipes(c, pl, filefd))
-		cpid = fork_handler(v + 2, pl);//return here on failure
-	pipe_cleanup(pl);
-	free(pl);
-	close(filefd[1]);
-	if (cpid)
-		unlink("/tmp/heredoc"
-	return (1);
+	fd_cleanup(&pfd, &ffd, v);
+	return (n);
 }
