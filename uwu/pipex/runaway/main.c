@@ -9,7 +9,7 @@ int	pfd_len(char **v)
 	i = 0;
 	while (v[i])
 		i ++;
-	return ((i - 1) * 2);
+	return ((i - (1 + heredoc_cond(v))) * 2);
 }
 
 int	pfd_init(char **v, int **pfd)
@@ -57,14 +57,14 @@ int	main_wait(int *pfd, int i, char **v)
 {
 	int	index;
 
-	probe(i, "i_in");
+//	probe(i, "i_in");
 	i --;
 	index = pfd_grab(i, v);
-	probe(i, "i_index");
-	probe(index, "close_index");
+//	probe(i, "i_index");
+//	probe(index, "close_index");
 //	(void) pfd;
 //	unset(&pfd[index]);
-	probe(pfd[index + 1], "closed");
+//	probe(pfd[index + 1], "closed");
 	unset(&pfd[index + 1]);
 	return (child_wait());
 }
@@ -77,9 +77,9 @@ int	main(int c, char **v)
 	int		*pfd;
 	pid_t	cpid;
 
-	ft_putstr("test: ");
-	ft_putstr(v[0]);
-	ft_putstr("\n");
+//	ft_putstr("test: ");
+//	ft_putstr(v[0]);
+//	ft_putstr("\n");
 	n = 0;
 	if (main_init(&pfd, &i, c, v))//bonus diff, pass c
 		return (i);

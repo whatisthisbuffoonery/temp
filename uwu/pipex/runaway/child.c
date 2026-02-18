@@ -12,8 +12,8 @@ int	child_wait(void)
 	if (w_return >= 0)
 		return (WEXITSTATUS(n));
 	return (w_return);
-	//no waitpid error msg nor stop logic //n?
 }
+//no logic check for waitpid
 
 void	child_err(char **cmd, char **v, int **pfd, int *ffd)
 {

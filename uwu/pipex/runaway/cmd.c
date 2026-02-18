@@ -1,8 +1,5 @@
 #include "h_pipex.h"
 
-/*
-
-*/
 //		|| !ft_strpart(cmd, "./"))//take out for pipex
 int	cmd_cmp(char *cmd)
 {
@@ -65,12 +62,10 @@ int	cmd_name(char ***cmd)
 
 int	cmd_init(char **v, int *i, char ***cmd)
 {
-	//probe(*i, "index: ");
 	*cmd = ft_split(v[*i], ' ');
 	if (!*cmd)
 		return (err(-1, v[*i]));
 	if (cmd_name(cmd))
 		return (1);
-	//*i += 1;
 	return (0);
 }

@@ -4,13 +4,13 @@ int	std_dup(int *pfd, int *ffd, int i, char **v)
 {
 	int	fd;
 
-	probe(pfd[0], "in");
-	probe(pfd[3], "out");
-	probe(i, "dup_i");
+//	probe(pfd[0], "in");
+//	probe(pfd[3], "out");
+//	probe(i, "dup_i");
 	fd = pfd[0];
-	if (*ffd > 2 && i < 3 + !ft_strcmp(v[1], "here_doc"))
+	if (*ffd > 2 && i < 3 + heredoc_cond(v))
 	{
-		probe(*ffd, "!!!ffd_in!!!");
+//		probe(*ffd, "!!!ffd_in!!!");
 		fd = *ffd;
 	}
 	if (dup2(fd, 0) < 0)
@@ -18,7 +18,7 @@ int	std_dup(int *pfd, int *ffd, int i, char **v)
 	fd = pfd[3];
 	if (*ffd > 2 && !v[i + 2])
 	{
-		probe(*ffd, "!!!ffd_out!!!");
+//		probe(*ffd, "!!!ffd_out!!!");
 		fd = *ffd;
 	}
 	if (dup2(fd, 1) < 0)
@@ -35,7 +35,7 @@ int	ffd_init(char **v, int *i, int **pfd, int *ffd)
 	if (*i == 1)
 		*ffd = ffd_start(v, i);
 	else if (!v[*i + 2])
-		*ffd = ffd_end(v[*i + 1], !ft_strcmp(v[1], "here_doc"));//pass strcmp to another wrapper
+		*ffd = ffd_end(v[*i + 1], heredoc_cond(v));//pass strcmp to another wrapper
 	if (*ffd < 0)
 	{
 		if (errno == ENOENT)
@@ -50,10 +50,7 @@ int	ffd_init(char **v, int *i, int **pfd, int *ffd)
 
 int	pfd_grab(int i, char **v)
 {
-	int	heredoc;
-
-	heredoc = !ft_strcmp(v[1], "here_doc");
-	return (2 * (i - (1 + 1 + heredoc)));
+	return (2 * (i - (1 + 1 + heredoc_cond(v))));
 }
 //
 //i value without heredoc: 2, 3, 4, 5, ...
@@ -81,20 +78,20 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)//offload ffd cleanup 
 	cpid = fork();
 	if (cpid)
 	{
-		probe(*i, "i_start");
+//		probe(*i, "i_start");
 		if (*i == 1)//remove end file cond, adjust loop in main
 			*i += 1;
 		*i += 1;
-		probe(*i, "i_ret");
+//		probe(*i, "i_ret");
 		return (err(cpid, "fork"));//just "fork"
 	}
 //	probe(*i, "before: ");
 	if (ffd_init(v, i, &pfd_src, ffd))
 		exit(*i);
 //	probe(*i, "after: ");
-	probe(pfd_grab(*i, v), "pfd_index");
+//	probe(pfd_grab(*i, v), "pfd_index");
 	pfd = &pfd_src[pfd_grab(*i, v)];
-	print_pfd(pfd);
+//	print_pfd(pfd);
 	if(cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i, v))
 		child_err(cmd, v, &pfd_src, ffd);//set ffd to 0 if any match
 	fd_cleanup(&pfd_src, ffd, v);

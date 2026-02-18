@@ -12,6 +12,7 @@
 void	probe(int n, char *a);
 
 int	pfd_len(char **v);
+int	heredoc_cond(char **v);
 
 int	ffd_start(char **v, int *i);
 int	ffd_end(char *v, int heredoc_flag);
