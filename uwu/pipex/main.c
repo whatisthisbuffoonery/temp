@@ -45,10 +45,6 @@ int	main_init(int **pfd, int *i, int c, char **v)
 	return (1);
 }
 
-//exit code is a race cond make a malloc array of cpids and use waitpid
-//or close the first pipe end and waitpid one at a time
-//this main wait is a new idea, my i increments are fucked
-
 int	main_wait(int *pfd, int i, char **v)
 {
 	int	index;
