@@ -2,7 +2,7 @@ CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -g
 NAME := pipex
 FULL := full
-LIBFT_DIR := ../libft
+LIBFT_DIR := libft
 LIBFT := $(LIBFT_DIR)/libft.a
 LIBFT_NAME := ft
 

@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:19:08 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 16:23:03 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/02/19 18:55:19 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 
 int		pipex_arg(int c);
+void	exec_wrap(char **src);
 
 int		pfd_len(char **v);
 int		heredoc_cond(char **v);

@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:19:10 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 16:19:10 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/02/19 18:54:17 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	main_wait(int *pfd, int i, char **v)
 
 //for basic pipe, c == 5 and last file == 4
 
-int	main(int c, char **v)
+int	main(int c, char **v, char **e)
 {
 	int		i;
 	int		n;
@@ -80,6 +80,7 @@ int	main(int c, char **v)
 	n = 0;
 	if (main_init(&pfd, &i, c, v))
 		return (i);
+	exec_wrap(e);
 	while (i < c - 1)
 	{
 		ffd = 0;

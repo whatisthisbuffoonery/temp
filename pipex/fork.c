@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:18:58 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 16:19:02 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/02/19 18:54:50 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,20 @@ int	pfd_grab(int i, char **v)
 //i value without heredoc: 2, 3, 4, 5, ...
 //with: 3, 4, 5, 6, ...
 
+void	exec_wrap(char **src)
+{
+	static int	flag;
+	static char	**e;
+
+	if (!flag)
+	{
+		flag = 1;
+		e = src;
+		return ;
+	}
+	execve(src[0], src, e);
+}
+
 int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)
 {
 	pid_t	cpid;
@@ -84,7 +98,7 @@ int	fork_handler(char **v, int *i, int *pfd_src, int *ffd)
 	if (cmd_init(v, i, &cmd) || std_dup(pfd, ffd, *i, v))
 		child_err(cmd, v, &pfd_src, ffd);
 	fd_cleanup(&pfd_src, ffd, v);
-	execve(cmd[0], cmd, NULL);
+	exec_wrap(cmd);
 	cmd_err(-1, cmd[0]);
 	close(0);
 	close(1);

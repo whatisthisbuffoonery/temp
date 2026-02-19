@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 22:15:13 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/31 14:13:19 by dthoo            ###   ########.fr       */
+/*   Updated: 2025/12/26 18:33:14 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@
 
 # ifndef BUFFER_SIZE
 
-#  define BUFFER_SIZE 128
+#  define BUFFER_SIZE 1024
 
 # endif
 
 typedef struct s_stash
 {
-	char	buf[1025][BUFFER_SIZE];
-	ssize_t	count[1025];
-	ssize_t	lim[1025];
+	char	buf[1024][BUFFER_SIZE];
+	ssize_t	count[1024];
+	ssize_t	lim[1024];
 }			t_stash;
 
 typedef struct s_var
@@ -51,7 +51,6 @@ typedef struct s_gnllist
 	int					total;
 }						t_gnllist;
 
-//char	*gnl(int fd);
 char	*gnl_b(int fd);
 
 #endif

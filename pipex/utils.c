@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 16:19:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 16:19:27 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/02/19 17:18:34 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,15 @@ void	fd_cleanup(int **pfd_src, int *ffd, char **v)
 		return ;
 	len = pfd_len(v);
 	i = 0;
-	while (i < len)
-		unset(&pfd[i++]);
-	i = 0;
 	while (ffd && *ffd > 2 && i < len)
 	{
 		if (*ffd == pfd[i])
 			*ffd = -1;
 		i ++;
 	}
+	i = 0;
+	while (i < len)
+		unset(&pfd[i++]);
 	if (ffd)
 		unset(ffd);
 	free(pfd);
