@@ -98,7 +98,6 @@ pid_t	fork_wrap(pid_t *tmp, int *i)
 	return (err((result > 0) - (result < 0), "fork error"));
 }
 
-
 int	main(int c, char **v, char **e)
 {
 	int		i;
@@ -108,8 +107,6 @@ int	main(int c, char **v, char **e)
 
 	if (main_init(&i, v, &pfd, &cpid))
 		return (1);
-	if (!e)
-		return (127);
 	while (i < c - 1)
 	{
 		if (!ffd_heredoc(v, &i, pfd, &cpid))
@@ -125,5 +122,6 @@ int	main(int c, char **v, char **e)
 		cpid_add(cpid, tmp, &i, v);
 	}
 	fd_cleanup(&pfd, NULL, v);
-	return (cpid_status(cpid, v, i));//actually get the last command and not get caught on a partial cpid situation
+	return (cpid_status(cpid, v, i));
 }
+//actually get the last command and not get caught on a partial cpid situation

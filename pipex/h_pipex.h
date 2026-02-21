@@ -21,7 +21,6 @@
 # include <sys/wait.h>
 # include <errno.h>
 
-
 void	cpid_add(pid_t *dst, pid_t src, int *index, char **v);
 int		cpid_nuke(pid_t **cpid);
 int		cpid_status(pid_t *cpid, char **v, int index);
@@ -43,6 +42,9 @@ int		pfd_grab(int i, char **v);
 int		cmd_init(char **v, int *i, char ***cmd, char **e);
 void	fork_handler(char **v, int *i, int *pfd_src, char **e);
 
+int		cmd_strchr(char *v);
+
+int		oops_err(int n, char *str);
 int		cmd_err(int n, char *str);
 int		err(int n, char *str);
 void	unset(int *fd);

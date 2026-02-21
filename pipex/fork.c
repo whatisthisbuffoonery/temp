@@ -66,32 +66,6 @@ int	pfd_grab(int i, char **v)
 //i value without heredoc: 2, 3, 4, 5, ...
 //with: 3, 4, 5, 6, ...
 
-void	exec_wrap(char **src)
-{
-	static int	flag;
-	static char	**e;
-
-	if (!flag)
-	{
-		flag = 1;
-		e = src;
-		return ;
-	}
-	execve(src[0], src, e);
-}
-
-void	exec_print(char **cmd, int *pfd, int *ffd)
-{
-	(void) pfd;
-	ft_putstr_fd("\ncommand: ", 2);
-	ft_putstr_fd(cmd[0], 2);
-	ft_putstr_fd(", file: ", 2);
-	if (*ffd < 3)
-		ft_putstr_fd("pipe\n", 2);
-	else
-		ft_putstr_fd("file\n", 2);
-}
-
 void	fork_handler(char **v, int *i, int *pfd_src, char **e)
 {
 	char	**cmd;

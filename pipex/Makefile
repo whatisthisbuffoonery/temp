@@ -6,7 +6,7 @@ LIBFT_DIR := libft
 LIBFT := $(LIBFT_DIR)/libft.a
 LIBFT_NAME := ft
 
-SRC := child.c cmd.c fork.c main.c open.c utils.c cpid.c
+SRC := child.c cmd.c fork.c main.c open.c utils.c cpid.c cleanup.c err.c
 
 MAND_OBJ := heredoc.o
 
