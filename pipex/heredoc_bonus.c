@@ -59,7 +59,7 @@ int	pipex_cmp(char *line, char *v, int v_len)
 
 //not considering tokens (not told to accept ">>")
 
-int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
+int	ffd_heredoc(char **v, int *i, int *pfd, pid_t **cpid)
 {
 	char	*line;
 	int		len;
@@ -72,14 +72,13 @@ int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
 	while (line && pipex_cmp(line, v[2], len))
 	{
 		if (heredoc_write(pfd[1], line))
-			return (-1);
+			return (cpid_nuke(cpid));
 		line = gnl_b(0);
 	}
 	free(line);
 	*i += 2;
 	if (errno)
-		return (err(-1, "read error"));
-	*ffd = pfd[0];
+		return (err(cpid_nuke(cpid), "read error"));
 	return (0);
 }
 

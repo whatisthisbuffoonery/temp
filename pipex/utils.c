@@ -14,6 +14,7 @@
 
 int	cmd_err(int n, char *str)
 {
+	/*
 	char	*tmp;
 
 	tmp = NULL;
@@ -21,8 +22,17 @@ int	cmd_err(int n, char *str)
 		tmp = ft_strrchr(str, '/');
 	if (tmp)
 		str = tmp;
+	*/
 	if (n < 0)
-		perror(str);
+	{
+		if (errno != ENOENT || ft_strchr(str, '/'))
+			perror(str);
+		else
+		{
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
+	}
 	return (n);
 }
 

@@ -19,7 +19,7 @@ int	ffd_start(char **v, int *i)
 	errno = 0;
 	newfd = open(v[1], O_RDONLY);
 	while (newfd < 0 && errno == EINTR)
-		newfd = open(v[*i], O_RDONLY);
+		newfd = open(v[1], O_RDONLY);
 	*i += 1;
 	return (err(newfd, "open error"));
 }

@@ -72,12 +72,50 @@ int	cmd_name(char ***cmd)
 	return (0);
 }
 
-int	cmd_init(char **v, int *i, char ***cmd)
+char	*find_path(char **e, char **path)
 {
+	int		i;
+	int		len;
+	char	*prefix;
+
+	i = 0;
+	prefix = "PATH=";
+	len = ft_strlen(prefix);
+	while (e[i])
+	{
+		if (!ft_strncmp(e[i], prefix, len) && ft_strlen(e[i]) > len)
+		{
+			*path = &e[i][len];
+			return (*path);
+		}
+		i ++;
+	}
+	return (NULL);
+}
+
+int	cmd_init(char **v, int *i, char ***cmd, char **e)
+{
+	char	**env;
+	char	*path;
+	int		flag;
+
+	flag = 0;
+	path = NULL;
+	env = NULL;
+	//cmd_name does not fail on null
+	if (!ft_strchr(v[*i], '/') && !find_path(e, &path))//set errno to ENOENT, also call strchr here
+		return (cmd_err(-1, "command not found"));
+	if (path)
+	{
+		env = ft_split(path, ':');
+		if (!env)
+			return (err(-1, v[*i]));
+	}
 	*cmd = ft_split(v[*i], ' ');
 	if (!*cmd)
-		return (err(-1, v[*i]));
-	if (cmd_name(cmd))
-		return (1);
-	return (0);
+		err(-1, v[*i]);
+	if (!*cmd || cmd_name(cmd, env))//null env possible
+		flag = 1;//ai cant figure out whether to continue on permission fail fuuuuu
+	cmd_cleanup(&env);
+	return (flag);
 }
