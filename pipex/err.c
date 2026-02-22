@@ -14,7 +14,7 @@ void	puterr(char *a)
 	}
 }
 
-int oops_err(int n, char *str)
+int	oops_err(int n, char *str)
 {
 	if (n < 0)
 		write(2, "pipex: ", 7);

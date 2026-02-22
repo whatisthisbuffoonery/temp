@@ -12,7 +12,9 @@
 
 #include "h_pipex.h"
 
-//EACCES is split between dirs not having read access and the actual X_OK failure code
+//EACCES is split between:
+//dirs not having read access
+//and the actual X_OK failure code
 //and we never check the other valid binaries after finding the first one
 int	cmd_name_help(char ***cmd_src, char *ret, char **env, int len)
 {
