@@ -47,6 +47,8 @@ int		cmd_strchr(char *v);
 int		oops_err(int n, char *str);
 int		cmd_err(int n, char *str);
 int		err(int n, char *str);
+int		one_off_err(char *str);
+
 void	unset(int *fd);
 void	fd_cleanup(int **pfd, int *ffd, char **v);
 int		cmd_cleanup(char ***cmd);

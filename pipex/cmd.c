@@ -123,6 +123,7 @@ int	cmd_init(char **v, int *i, char ***cmd, char **e)
 	flag = 0;
 	path = NULL;
 	env = NULL;
+	errno = 0;
 	if (!cmd_strchr(v[*i]) && !find_path(e, &path))
 		return (oops_err(-1, v[*i]));
 	if (path)
@@ -131,9 +132,9 @@ int	cmd_init(char **v, int *i, char ***cmd, char **e)
 		if (!env)
 			return (oops_err(-1, v[*i]));
 	}
-	*cmd = ft_split(v[*i], ' ');
-	if (!*cmd)
-		oops_err(-1, v[*i]);
+	*cmd = parsed_argsplit(v[*i]);
+	if (!*cmd && errno)
+		one_off_err(v[*i]);
 	if (!*cmd || cmd_name(cmd, env))
 		flag = 1;
 	cmd_cleanup(&env);

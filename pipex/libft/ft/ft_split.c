@@ -28,7 +28,7 @@ static int	malloc_wrap(char ***ret, int *count, int *i_ptr)
 	return (0);
 }
 
-static char	**split_cleanup(char **ret)
+char	**split_cleanup(char **ret)
 {
 	int	i;
 
@@ -64,7 +64,7 @@ static int	make_string(char **dst, char const *s, int *i, int c)
 	return (0);
 }
 
-static int	delimiter_cond(char const *s, char c, int i)
+int	delimiter_cond(char const *s, char c, int i)
 {
 	return ((s[i] == c && s[i + 1] && s[i + 1] != c) || (!i && s[i] != c));
 }

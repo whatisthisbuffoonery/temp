@@ -37,7 +37,7 @@ Note that the outfile contents are truncated when not using heredoc, and appende
   
 ##Resources  
   
-Error codes and messages: perplexity and the testers  
+error codes and messages: perplexity and the testers  
   
 what is a pipe: https://www.geeksforgeeks.org/linux-unix/piping-in-unix-or-linux/  
   
@@ -68,4 +68,13 @@ bash command handling:
 testers:  
 	basic + envp + concurrency testing, which should all pass: https://github.com/vfurmane/pipex-tester  
 	bad permissions testing: https://github.com/denisgodoy/pipex-tester.git  
-		the quote parsing parts are outside the scope of this project  
+		handling quote parsing for single and double quotes are outside the scope of this project  
+##Quote parsing for stuff like awk, tr, sed, etc.
+
+It would be reasonable in a shell project where we handle quotes all by ourselves.  
+  
+This is not, in fact, a shell project. Our input string have all gone through bash's parsing.  
+  
+For instance:  
+```
+export

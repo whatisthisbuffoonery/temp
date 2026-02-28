@@ -12,7 +12,6 @@
 
 #include "h_pipex.h"
 
-
 void	unset(int *fd)
 {
 	if (*fd > 2)

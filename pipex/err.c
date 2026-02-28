@@ -48,3 +48,16 @@ int	err(int n, char *str)
 	}
 	return (n);
 }
+
+int	one_off_err(char *str)
+{
+	write(2, "pipex: ", 7);
+	if (errno)
+		perror(str);
+	else
+	{
+		ft_putstr_fd(str, 2);
+		write(2, ": unclosed quotes\n", 18);
+	}
+	return (-1);
+}
