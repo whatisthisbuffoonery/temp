@@ -133,7 +133,7 @@ int	cmd_init(char **v, int *i, char ***cmd, char **e)
 			return (oops_err(-1, v[*i]));
 	}
 	*cmd = parsed_argsplit(v[*i]);
-	if (!*cmd && errno)
+	if (!*cmd)
 		one_off_err(v[*i]);
 	if (!*cmd || cmd_name(cmd, env))
 		flag = 1;
