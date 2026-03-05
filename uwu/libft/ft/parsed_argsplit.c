@@ -66,6 +66,7 @@ char	**parsed_help(char **dst, char *s, char *ht)
 	return (dst);
 }
 
+//"tr a ' a '"
 char	**parsed_argsplit(char *s)
 {
 	int		i;
