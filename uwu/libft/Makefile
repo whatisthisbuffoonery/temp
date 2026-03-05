@@ -24,7 +24,7 @@ parsed_argsplit.c malloc_cond.c
 BONUS_SRC := ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_lstdelone_bonus.c \
 ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c ft_lstsize_bonus.c
 
-GNL_SRC := get_next_line_bonus.c get_next_line_utils_bonus.c
+GNL_SRC := get_next_line_bonus.c get_next_line_utils_bonus.c get_next_line.c get_next_line_utils.c
 
 FT_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(FT_SRC))
 

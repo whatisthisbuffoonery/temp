@@ -12,10 +12,10 @@
 
 #include "get_next_line_bonus.h"
 
-int		gnl_new(t_gnllist **lst, char *ret, int i);
-void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done);
-char	*gnl_shove(t_gnllist *lst);
-char	*read_buf(t_var *file, int fd, int *done);
+int		gnl_new_b(t_gnllist **lst, char *ret, int i);
+void	gnl_cleanup_b(t_gnllist *lst, char **ret, t_var *file, int done);
+char	*gnl_shove_b(t_gnllist *lst);
+char	*read_buf_b(t_var *file, int fd, int *done);
 
 static void	gnl_file_management(t_stash *stash, t_var *file, int fd, int flag)
 {
@@ -48,15 +48,15 @@ char	*gnl_b(int fd)
 	gnl_file_management(&stash, &file, fd, 1);
 	while (!done)
 	{
-		ret = read_buf(&file, fd, &done);
+		ret = read_buf_b(&file, fd, &done);
 		if (!ret)
 			break ;
-		if (gnl_new(&lst, ret, 0))
+		if (gnl_new_b(&lst, ret, 0))
 			done = -1;
 	}
 	if (done == 1 && lst)
-		ret = gnl_shove(lst);
-	gnl_cleanup(lst, &ret, &file, done);
+		ret = gnl_shove_b(lst);
+	gnl_cleanup_b(lst, &ret, &file, done);
 	gnl_file_management(&stash, &file, fd, 0);
 	return (ret);
 }

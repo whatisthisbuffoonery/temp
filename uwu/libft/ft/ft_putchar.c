@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 16:19:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 17:18:34 by dthoo            ###   ########.fr       */
+/*   Created: 2026/03/01 14:38:27 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/01 14:38:29 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "h_pipex.h"
+#include <unistd.h>
 
-void	unset(int *fd)
+void	ft_putchar(char n)
 {
-	if (*fd > 2)
-		close(*fd);
-	*fd = 0;
-}
-
-int	cmd_strchr(char *v)
-{
-	int	i;
-
-	i = 0;
-	while (v[i] && v[i] != ' ')
-	{
-		if (v[i] == '/')
-			return (1);
-		i ++;
-	}
-	return (0);
+	write(1, &n, 1);
 }

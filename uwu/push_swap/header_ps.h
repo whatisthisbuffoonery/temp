@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:23:06 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/18 01:26:27 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/05 18:09:41 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ typedef struct s_cost
 	int	b;
 	int	total;
 }		t_cost;
+
+typedef struct s_psnode
+{
+	int				num;
+	struct s_psnode	*mark;
+	struct s_psnode	*next;
+}					t_psnode;
 
 int		ps_placement(t_stack *a);
 int		init(int c, char **v, t_stack **a, t_stack **b);

@@ -10,11 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ffd_heredoc(char **v, int *i, int *ffd, int *pfd)
+#include "h_pipex.h"
+
+int	ffd_heredoc(char **v, int *i, int *pfd, pid_t **cpid)
 {
+	(void) cpid;
 	(void) v;
 	(void) i;
-	(void) ffd;
 	(void) pfd;
 	return (0);
 }

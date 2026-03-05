@@ -6,14 +6,16 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 12:22:42 by dthoo             #+#    #+#             */
-/*   Updated: 2026/01/17 12:22:43 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/05 18:14:44 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header_ps.h"
 
-static void	window_shopping(t_list *curr, t_list *a, t_list *b, t_list *iter)
+static void	window_shopping(t_psnode *curr, t_psnode *a, t_psnode *b)
 {
+	t_psnode	*iter;
+
 	while (a && b)
 	{
 		if (a->num < b->num)
@@ -39,10 +41,10 @@ static void	window_shopping(t_list *curr, t_list *a, t_list *b, t_list *iter)
 	}
 }
 
-static void	merge_split(t_list **head, t_list **a, t_list **b)
+static void	merge_split(t_psnode **head, t_psnode **a, t_psnode **b)
 {
-	t_list	*i;
-	t_list	*k;
+	t_psnode	*i;
+	t_psnode	*k;
 
 	i = *head;
 	k = NULL;
@@ -60,10 +62,10 @@ static void	merge_split(t_list **head, t_list **a, t_list **b)
 		i->next = NULL;
 }
 
-static void	merge_sort(t_list **head)
+static void	merge_sort(t_psnode **head)
 {
-	t_list	*a;
-	t_list	*b;
+	t_psnode	*a;
+	t_psnode	*b;
 
 	a = NULL;
 	b = NULL;
@@ -82,19 +84,19 @@ static void	merge_sort(t_list **head)
 		*head = a;
 		a = a->next;
 	}
-	window_shopping(*head, a, b, 0);
+	window_shopping(*head, a, b);
 }
 
-static void	place_help(t_stack *a, t_list *sort, t_list *send)
+static void	place_help(t_stack *a, t_psnode *sort, t_psnode *send)
 {
-	int		i;
-	t_list	*curr;
+	int			i;
+	t_psnode	*curr;
 
 	i = 0;
 	curr = sort;
 	while (curr)
 	{
-		((t_list *) curr->content)->num = i;
+		curr->mark->num = i;
 		curr = curr->next;
 		i ++;
 	}
@@ -111,14 +113,14 @@ static void	place_help(t_stack *a, t_list *sort, t_list *send)
 
 int	ps_placement(t_stack *a)
 {
-	int		i;
-	int		size;
-	t_list	*sort;
-	t_list	*send;
+	int			i;
+	int			size;
+	t_psnode	*sort;
+	t_psnode	*send;
 
 	i = 0;
 	size = a->top + 1;
-	send = malloc((2 * size) * sizeof(t_list));
+	send = malloc((2 * size) * sizeof(t_psnode));
 	if (!send)
 		return (1);
 	sort = &send[size];
@@ -127,7 +129,7 @@ int	ps_placement(t_stack *a)
 		sort[i].next = &sort[i + 1];
 		send[i].next = &send[i + 1];
 		sort[i].num = a->arr[i];
-		sort[i].content = &send[i];
+		sort[i].mark = &send[i];
 		i ++;
 	}
 	sort[size - 1].next = NULL;

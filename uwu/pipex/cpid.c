@@ -1,34 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   cpid.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 16:19:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 17:18:34 by dthoo            ###   ########.fr       */
+/*   Created: 2026/03/01 14:36:47 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/01 14:36:48 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_pipex.h"
 
-void	unset(int *fd)
+void	cpid_add(pid_t *dst, pid_t src, int *index, char **v)
 {
-	if (*fd > 2)
-		close(*fd);
-	*fd = 0;
+	dst[*index - (3 + heredoc_cond(v))] = src;
 }
 
-int	cmd_strchr(char *v)
+int	cpid_nuke(pid_t **cpid)
+{
+	free(*cpid);
+	*cpid = NULL;
+	return (-1);
+}
+
+int	cpid_status(pid_t *cpid, char **v, int index)
 {
 	int	i;
+	int	n;
 
+	if (!cpid)
+		return (1);
 	i = 0;
-	while (v[i] && v[i] != ' ')
+	index -= 2 + heredoc_cond(v);
+	while (i < index)
 	{
-		if (v[i] == '/')
-			return (1);
-		i ++;
+		n = child_wait(cpid[i++]);
 	}
-	return (0);
+	free(cpid);
+	return (n);
 }

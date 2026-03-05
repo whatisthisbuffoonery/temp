@@ -1,34 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 16:19:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/02/19 17:18:34 by dthoo            ###   ########.fr       */
+/*   Created: 2026/03/01 14:36:51 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/01 14:36:52 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_pipex.h"
 
-void	unset(int *fd)
+void	fd_cleanup(int **pfd_src, int *ffd, char **v)
 {
-	if (*fd > 2)
-		close(*fd);
-	*fd = 0;
+	int	i;
+	int	len;
+	int	*pfd;
+
+	pfd = *pfd_src;
+	if (!pfd)
+		return ;
+	len = pfd_len(v);
+	i = 0;
+	while (ffd && *ffd > 2 && i < len)
+	{
+		if (*ffd == pfd[i])
+			*ffd = -1;
+		i ++;
+	}
+	i = 0;
+	while (i < len)
+		unset(&pfd[i++]);
+	if (ffd)
+		unset(ffd);
+	free(pfd);
+	*pfd_src = NULL;
 }
 
-int	cmd_strchr(char *v)
+int	cmd_cleanup(char ***cmd)
 {
 	int	i;
 
 	i = 0;
-	while (v[i] && v[i] != ' ')
+	if (*cmd)
 	{
-		if (v[i] == '/')
-			return (1);
-		i ++;
+		while ((*cmd)[i])
+			free((*cmd)[i++]);
+		free(*cmd);
+		*cmd = NULL;
 	}
-	return (0);
+	return (1);
 }

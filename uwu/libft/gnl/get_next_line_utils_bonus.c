@@ -14,7 +14,7 @@
 
 //void	ft_putnbr(int n);
 
-static void	refresh_buffer(t_var *file, int fd, int *done)
+static void	refresh_buffer_b(t_var *file, int fd, int *done)
 {
 	if (fd >= 0)
 		file->lim = read(fd, file->buf, BUFFER_SIZE);
@@ -28,7 +28,7 @@ static void	refresh_buffer(t_var *file, int fd, int *done)
 		*done = 1;
 }
 
-char	*read_buf(t_var *file, int fd, int *done)
+char	*read_buf_b(t_var *file, int fd, int *done)
 {
 	ssize_t	i;
 	ssize_t	k;
@@ -36,7 +36,7 @@ char	*read_buf(t_var *file, int fd, int *done)
 
 	k = -1;
 	if (file->count >= file->lim)
-		refresh_buffer(file, fd, done);
+		refresh_buffer_b(file, fd, done);
 	if (file->lim < 1)
 		return (NULL);
 	i = file->count;
@@ -62,7 +62,7 @@ static void probe(int n)
 }
 */
 
-int	gnl_new(t_gnllist **lst, char *ret, int i)
+int	gnl_new_b(t_gnllist **lst, char *ret, int i)
 {
 	t_gnlnode	*new;
 
@@ -89,7 +89,7 @@ int	gnl_new(t_gnllist **lst, char *ret, int i)
 	return (0);
 }
 
-char	*gnl_shove(t_gnllist *lst)
+char	*gnl_shove_b(t_gnllist *lst)
 {
 	int			i;
 	int			k;
@@ -115,7 +115,7 @@ char	*gnl_shove(t_gnllist *lst)
 	return (ret);
 }
 
-void	gnl_cleanup(t_gnllist *lst, char **ret, t_var *file, int done)
+void	gnl_cleanup_b(t_gnllist *lst, char **ret, t_var *file, int done)
 {
 	t_gnlnode	*curr;
 	t_gnlnode	*tmp;
