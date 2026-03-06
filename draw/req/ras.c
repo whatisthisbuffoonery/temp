@@ -105,7 +105,7 @@ int	main(void)
 	float	p2d[8][2];
 	set_at_zero(p3d, H, T);
 	int i = 0;
-	t_angle angle = {.x = 20.0, .y = 10.0, .p = 300.0};
+	t_angle angle = {.x = 45.0, .y = 35.264, .p = 0.0};
 	while (i < 8)
 	{
 		do_isometric(p2d[i], p3d[i], angle);
