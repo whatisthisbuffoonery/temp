@@ -1,5 +1,5 @@
 in:
-	cp ../draw/* . -r
+	rsync -avc ../../draw/src/ ./src/ -r
 
 out: 
-	cp ./* ../draw/ -r
+	rsync -avc ./src/ ../../draw/src/ -r

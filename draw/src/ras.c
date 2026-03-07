@@ -3,6 +3,8 @@
 //rad all the angles first // see if you can squeeze fixed in here
 //plez do not modify 3d array, do z scaling using local t_3d to call this //scale is determined at init
 // no nevermind we have to include separate controls for both z and scale
+//YX euler approach using left handed formula
+//have a pixelset() func that checks for out-of-screen pixels
 void	ras(t_3d *3d, t_2d *2d, t_angle angle, float scale)
 {
 	float	z;
