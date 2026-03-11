@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 04:45:36 by dthoo             #+#    #+#             */
-/*   Updated: 2025/11/21 20:58:03 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/11 11:28:52 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_strcmp(char *a, char *b);
 int		ft_atoi(const char *nptr);
+int		ft_atoi_ind(const char *nptr, int *index);
 
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
