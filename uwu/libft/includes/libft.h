@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 04:45:36 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/11 11:28:52 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/12 22:34:00 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,10 @@ void	ft_intset(int *dst, int c, size_t n);
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 void	ft_bzero(void *s, size_t n);
+
+void	ft_swap(int *a, int *b);
+void	ft_swapf(float *a, float *b);
+
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);

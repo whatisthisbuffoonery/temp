@@ -8,15 +8,20 @@
 //YX euler approach using left handed formula
 
 //have a pixelset() func that checks for out-of-screen pixels
-void	ras(t_3d *3d, t_2d *2d, t_angle angle, float scale)
+//x = x * cos(angle.y) - z * sin(angle.y)
+//z = x * sin(angle.y) + z * cos(angle.y)
+void	rasterise_isomnetric(t_pt *pt, t_angle angle, float scale)
 {
 	float	z;
 
-	2d->x = (3d->x * cosf(angle.y)) + (3d->z * sinf(angle.y));
-	z = -(3d->x * sinf(angle.y)) + (3d->z * cosf(angle.y));
-	2d->y = (3d->y * cosf(angle.x)) + (3d->z * sinf(angle.x));
-	//x = x * cos(angle.y) - z * sin(angle.y)
-	//z = x * sin(angle.y) + z * cos(angle.y)
-	2d->x *= scale;
-	2d->y *= scale;
+	pt->fx = (pt->x * cosf(angle.y)) + (pt->z * sinf(angle.y));
+	z = -(pt->x * sinf(angle.y)) + (pt->z * cosf(angle.y));
+	pt->fy = (pt->y * cosf(angle.x)) + (pt->z * sinf(angle.x));
+	pt->fx *= scale;
+	pt->fy *= scale;
+}
+
+void	parallel()
+{
+	///wtf
 }

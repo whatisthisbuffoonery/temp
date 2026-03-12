@@ -140,7 +140,7 @@ int	fdf_cleanup(t_data *d, t_pt *pt)
 	if (data.mlx)
 		mlx_destroy_display(data.mlx);
 	free(data.mlx);//damn you ai
-	exit(0);//bruh
+	//exit(0);//bruh//fuck you, you barely passed
 	return (1);
 }
 
@@ -162,5 +162,5 @@ int	main(int c, char **v)
 	data.y -= 1;//0 index
 	close(fd[0]);
 	close(fd[1]);
-	return (draw(data, pt, angle));//angle and data are copied
+	return (loop_me(data, pt, angle));//angle and data are copied
 }

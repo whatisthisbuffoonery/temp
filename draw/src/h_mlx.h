@@ -3,7 +3,9 @@
 
 # include "libft.h"
 # include "mlx.h"
-# include "X.h"
+# include <X11/X.h>
+# include <X11/keysymdef.h>
+# include <sys/time.h>
 
 # ifndef WIDTH
 #  define WIDTH 800
@@ -13,10 +15,17 @@
 #  define HEIGHT 600
 # endif
 
+# define FRAME_MCS 16667 //rounded up
+# define SECOND_MCS 1000000 //7 digits
+# define EPSILON 1e-6f //dang floats not knowing what 0 is
+
 typedef struct
 {
 	float	x;
 	float	y;
+	int		x_max;
+	int		y_max;
+	int		scale;//fmlllllllll
 }			t_angle;
 
 //we will scale in ras
@@ -41,7 +50,8 @@ typedef struct
 	void			*mlx;
 	void			*win;
 	void			*img;
-	unsigned int	*buf;
+	char			*buf;//changed back for portability, settle tabs later
+	int				size;
 	int				endian;//not a ptr oml
 	int				line;
 	int				bpp;
@@ -53,6 +63,3 @@ typedef struct
 	float			ay;
 	t_param			param;
 }					t_data;
-//bpp = 32
-//line size = screen width
-//endian: mlx_get_data_addr() sets &endian, use that
