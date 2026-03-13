@@ -15,9 +15,16 @@
 #  define HEIGHT 600
 # endif
 
-# define FRAME_MCS 16667 //rounded up
 # define SECOND_MCS 1000000 //7 digits
+
+# ifndef FRAMES
+#  define FRAMES 30
+# endif
+
+# define FRAME_MCS (SECOND_MCS / FRAMES) + 1 //rounded up...to be considered
+
 # define EPSILON 1e-6f //dang floats not knowing what 0 is
+# define WHITE 0x00FFFFFF //hm
 
 typedef struct
 {
@@ -62,4 +69,5 @@ typedef struct
 	float			ax;//perspective
 	float			ay;
 	t_param			param;
+	//t_pt			tmp;//gosh dangit
 }					t_data;

@@ -1,12 +1,10 @@
 #include "h_mlx.h"
 
-int	frame_wait(void)
+int	frame_wait(struct timeval start)
 {
-	struct timeval	start;//need to standardise this to fixed points
 	struct timeval	end;
 	int				flag;
 
-	gettimeofday(&start, NULL);
 	gettimeofday(&end, NULL);
 	flag = 0;
 	if (start.tv_usec + FRAME_MCS >= SECOND_MCS)
@@ -18,27 +16,38 @@ int	frame_wait(void)
 	return (0);
 }
 
-void	goodlines(t_data *data, int index)
+void	goodlines2(t_data *data)
 {
-	if (index < data->x)
+	int	x;
+	int	y;
+	int	src;
+	int	line;
+
+	y = 0;
+	line = 0;
+	while (y <= data->y)
 	{
-		xiaolin_wu(&data->pt[index], &data->pt[index + 1], data->line);
-		goodlines(data, index + 1);
-	}
-	if (index / data->line < data->y)
-	{
-		xiaolin_wu(&data->pt[index],
-			&data->pt[index + data->x + 1],
-			data->line);
-		goodlines(data, index + data->x + 1);
+		x = 0;
+		while (x < data->x)// 0 index minus 1
+		{
+			src = line + x;
+			xiaolin_wu(&pt[src], &pt[src + 1], data);
+			if (y < data->y)
+				xiaolin_wu(&pt[src], &pt[src + data->x + 1], data, 0);
+			x ++;
+		}
+		y ++;
+		line += data->x;
 	}
 }
 
 int	draw_frame(void *param)
 {
+	struct timeval	start;
 	t_data	data;
 	int		i;
 
+	gettimeofday(&start, NULL);
 	i = 0;
 	data = *(t_data *) param;
 	change_view(&data.angle, data.keys);//I still remember scale is in there
@@ -46,6 +55,7 @@ int	draw_frame(void *param)
 		rasterise(&data.pt[i++], data.angle, data.angle.scale);
 //	bresenham(data);
 	goodlines(&data, 0);//xiolin wu
+	frame_wait(start);
 	//round float to pixel int coords (math)
 	//calculate lines for out of bounds vectors
 	//deal with mlx syntax fuckery

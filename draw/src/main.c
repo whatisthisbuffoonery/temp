@@ -89,11 +89,12 @@ int	data_init(t_data *data, char *v)
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	if (data->img)
 		data->buf = mlx_get_data_addr(data->img,
-				&data->bpp,
+				&data->bipp,
 				&data->line,
 				&data->endian);
 	if (!data->win || !data->img || !data->buf)
 		return (1);//cleanup elsewhere
+	data->bypp = data->bipp / 8;
 	return (0);
 }
 
