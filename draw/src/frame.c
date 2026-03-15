@@ -16,7 +16,7 @@ int	frame_wait(struct timeval start)
 	return (0);
 }
 
-void	goodlines2(t_data *data)
+void	goodlines(t_data *data)
 {
 	int	x;
 	int	y;
@@ -44,17 +44,18 @@ void	goodlines2(t_data *data)
 int	draw_frame(void *param)
 {
 	struct timeval	start;
-	t_data	data;
+	t_data	*data;
 	int		i;
 
 	gettimeofday(&start, NULL);
 	i = 0;
-	data = *(t_data *) param;
-	change_view(&data.angle, data.keys);//I still remember scale is in there
-	while (i < data.frame)
-		rasterise(&data.pt[i++], data.angle, data.angle.scale);
+	data = (t_data *) param;
+	change_view(&data->angle, data->keys);//I still remember scale is in there
+	while (i < data.size)
+		rasterise(&data->pt[i++], data->view);
+	scale(data->pt, &data->view.scale);
 //	bresenham(data);
-	goodlines(&data, 0);//xiolin wu
+	goodlines(&data, 0);//xiaolin wu
 	frame_wait(start);
 	//round float to pixel int coords (math)
 	//calculate lines for out of bounds vectors

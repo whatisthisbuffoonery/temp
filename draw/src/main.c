@@ -152,9 +152,8 @@ int	main(int c, char **v)
 	t_pt	*pt;//these are all floats//eh use map size as safety
 	t_data	data;
 	int		fd[2];
-	t_angle	angle;
 
-	if (c != 2 || fd_init(v[1], fd) || angle_init(&angle)) //diff for bonus projection, have angle init func here too
+	if (c != 2 || fd_init(v[1], fd)) //diff for bonus projection, have angle init func here too
 		return (1);
 	pt = NULL;
 	set_all(&data);
@@ -163,5 +162,7 @@ int	main(int c, char **v)
 	data.y -= 1;//0 index
 	close(fd[0]);
 	close(fd[1]);
-	return (loop_me(data, pt, angle));//angle and data are copied
+	data.param.view = view_init(v, pt);
+	data.param.pt = pt;
+	return (loop_me(data));//angle and data are copied
 }

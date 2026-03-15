@@ -30,10 +30,8 @@ typedef struct
 {
 	float	x;
 	float	y;
-	int		x_max;
-	int		y_max;
-	int		scale;//fmlllllllll
-}			t_angle;
+	float	scale;//fmlllllllll
+}			t_view;
 
 //we will scale in ras
 typedef struct
@@ -48,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-	t_angle	angle;
+	t_angle	view;
 	t_pt	*pt;
 }			t_param;
 

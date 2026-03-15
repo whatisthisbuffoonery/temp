@@ -2,7 +2,6 @@
 
 int main(void)
 {
-	ft_putchar(0b00100110);
-	ft_putchar(0b01100100);
+	ft_putnbr(255 * (1 - 0.4));
 	ft_putchar('\n');
 }
