@@ -1,13 +1,16 @@
 #include "h_mlx.h"
 
-t_view	view_init(char **v)//, t_pt *pt, int size)
+t_view	angle_init(char **v)//, t_pt *pt, int size)
 {
 	t_view	ret;
 
-	(void v);
+	(void) v;
 //	ir_set(&x, *y, NULL, NULL);
-	ret.x = 45.0;
-	ret.y = 35.264;
-	ret.scale = -1.0;
+	ret.x = (35.264f) * RAD;
+	ret.y = (45.0f) * RAD;
+	ret.sinx = sinf(ret.x);
+	ret.siny = sinf(ret.y);
+	ret.cosx = cosf(ret.x);
+	ret.cosy = cosf(ret.y);
 	return (ret);
 }

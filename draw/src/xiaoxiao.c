@@ -2,11 +2,12 @@
 
 //m = (dfy - c) / dfx, c = y1
 
-void	swap_wrapper(t_pt *src, float *dx, float *dy)
+void	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 {
-	ft_swap(&src.x, &src.y);
-	if (dx && dy)
-		ft_swapf(dx, dy);
+	ft_swapf(&src->fx, &src->fy);
+	ft_swapf(&dst->fx, &dst->fy);
+	*dy = dst->fy - src->fy;//oh this was backwards
+	*dx = dst->fx - src->fx;
 }
 
 //say [1, 2] and [10, 6], line size 20
@@ -16,60 +17,83 @@ void	swap_wrapper(t_pt *src, float *dx, float *dy)
 //upper pixel strength: 1 - 0.44 = 0.56 (2 is higher than 3)
 //lower pixel strength: 0.44
 //point coords: x = 2, y = 2, y = 3
-void	buf_edit(char *buf, t_pt pixel, int line, int bypp)//feed in upper pixel
+//propose storing as unsigned int
+void	buf_edit(t_data *data, float fx, float fy)//feed in upper pixel
 {
-	char	value;
-	char	*cache;
+	unsigned char	value;
+	char			*cache;
+	int				x;
+	int				y;
+	int				line;
 
-	if (pixel.x < 0 || pixel.x >= WIDTH)
+	x = fx;
+	y = fy;
+	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < -1)
 		return ;
-	value = 255 * (pixel.fy - pixel.y);
-	cache = &buf[(pixel.x * bypp) + (pixel.y * line)];
-	if (pixel.y >= 0 && pixel.y < HEIGHT)
+	line = data->line;
+	value = 255 * (fy - y);
+	cache = &data->buf[(x * data->bypp) + (y * line)];
+	if (y >= 0 && y < HEIGHT)
 		*(unsigned int *) cache = ((255 - value) << 16) + WHITE;
-	pixel.y += 1;
-	if (pixel.y >= 0 && pixel.y < HEIGHT)
+	y += 1;
+	if (y >= 0 && y < HEIGHT)
 		*(unsigned int *) (cache + line) = (value << 16) + WHITE;
 }
 
+/*
 t_pt	pixel_place(t_pt *src, int i, float m, int steep)
 {
 	t_pt	ret;
 
-	ret.fx = src->fx + (float) i;
-	ret.fy = src->fy + ((float) i * m);
+	ret.fx = src->fx + i;
+	ret.fy = src->fy + (i * m);
 	if (steep)
 		ft_swapf(&ret->fx, &ret->fy);
 	ret.x = (int) ret.fx; //sure
 	ret.y = (int) ret.fy; //eh...?
 	return (ret);
 }
+not in use
+*/
+
+void	swap_pt(t_pt *src, t_pt *dst, float *dx, float *dy)
+{
+	t_pt	tmp;
+
+	tmp = *src;
+	*src = *dst;
+	*dst = tmp;
+	*dy = dst->fy - src->fy;//oh this was backwards
+	*dx = dst->fx - src->fx;
+}
 
 //upper_pixel = {(src->fx + i), (src->fy + (i * m))} //both casted to ints
 //lower_pixel = {(src->fx + i), (src->fy + (i * m) + 1)}
-void	xiaolin_wu(t_pt *src, t_pt *dst, t_data *data, int steep)
+void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 {
 	float	m;
 	float	dx;
-	float	dy;
-	int		i;
-	int		idx;
+	float	dy;//sac
+	int		steep;
 
-	dy = src->fy - dst->fy;
-	dx = src->fx - dst->fx;
-	steep = (dy > dx);
+	dy = dst.fy - src.fy;
+	dx = dst.fx - src.fx;
+	steep = (fabsf(dy) > fabsf(dx));
 	if (steep)
-		swap_wrapper(src, &dx, &dy);
-	m = 1;
-	if (dx > EPSILON)
+		swap_wrapper(&src, &dst, &dx, &dy);
+	if (dx < 0)
+		swap_pt(&src, &dst, &dx, &dy);
+	m = 0.0f;
+	if (fabsf(dx) > EPSILON)
 		m = dy / dx;//gradient after swap
-	i = 0;
-	idx = (int) dx;
-	while (++i < idx)//starts at 1
-		buf_edit(buf,
-			pixel_place(src, i, m, steep),
-			data->line,
-			data->bypp);
-	if (steep)//man my libft needs a fukin swap func now
-		swap_wrapper(src, NULL, NULL);
+	while (--dx > 1.99f)//(++i < (int) dx)//starts at 1//i.e. 10.99: 9 8 7 6 5 4 3 2.99//1 2 3 4 5 6 7 8 9 10
+	{
+		src.fx += 1;
+		src.fy += m;
+		if (steep)
+			buf_edit(data, src.fy, src.fx);
+		else
+			buf_edit(data, src.fx, src.fy);
+	}
 }
+//i.e. from 2.7 to 8.3//dx = 5.6//previous loop: 1 2 3 4 5//this loop: 4.6 3 2.6 1

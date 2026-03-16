@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_swap.c                                          :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/12 22:31:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/15 21:30:34 by dthoo            ###   ########.fr       */
+/*   Created: 2026/03/16 04:30:33 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/16 14:50:43 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-inline void	ft_swapf(int *a, int *b)
-{
-	int	tmp;
+#include <stdio.h>
+#include <math.h>
+# define DEG (180.0f / M_PI)
+# define RAD (M_PI / 180.0f)
+# define STEP (1.0f * RAD)
+# define RAD_MAX (360.0f * RAD)
 
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
+int	main(void)
+{
+	printf("%f\n", RAD_MAX);
 }

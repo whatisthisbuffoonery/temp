@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ras.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/16 13:04:48 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/16 17:09:41 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "h_mlx.h"
 
 //rad all the angles first // see if you can squeeze fixed in here
@@ -20,10 +32,10 @@ float	scale_init(t_pt *pt, int size)
 	float	y_min;
 	int		i;
 
-	x_min = INT_MAX;
-	y_min = INT_MAX;
-	x_max = INT_MIN;
-	y_max = INT_MIN;
+	x_min = FLT_MAX;
+	y_min = FLT_MAX;
+	x_max = -FLT_MAX;
+	y_max = -FLT_MAX;
 	i = 0;
 	while (i < size)
 	{
@@ -50,17 +62,17 @@ t_view	view_init(t_pt *pt, int size, char **v)
 	i = 0;
 	while (i < size)
 	{
-		pt[i].fx = (pt[i].x * cosf(view.y)) + (pt[i].z * sinf(view.y));
-		z = -(pt[i].x * sinf(view.y)) + (pt[i].z * cosf(view.y));
-		pt[i].fy = (pt[i].y * cosf(view.x)) + (pt[i].z * sinf(view.x));
+		pt[i].fx = (pt[i].x * view.cosy) + (pt[i].z * view.siny);
+		z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
+		pt[i].fy = (pt[i].y * view.cosx) + (pt[i].z * view.sinx);
 		i ++;
 	}
 	view.scale = scale_init(pt, size);
 	i = 0;
 	while (i < size)
 	{
-		pt[i].fx *= scale;
-		pt[i].fy *= scale;
+		pt[i].fx *= view.scale;
+		pt[i].fy *= view.scale;
 		i ++;
 	}
 	return (view);
@@ -68,22 +80,26 @@ t_view	view_init(t_pt *pt, int size, char **v)
 
 //((x * cos) + (y * sin)) * scale
 //
-void	rasterise_isometric(t_pt *pt, t_view view, int size)
+//		pt[i].fx = ((pt[i].x * cosf(view.y)) + (pt[i].z * sinf(view.y))) * view.scale;
+//		z = -(pt[i].x * sinf(view.y)) + (pt[i].z * cosf(view.y));
+//		pt[i].fy = ((pt[i].y * cosf(view.x)) + (pt[i].z * sinf(view.x))) * view.scale;
+void	rasterise(t_pt *pt, t_view view, int size)
 {
 	float	z;
 	int		i;
 
 	i = 0;
-	while (i < size)//get key changer to calc sin and cos, store another copy with scale included (i.e. cos * scale)
+	while (i < size)
 	{
-		pt[i].fx = ((pt[i].x * cosf(view.y)) + (pt[i].z * sinf(view.y))) * view.scale;
-		z = -(pt[i].x * sinf(view.y)) + (pt[i].z * cosf(view.y));
-		pt[i].fy = ((pt[i].y * cosf(view.x)) + (pt[i].z * sinf(view.x))) * view.scale;
+		pt[i].fx = ((pt[i].x * view.cosy) + (pt[i].z * view.siny)) * view.scale;
+		z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
+		pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx)) * view.scale;
 		i ++;
 	}
 }
-
+/*
 void	parallel()
 {
 	///wtf
 }
+*/

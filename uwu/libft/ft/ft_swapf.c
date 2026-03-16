@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 22:31:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/12 22:32:18 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/15 21:29:52 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_swapf(float *a, float *b)
+inline void	ft_swapf(float *a, float *b)
 {
 	float	tmp;
 

@@ -12,7 +12,7 @@ int	size_init(t_data *data, int fd)//open files outside // start x from 0 we'll 
 	while (line)
 	{
 		if ((!i && ft_isdigit(line[i]))
-			|| (!ft_isdigit(line[i]) && ft_isdigit(line[i + 1]))) //catches negative numbers
+			|| (line[i] && !ft_isdigit(line[i]) && ft_isdigit(line[i + 1]))) //catches negative numbers
 			count ++;
 		if (!line[i])
 		{
@@ -34,26 +34,22 @@ int	size_init(t_data *data, int fd)//open files outside // start x from 0 we'll 
 int	pt_xy(t_pt **pt, t_data *data)
 {
 	int	i;
+	int	line;
 
 	i = 0;
-	data->z_min = INT_MAX;
-	data->z_max = INT_MIN;
+	line = data->x + 1;
 	while (i < data->size)
 	{
-		(*pt)[i].x = i % WIDTH;
-		(*pt)[i].y = i / WIDTH;
-		if ((*pt)[i].z < data->z_min)
-			data->z_min = (*pt)[i].z;
-		if ((*pt)[i].z > data->z_max)
-			data->z_max = (*pt)[i].z;
+		(*pt)[i].x = i % line;
+		(*pt)[i].y = i / line;
 		i ++;
 	}
+	return (0);
 }
 
 //i just realised my parsing is a bit overkill
 int	pt_init(t_pt **pt, t_data *data, int *fd)
 {
-	int		fd[2];
 	int		i;
 	int		k;
 	char	*line;
@@ -62,7 +58,7 @@ int	pt_init(t_pt **pt, t_data *data, int *fd)
 	k = 0;
 	data->size = size_init(data, fd[0]);
 	line = gnl(fd[1]);
-	if (!data->size || !malloc_cond(pt, data->size * sizeof(t_pt)))
+	if (!data->size || !malloc_cond((void **) pt, data->size * sizeof(t_pt)))
 		return (1);
 	while (line)
 	{
@@ -106,8 +102,6 @@ void	set_all(t_data *data)
 	d.win = NULL;
 	d.img = NULL;
 	d.buf = NULL;
-	d.z_min = INT_MAX;
-	d.z_max = INT_MIN;
 	d.x = 0;
 	d.y = 0;
 	*data = d;
@@ -131,8 +125,15 @@ int	fd_init(char *v, int *fd)
 int	fdf_cleanup(t_data *d, t_pt *pt)
 {
 	t_data	data;
+	static int debug;
 
+	if (debug++)
+	{
+		ft_putstr("\nhuh\n");
+		return (0);
+	}
 	data = *d;
+	//(void) pt;
 	free(pt);
 	if (data.img)
 		mlx_destroy_image(data.mlx, data.img);
@@ -141,7 +142,12 @@ int	fdf_cleanup(t_data *d, t_pt *pt)
 	if (data.mlx)
 		mlx_destroy_display(data.mlx);
 	free(data.mlx);//damn you ai
-	//exit(0);//bruh//fuck you, you barely passed
+	d->mlx = NULL;
+	d->win = NULL;
+	d->img = NULL;
+	d->buf = NULL;
+	d->param.pt = NULL;
+	exit(0);//bruh//fuck you, you barely passed
 	return (1);
 }
 
@@ -155,14 +161,29 @@ int	main(int c, char **v)
 
 	if (c != 2 || fd_init(v[1], fd)) //diff for bonus projection, have angle init func here too
 		return (1);
-	pt = NULL;
+//	pt = NULL;
 	set_all(&data);
 	if (pt_init(&pt, &data, fd) || data_init(&data, v[1]))
 		return (fdf_cleanup(&data, pt));
 	data.y -= 1;//0 index
 	close(fd[0]);
 	close(fd[1]);
-	data.param.view = view_init(v, pt);
+	/*
+	int i = 0;
+	while (i < data.size)
+	{
+		ft_putnbr(pt[i].x);
+		ft_putstr(" ,");
+		ft_putnbr(pt[i].y);
+		ft_putstr(" ,");
+		ft_putnbr(pt[i].z);
+		ft_putchar('\n');
+		i ++;
+	}
+	*/
+	data.param.view = view_init(pt, data.size, v);
 	data.param.pt = pt;
+//	goodlines(&data);
+//	fdf_cleanup(&data, pt);
 	return (loop_me(data));//angle and data are copied
 }
