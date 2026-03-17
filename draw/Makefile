@@ -1,3 +1,6 @@
+all:
+	echo "dude really"
+
 in:
 	rsync -avc ../../draw/src/ ./src/ -r
 

@@ -162,7 +162,8 @@ int	main(int c, char **v)
 	if (c != 2 || fd_init(v[1], fd)) //diff for bonus projection, have angle init func here too
 		return (1);
 //	pt = NULL;
-	set_all(&data);
+//	set_all(&data);
+	ft_memset(&data, 0, sizeof(t_data));
 	if (pt_init(&pt, &data, fd) || data_init(&data, v[1]))
 		return (fdf_cleanup(&data, pt));
 	data.y -= 1;//0 index

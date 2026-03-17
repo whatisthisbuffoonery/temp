@@ -19,5 +19,5 @@
 
 int	main(void)
 {
-	printf("%f\n", RAD_MAX);
+	printf("%d, %d, %d, %d\n", 0x111111, 0x222222, 0xFFFFFF, 0x111111 * 15);
 }

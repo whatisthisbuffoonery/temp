@@ -32,6 +32,10 @@ int	pressed_key(int keycode, void *param)
 		keys->s = 1;
 	else if (keycode == 'd')
 		keys->d = 1;
+	else if (keycode == 'q')
+		keys->q = 1;
+	else if (keycode == 'e')
+		keys->e = 1;
 	ft_putchar(keycode);
 	ft_putchar('p');
 	ft_putchar('\n');
@@ -51,25 +55,29 @@ int	released_key(int keycode, void *param)
 		keys->s = 0;
 	else if (keycode == 'd')
 		keys->d = 0;
+	else if (keycode == 'q')
+		keys->q = 0;
+	else if (keycode == 'e')
+		keys->e = 0;
 	ft_putchar(keycode);
 	ft_putchar('r');
 	ft_putchar('\n');
 	return (0);
 }
-#include <stdio.h>
+//#include <stdio.h>
 int	mouse_wheel(int keycode, int x, int y, void *param)
 {
 	t_data	*data;
 
 	(void) x;
 	(void) y;
-	ft_putstr("\nhere\n");
+//	ft_putstr("\nhere\n");
 	data = (t_data *) param;
-	printf("test3: %f\n", data->param.view.scale);
-	if (keycode == DOWN && data->param.view.scale > 1)
-		data->param.view.scale -= 0.2;
+//	printf("test3: %f\n", data->param.view.scale);
+	if (keycode == DOWN && data->param.view.scale > 6)
+		data->param.view.scale -= 5;
 	else if (keycode == UP)
-		data->param.view.scale += 0.2;
+		data->param.view.scale += 5;
 	return (0);
 }
 
@@ -97,7 +105,7 @@ int	oops(void *param)
 //colour: 0x00RRGGBB
 int	loop_me(t_data data)//man I want int coords//convert from float vectors to int pixels before breisenham
 {
-	data.param.keys = (t_keys){.w = 0, .a = 0, .s = 0, .d = 0};
+	data.param.keys = (t_keys){.w = 0, .a = 0, .s = 0, .d = 0};//, .q = 0, .e = 0};
 
 	mlx_hook(data.win, DestroyNotify, StructureNotifyMask, clicked_x, &data);//works
 
@@ -109,7 +117,7 @@ int	loop_me(t_data data)//man I want int coords//convert from float vectors to i
 	//mlx_key_hook(data.win, released_key, &data.param.keys);//does release key
 
 	mlx_mouse_hook(data.win, mouse_wheel, &data);
-	printf("test1: %f\n", data.param.view.scale);
+//	printf("test1: %f\n", data.param.view.scale);
 
 	mlx_loop_hook(data.mlx, draw_frame, &data);//put sleep in here//keys edit TBA
 //	mlx_loop_hook(data.mlx, oops, &data);

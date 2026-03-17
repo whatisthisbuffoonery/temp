@@ -21,7 +21,7 @@
 # define SECOND_MCS 1000000 //7 digits
 
 # ifndef FRAMES
-#  define FRAMES 10
+#  define FRAMES 60
 # endif
 
 # define FRAME_MCS ((SECOND_MCS / FRAMES) + 1) //rounded up...to be considered
@@ -34,6 +34,10 @@
 # define STEP (1.0f * RAD)
 # define RAD_MAX (360.0f * RAD)
 
+# define WEIGHT 0x0
+# define SHADE 0x00010101
+# define HALF (SHADE * WEIGHT)
+
 # define UP 4
 # define DOWN 5
 
@@ -41,11 +45,14 @@ typedef struct
 {
 	float	x;
 	float	y;
+	float	z;
 	float	scale;//fmlllllllll
 	float	cosx;
 	float	sinx;
 	float	cosy;
 	float	siny;
+	float	cosz;
+	float	sinz;
 }			t_view;
 
 //we will scale in ras
@@ -65,6 +72,8 @@ typedef struct
 	char	a;
 	char	s;
 	char	d;
+	char	q;
+	char	e;
 }			t_keys;
 
 typedef struct//to phase out
@@ -74,16 +83,18 @@ typedef struct//to phase out
 	t_keys	keys;
 }			t_param;
 
-typedef struct
+typedef struct s_data
 {
 	void			*mlx;
 	void			*win;
 	void			*img;
 	char			*buf;//changed back for portability, settle tabs later
+	unsigned int	*ubuf;//wait for it
+	void			(*buf_edit)(struct s_data *, float, float);//lmaoooooo//actually just set shade and half between 24 and 16, 32 is a no op
 	int				size;
 	int				endian;//not a ptr oml
 	int				line;
-	int				bipp;
+	int				bipp;//consider combining?
 	int				bypp;
 	int				x;//pls 0 index
 	int				y;//we just sub one.......for two lines
@@ -96,7 +107,7 @@ typedef struct
 t_view	view_init(t_pt *pt, int size, char **v);
 t_view	angle_init(char **v);
 
-void	rasterise(t_pt *pt, t_view view, int size);
+void	rasterise(t_pt *pt, t_view view, int size, t_data *data);
 void	xiaolin_wu(t_pt src, t_pt dst, t_data *data);
 void	goodlines(t_data *data);
 void	change_view(t_view *view, t_keys keys);

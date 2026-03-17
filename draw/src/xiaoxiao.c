@@ -18,26 +18,36 @@ void	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 //lower pixel strength: 0.44
 //point coords: x = 2, y = 2, y = 3
 //propose storing as unsigned int
-void	buf_edit(t_data *data, float fx, float fy)//feed in upper pixel
+
+void	buf_edit(t_data *data, float fx, float fy)//feed in upper pixel//
 {
-	unsigned char	value;
-	char			*cache;
-	int				x;
-	int				y;
-	int				line;
+	int		value;
+	char	*cache;
+	int		x;
+	int		y;
+	int		line;
 
 	x = fx;
 	y = fy;
 	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < -1)
 		return ;
 	line = data->line;
-	value = 255 * (fy - y);
 	cache = &data->buf[(x * data->bypp) + (y * line)];
+
+	// original Wu anti-aliasing logic (kept as comments):
+	value = (0xFF - WEIGHT) * (fy - y);
 	if (y >= 0 && y < HEIGHT)
-		*(unsigned int *) cache = ((255 - value) << 16) + WHITE;
+	    *(unsigned int *) cache = ((0xFF - value) * SHADE) + HALF;
 	y += 1;
 	if (y >= 0 && y < HEIGHT)
-		*(unsigned int *) (cache + line) = (value << 16) + WHITE;
+	    *(unsigned int *) (cache + line) = (value * SHADE) + HALF;
+
+	// Force pure white pixels
+	// if (y >= 0 && y < HEIGHT)
+	// 	*(unsigned int *) cache = WHITE;
+	// y += 1;
+	// if (y >= 0 && y < HEIGHT)
+	// 	*(unsigned int *) (cache + line) = WHITE;
 }
 
 /*
@@ -86,7 +96,7 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	m = 0.0f;
 	if (fabsf(dx) > EPSILON)
 		m = dy / dx;//gradient after swap
-	while (--dx > 1.99f)//(++i < (int) dx)//starts at 1//i.e. 10.99: 9 8 7 6 5 4 3 2.99//1 2 3 4 5 6 7 8 9 10
+	while (src.fx < dst.fx)//(++i < (int) dx)//starts at 1//i.e. 10.99: 9 8 7 6 5 4 3 2.99//1 2 3 4 5 6 7 8 9 10
 	{
 		src.fx += 1;
 		src.fy += m;

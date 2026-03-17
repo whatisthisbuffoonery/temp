@@ -62,9 +62,25 @@ t_view	view_init(t_pt *pt, int size, char **v)
 	i = 0;
 	while (i < size)
 	{
-		pt[i].fx = (pt[i].x * view.cosy) + (pt[i].z * view.siny);
-		z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
-		pt[i].fy = (pt[i].y * view.cosx) + (pt[i].z * view.sinx);
+		// pt[i].fx = (pt[i].x * view.cosy) + (pt[i].z * view.siny);
+		// z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
+		// pt[i].fy = (pt[i].y * view.cosx) + (z * view.sinx);
+
+		//pt[i].fx = pt[i].x - //fuck my data->x;
+
+		pt[i].fx = (pt[i].x * view.cosz) - (pt[i].y * view.sinz);
+		pt[i].fy = (pt[i].x * view.sinz) + (pt[i].y * view.cosz);
+		z = -(pt[i].fx * view.siny) + (pt[i].z * view.cosy);
+		pt[i].fx = ((pt[i].fx * view.cosy) + (pt[i].z * view.siny));
+		pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx));
+		// Rotate around z
+		// float x_temp = pt[i].x * view.cosz - pt[i].y * view.sinz;
+		// float y_temp = pt[i].x * view.sinz + pt[i].y * view.cosz;
+		// // Rotate around y
+		// pt[i].fx = (x_temp * view.cosy) + (pt[i].z * view.siny);
+		// z = -(x_temp * view.siny) + (pt[i].z * view.cosy);
+		// // Rotate around x
+		// pt[i].fy = (y_temp * view.cosx) + (z * view.sinx);
 		i ++;
 	}
 	view.scale = scale_init(pt, size);
@@ -91,9 +107,24 @@ void	rasterise(t_pt *pt, t_view view, int size)
 	i = 0;
 	while (i < size)
 	{
-		pt[i].fx = ((pt[i].x * view.cosy) + (pt[i].z * view.siny)) * view.scale;
-		z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
+		// pt[i].fx = ((pt[i].x * view.cosy) + (pt[i].z * view.siny)) * view.scale;
+		// z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
+		// pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx)) * view.scale;
+
+		pt[i].fx = (pt[i].x * view.cosz) - (pt[i].y * view.sinz);
+		pt[i].fy = (pt[i].x * view.sinz) + (pt[i].y * view.cosz);
+		z = -(pt[i].fx * view.siny) + (pt[i].z * view.cosy);
+		pt[i].fx = ((pt[i].fx * view.cosy) + (pt[i].z * view.siny)) * view.scale;
 		pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx)) * view.scale;
+		
+		// // Rotate around z
+		// float x_temp = pt[i].x * view.cosz - pt[i].y * view.sinz;
+		// float y_temp = pt[i].x * view.sinz + pt[i].y * view.cosz;
+		// // Rotate around y
+		// pt[i].fx = ((x_temp * view.cosy) + (pt[i].z * view.siny)) * view.scale;
+		// z = -(x_temp * view.siny) + (pt[i].z * view.cosy);
+		// // Rotate around x
+		// pt[i].fy = ((y_temp * view.cosx) + (z * view.sinx)) * view.scale;
 		i ++;
 	}
 }
