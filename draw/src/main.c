@@ -1,13 +1,13 @@
 #include "h_mlx.h"
 
-int	size_init(t_data *data, int fd)//open files outside // start x from 0 we'll edit the padding later
+int	size_init(t_data *data, int fd)
 {
 	char	*line;
 	int		i;
 	int		count;
 
 	i = 0;
-	count = 0;//set data elsewhere
+	count = 0;
 	line = gnl(fd);
 	while (line)
 	{
@@ -29,8 +29,6 @@ int	size_init(t_data *data, int fd)//open files outside // start x from 0 we'll 
 	return (count);
 }
 
-// we will open two fds for this
-
 int	pt_xy(t_pt **pt, t_data *data)
 {
 	int	i;
@@ -47,7 +45,6 @@ int	pt_xy(t_pt **pt, t_data *data)
 	return (0);
 }
 
-//i just realised my parsing is a bit overkill
 int	pt_init(t_pt **pt, t_data *data, int *fd)
 {
 	int		i;
@@ -58,7 +55,7 @@ int	pt_init(t_pt **pt, t_data *data, int *fd)
 	k = 0;
 	data->size = size_init(data, fd[0]);
 	line = gnl(fd[1]);
-	if (!data->size || !malloc_cond((void **) pt, data->size * sizeof(t_pt)))
+	if (data->size < 1 || !malloc_cond((void **) pt, data->size * sizeof(t_pt)))
 		return (1);
 	while (line)
 	{
@@ -75,7 +72,6 @@ int	pt_init(t_pt **pt, t_data *data, int *fd)
 	return (pt_xy(pt, data));
 }
 
-//data file here
 int	data_init(t_data *data, char *v)
 {
 	data->mlx = mlx_init();
@@ -89,25 +85,16 @@ int	data_init(t_data *data, char *v)
 				&data->line,
 				&data->endian);
 	if (!data->win || !data->img || !data->buf)
-		return (1);//cleanup elsewhere
+		return (1);
 	data->bypp = data->bipp / 8;
+	data->ubuf = (unsigned int *) data->buf;
+	if (data->bipp == 32)
+		data->buf_edit = buf_edit_uint;
+	else
+		data->buf_edit = buf_edit_char;
 	return (0);
 }
 
-void	set_all(t_data *data)
-{
-	t_data	d;
-
-	d.mlx = NULL;
-	d.win = NULL;
-	d.img = NULL;
-	d.buf = NULL;
-	d.x = 0;
-	d.y = 0;
-	*data = d;
-}
-
-//main file
 int	fd_init(char *v, int *fd)
 {
 	fd[0] = open(v, O_RDONLY);
@@ -125,15 +112,8 @@ int	fd_init(char *v, int *fd)
 int	fdf_cleanup(t_data *d, t_pt *pt)
 {
 	t_data	data;
-	static int debug;
 
-	if (debug++)
-	{
-		ft_putstr("\nhuh\n");
-		return (0);
-	}
 	data = *d;
-	//(void) pt;
 	free(pt);
 	if (data.img)
 		mlx_destroy_image(data.mlx, data.img);
@@ -141,50 +121,33 @@ int	fdf_cleanup(t_data *d, t_pt *pt)
 		mlx_destroy_window(data.mlx, data.win);
 	if (data.mlx)
 		mlx_destroy_display(data.mlx);
-	free(data.mlx);//damn you ai
+	free(data.mlx);
 	d->mlx = NULL;
 	d->win = NULL;
 	d->img = NULL;
 	d->buf = NULL;
 	d->param.pt = NULL;
-	exit(0);//bruh//fuck you, you barely passed
+	exit(0);
 	return (1);
 }
 
-//split rasterisation into (in order):
-//rotation for x and y perspective
 int	main(int c, char **v)
 {
-	t_pt	*pt;//these are all floats//eh use map size as safety
+	t_pt	*pt;
 	t_data	data;
 	int		fd[2];
 
-	if (c != 2 || fd_init(v[1], fd)) //diff for bonus projection, have angle init func here too
+	if (c != 2 || fd_init(v[1], fd))//sorry, could not finish perspective projection in time, c != 2 it is.
 		return (1);
-//	pt = NULL;
-//	set_all(&data);
+	
 	ft_memset(&data, 0, sizeof(t_data));
 	if (pt_init(&pt, &data, fd) || data_init(&data, v[1]))
 		return (fdf_cleanup(&data, pt));
 	data.y -= 1;//0 index
 	close(fd[0]);
 	close(fd[1]);
-	/*
-	int i = 0;
-	while (i < data.size)
-	{
-		ft_putnbr(pt[i].x);
-		ft_putstr(" ,");
-		ft_putnbr(pt[i].y);
-		ft_putstr(" ,");
-		ft_putnbr(pt[i].z);
-		ft_putchar('\n');
-		i ++;
-	}
-	*/
-	data.param.view = view_init(pt, data.size, v);
 	data.param.pt = pt;
-//	goodlines(&data);
-//	fdf_cleanup(&data, pt);
-	return (loop_me(data));//angle and data are copied
+	view_init(pt, data.size, v, &data);
+
+	return (loop_me(data));
 }

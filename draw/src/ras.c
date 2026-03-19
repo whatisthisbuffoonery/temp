@@ -6,131 +6,117 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 13:04:48 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/16 17:09:41 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/20 03:20:04 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "h_mlx.h"
 
-//rad all the angles first // see if you can squeeze fixed in here
-//plez do not modify 3d array, do z scaling using local t_3d to call this //scale is determined at init
-// no nevermind we have to include separate controls for both z and scale
-//actually handle scale AFTER this func
-
-//YX euler approach using left handed formula
-
-//have a pixelset() func that checks for out-of-screen pixels
-//x = x * cos(angle.y) - z * sin(angle.y)
-//z = x * sin(angle.y) + z * cos(angle.y)
-//scale separately
-
-float	scale_init(t_pt *pt, int size)
+void	scale_init(t_pt *pt, int size, t_data *data, float *f)
 {
-	float	x_max;
-	float	y_max;
-	float	x_min;
-	float	y_min;
 	int		i;
+	float	bw;
+	float	bh;
+	t_view	*view;
 
-	x_min = FLT_MAX;
-	y_min = FLT_MAX;
-	x_max = -FLT_MAX;
-	y_max = -FLT_MAX;
 	i = 0;
+	view = &data->param.view;
 	while (i < size)
 	{
-		if (pt[i].fx > x_max)
-			x_max = pt[i].fx;
-		if (pt[i].fy > y_max)
-			y_max = pt[i].fy;
-		if (pt[i].fx < x_min)
-			x_min = pt[i].fx;
-		if (pt[i].fy < y_min)
-			y_min = pt[i].fy;
+		if (pt[i].fx > f[2])
+			f[2] = pt[i].fx;
+		if (pt[i].fy > f[3])
+			f[3] = pt[i].fy;
+		if (pt[i].fx < f[0])
+			f[0] = pt[i].fx;
+		if (pt[i].fy < f[1])
+			f[1] = pt[i].fy;
 		i ++;
 	}
-	return (fminf(WIDTH / fabs(x_max - x_min), HEIGHT / fabs(y_max - y_min)));
+	bw = fmaxf(f[2] - f[0], 1.0f);
+	bh = fmaxf(f[3] - f[1], 1.0f);
+	view->scale = (fminf(WIDTH / bw, HEIGHT / bh)) * 0.5;
+	// while (i < size)
+	// {
+	// 	pt[i].fx = (pt[i].fx * view->scale) + data->cx;
+	// 	pt[i].fy = (pt[i].fy * view->scale) + data->cy;
+	// 	i ++;
+	// }
 }
 
-t_view	view_init(t_pt *pt, int size, char **v)
+void	center_init(t_data *data, int size)
 {
-	float	z;
+	t_pt	*pt;
+	int		i;
+	int		z_min;
+	int		z_max;
+
+	pt = data->param.pt;
+	i = 0;
+	z_min = INT_MAX;
+	z_max = INT_MIN;
+	while (i < size)
+	{
+		if (pt[i].z > z_max)
+			z_max = pt[i].z;
+		if (pt[i].z < z_min)
+			z_min = pt[i].z;
+		i ++;
+	}
+	data->cx = (float) (data->x) * 0.5f;
+	data->cy = (float) (data->y) * 0.5f;
+	data->cz = (z_min + z_max) * 0.5f;
+}
+
+void	view_init(t_pt *pt, int size, char **v, t_data *data)
+{
 	int		i;
 	t_view	view;
+	t_trig	t;
+	float	z;
 
-	view = angle_init(v);//pls cast to rad
+	view = angle_init(v);
+	center_init(data, size);
 	i = 0;
 	while (i < size)
 	{
-		// pt[i].fx = (pt[i].x * view.cosy) + (pt[i].z * view.siny);
-		// z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
-		// pt[i].fy = (pt[i].y * view.cosx) + (z * view.sinx);
-
-		//pt[i].fx = pt[i].x - //fuck my data->x;
-
-		pt[i].fx = (pt[i].x * view.cosz) - (pt[i].y * view.sinz);
-		pt[i].fy = (pt[i].x * view.sinz) + (pt[i].y * view.cosz);
-		z = -(pt[i].fx * view.siny) + (pt[i].z * view.cosy);
-		pt[i].fx = ((pt[i].fx * view.cosy) + (pt[i].z * view.siny));
-		pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx));
-		// Rotate around z
-		// float x_temp = pt[i].x * view.cosz - pt[i].y * view.sinz;
-		// float y_temp = pt[i].x * view.sinz + pt[i].y * view.cosz;
-		// // Rotate around y
-		// pt[i].fx = (x_temp * view.cosy) + (pt[i].z * view.siny);
-		// z = -(x_temp * view.siny) + (pt[i].z * view.cosy);
-		// // Rotate around x
-		// pt[i].fy = (y_temp * view.cosx) + (z * view.sinx);
+		t.x = pt[i].x - data->cx;
+		t.y = pt[i].y - data->cy;
+		t.z = pt[i].z - data->cz;
+		pt[i].fx = (t.x * view.cosz) - (t.y * view.sinz);
+		pt[i].fy = (t.x * view.sinz) + (t.y * view.cosz);
+		z = -(pt[i].fx * view.siny) + (t.z * view.cosy);
+		pt[i].fx = ((pt[i].fx * view.cosy) + (t.z * view.siny)) + data->cx;
+		pt[i].fy = ((pt[i].fy * view.cosx) + (z * view.sinx)) + data->cy;
 		i ++;
 	}
-	view.scale = scale_init(pt, size);
-	i = 0;
-	while (i < size)
-	{
-		pt[i].fx *= view.scale;
-		pt[i].fy *= view.scale;
-		i ++;
-	}
-	return (view);
+	data->param.view = view;
+	scale_init(pt, size, data, (float []){FLT_MAX, FLT_MAX, -FLT_MAX, -FLT_MAX});
 }
 
-//((x * cos) + (y * sin)) * scale
-//
-//		pt[i].fx = ((pt[i].x * cosf(view.y)) + (pt[i].z * sinf(view.y))) * view.scale;
-//		z = -(pt[i].x * sinf(view.y)) + (pt[i].z * cosf(view.y));
-//		pt[i].fy = ((pt[i].y * cosf(view.x)) + (pt[i].z * sinf(view.x))) * view.scale;
-void	rasterise(t_pt *pt, t_view view, int size)
+void	rasterise(t_pt *pt, t_view view, int size, t_data *data)
 {
-	float	z;
+	t_trig	t;
+	t_trig	r;
 	int		i;
 
 	i = 0;
 	while (i < size)
 	{
-		// pt[i].fx = ((pt[i].x * view.cosy) + (pt[i].z * view.siny)) * view.scale;
-		// z = -(pt[i].x * view.siny) + (pt[i].z * view.cosy);
-		// pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx)) * view.scale;
-
-		pt[i].fx = (pt[i].x * view.cosz) - (pt[i].y * view.sinz);
-		pt[i].fy = (pt[i].x * view.sinz) + (pt[i].y * view.cosz);
-		z = -(pt[i].fx * view.siny) + (pt[i].z * view.cosy);
-		pt[i].fx = ((pt[i].fx * view.cosy) + (pt[i].z * view.siny)) * view.scale;
-		pt[i].fy = ((pt[i].y * view.cosx) + (z * view.sinx)) * view.scale;
-		
-		// // Rotate around z
-		// float x_temp = pt[i].x * view.cosz - pt[i].y * view.sinz;
-		// float y_temp = pt[i].x * view.sinz + pt[i].y * view.cosz;
-		// // Rotate around y
-		// pt[i].fx = ((x_temp * view.cosy) + (pt[i].z * view.siny)) * view.scale;
-		// z = -(x_temp * view.siny) + (pt[i].z * view.cosy);
-		// // Rotate around x
-		// pt[i].fy = ((y_temp * view.cosx) + (z * view.sinx)) * view.scale;
+		t.x = pt[i].x - data->cx;
+		t.y = pt[i].y - data->cy;
+		t.z = pt[i].z - data->cz;
+		pt[i].fx = (t.x * view.cosz) - (t.y * view.sinz);
+		pt[i].fy = (t.x * view.sinz) + (t.y * view.cosz);
+		r.z = -(pt[i].fx * view.siny) + (t.z * view.cosy);
+		r.x = (pt[i].fx * view.cosy) + (t.z * view.siny);
+		r.y = (pt[i].fy * view.cosx) + (r.z * view.sinx);
+		r.z *= view.scale;
+		r.y *= view.scale;
+		r.x *= view.scale;
+		pt[i].fx = r.x + (((float)WIDTH) * 0.5f) + data->offset_x;
+		pt[i].fy = r.y + (((float)HEIGHT) * 0.5f) + data->offset_y;
+		pt[i].fz = r.z;
 		i ++;
 	}
 }
-/*
-void	parallel()
-{
-	///wtf
-}
-*/

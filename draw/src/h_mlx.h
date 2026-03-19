@@ -24,19 +24,16 @@
 #  define FRAMES 60
 # endif
 
-# define FRAME_MCS ((SECOND_MCS / FRAMES) + 1) //rounded up...to be considered
+# define FRAME_MCS ((SECOND_MCS / FRAMES) + 1)
 
-# define EPSILON 1e-6f //dang floats not knowing what 0 is
-# define WHITE 0x00FFFFFF //hm
+# define EPSILON 1e-6f
 # define R_PI (2 * M_PI)
 # define DEG (180.0f / M_PI)
 # define RAD (M_PI / 180.0f)
 # define STEP (1.0f * RAD)
 # define RAD_MAX (360.0f * RAD)
 
-# define WEIGHT 0x0
 # define SHADE 0x00010101
-# define HALF (SHADE * WEIGHT)
 
 # define UP 4
 # define DOWN 5
@@ -46,13 +43,16 @@ typedef struct
 	float	x;
 	float	y;
 	float	z;
-	float	scale;//fmlllllllll
+	float	scale;
 	float	cosx;
 	float	sinx;
 	float	cosy;
 	float	siny;
 	float	cosz;
 	float	sinz;
+	float	fov;
+	float	focal;
+	char	pers;
 }			t_view;
 
 //we will scale in ras
@@ -62,9 +62,9 @@ typedef struct
 	int		y;
 	int		z;
 	float	fx;
-	float	fy;//fml
+	float	fy;
+	float	fz;
 }			t_pt;
-//i made t map a dynamic array, i would want to just use this struct instead
 
 typedef struct
 {
@@ -74,39 +74,69 @@ typedef struct
 	char	d;
 	char	q;
 	char	e;
+	char	up;
+	char	left;
+	char	down;
+	char	right;
 }			t_keys;
 
-typedef struct//to phase out
+typedef struct
 {
 	t_view	view;
 	t_pt	*pt;
 	t_keys	keys;
 }			t_param;
 
+typedef struct
+{
+	float	xu;
+	float	xl;
+	float	yu;
+	float	yl;
+	float	zu;
+	float	zl;
+	float	cx;
+	float	cy;
+	float	cz;
+}			t_lim;
+
+typedef struct
+{
+	float	x;
+	float	y;
+	float	z;
+}			t_trig;
+
+
 typedef struct s_data
 {
+	t_param			param;
 	void			*mlx;
 	void			*win;
 	void			*img;
-	char			*buf;//changed back for portability, settle tabs later
-	unsigned int	*ubuf;//wait for it
-	void			(*buf_edit)(struct s_data *, float, float);//lmaoooooo//actually just set shade and half between 24 and 16, 32 is a no op
+	char			*buf;
+	unsigned int	*ubuf;
+	void			(*buf_edit)(struct s_data *, float, float);
 	int				size;
-	int				endian;//not a ptr oml
+	int				endian;
 	int				line;
-	int				bipp;//consider combining?
+	int				bipp;
 	int				bypp;
-	int				x;//pls 0 index
-	int				y;//we just sub one.......for two lines
-	float			ax;//perspective
-	float			ay;
-	t_param			param;
-	//t_pt			tmp;//gosh dangit
+	unsigned int	colour_max;
+	int				x;
+	int				y;
+	float			cx;
+	float			cy;
+	float			cz;
+	float			offset_x;
+	float			offset_y;
 }					t_data;
 
-t_view	view_init(t_pt *pt, int size, char **v);
+void	view_init(t_pt *pt, int size, char **v, t_data *data);
 t_view	angle_init(char **v);
 
+void	buf_edit_uint(t_data *data, float fx, float fy);
+void	buf_edit_char(t_data *data, float fx, float fy);
 void	rasterise(t_pt *pt, t_view view, int size, t_data *data);
 void	xiaolin_wu(t_pt src, t_pt dst, t_data *data);
 void	goodlines(t_data *data);
