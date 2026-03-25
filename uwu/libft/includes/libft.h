@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 04:45:36 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/16 13:00:08 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/25 13:43:11 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int		ft_isquote(int c);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 int		min(int a, int b);
+int		max2(int a, int b);
 
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

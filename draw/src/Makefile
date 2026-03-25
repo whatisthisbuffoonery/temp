@@ -1,5 +1,5 @@
-MLX_DIR := ../minilibx-linux
-LIBFT_DIR := ../libft
+MLX_DIR := minilibx-linux
+LIBFT_DIR := libft
 LIBFT := $(LIBFT_DIR)/libft.a
 INCLUDES := -I$(MLX_DIR) -I$(LIBFT_DIR)/includes
 LIBS := -lm -lXext -lX11 -lmlx -lft -L$(MLX_DIR) -L$(LIBFT_DIR) -L/usr/lib/X11
@@ -45,8 +45,8 @@ clean:
 	rm -rf $(OBJ) $(OBJ_MAND) $(OBJ_BONUS)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(FULL)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus

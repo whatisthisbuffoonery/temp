@@ -2,7 +2,7 @@ all:
 	echo "dude really"
 
 in:
-	rsync -avc ../../draw/src/ ./src/ -r
+	rsync -avc ../../three_deez/* ./src/ -r
 
 out: 
 	rsync -avc ./src/ ../../draw/src/ -r

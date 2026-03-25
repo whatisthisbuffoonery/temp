@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   h_mlx.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 13:50:56 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/25 13:51:00 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef H_MLX_H
 # define H_MLX_H
 
@@ -59,12 +71,14 @@ typedef struct s_view
 
 typedef struct s_pt
 {
-	int		x;
-	int		y;
-	int		z;
-	float	fx;
-	float	fy;
-	float	fz;
+	int				x;
+	int				y;
+	int				z;
+	float			fx;
+	float			fy;
+	float			fz;
+	unsigned int	colour;
+	char			colour_flag;
 }			t_pt;
 
 typedef struct s_keys
@@ -140,5 +154,6 @@ void	scale_init(t_pt *pt, int size, t_data *data, float *f);
 int		pt_init(t_pt **pt, t_data *data, int *fd);
 int		clicked_x(void *param);
 int		perspective_flag(char *v);
+int		fd_err(int *fd);
 
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   frame.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/25 13:49:02 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/25 13:49:07 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "h_mlx.h"
 /*
 int stuff = 0;
@@ -19,6 +31,13 @@ void timer(struct timeval start, struct timeval end)
 	}
 }
 */
+
+int	fd_err(int *fd)
+{
+	close(fd[0]);
+	close(fd[1]);
+	return (1);
+}
 
 int	frame_wait(struct timeval start)
 {
