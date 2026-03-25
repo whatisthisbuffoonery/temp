@@ -1,11 +1,28 @@
 #include "h_mlx.h"
 
-void	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
+int	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 {
-	ft_swapf(&src->fx, &src->fy);
-	ft_swapf(&dst->fx, &dst->fy);
-	*dy = dst->fy - src->fy;
+	int		steep;
+	t_pt	tmp;
+
 	*dx = dst->fx - src->fx;
+	*dy = dst->fy - src->fy;
+	steep = (fabsf(*dy) > fabsf(*dx));
+	if (steep)
+	{
+		ft_swapf(&src->fx, &src->fy);
+		ft_swapf(&dst->fx, &dst->fy);
+		ft_swapf(dx, dy);
+	}
+	if (*dx < 0)
+	{
+		tmp = *src;
+		*src = *dst;
+		*dst = tmp;
+		*dx = -*dx;
+		*dy = -*dy;
+	}
+	return (steep);
 }
 
 void	buf_edit_uint(t_data *data, float fx, float fy)
@@ -24,10 +41,10 @@ void	buf_edit_uint(t_data *data, float fx, float fy)
 	buf = &data->ubuf[x + (y * line)];
 	value = 0xFF * (fy - y);
 	if (y >= 0 && y < HEIGHT)
-	    *buf = (0xFF - value) * SHADE;
+		*buf = (0xFF - value) * data->shade;
 	y += 1;
 	if (y >= 0 && y < HEIGHT)
-	    *(buf + line) = value * SHADE;
+		*(buf + line) = value * data->shade;
 }
 
 void	buf_edit_char(t_data *data, float fx, float fy)
@@ -48,14 +65,14 @@ void	buf_edit_char(t_data *data, float fx, float fy)
 	if (data->bipp == 24)
 	{
 		if (y >= 0 && y < HEIGHT)
-			*(unsigned int *) buf = (0xFF - value) * SHADE;
+			*(unsigned int *) buf = (0xFF - value) * data->shade;
 		y += 1;
 		if (y >= 0 && y < HEIGHT)
-			*(unsigned int *) (buf + line) = value * SHADE;
+			*(unsigned int *)(buf + line) = value * data->shade;
 		return ;
 	}
 	if (y >= 0 && y < HEIGHT)
-		*(unsigned int *) (buf + line) = 0xFF;
+		*(unsigned int *)(buf + line) = 0xFF;
 }
 
 void	swap_pt(t_pt *src, t_pt *dst, float *dx, float *dy)
@@ -74,15 +91,15 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	float	m;
 	float	dx;
 	float	dy;
-	int		steep;
+	float	*args[2];
 
-	dy = dst.fy - src.fy;
-	dx = dst.fx - src.fx;
-	steep = (fabsf(dy) > fabsf(dx));
-	if (steep)
-		swap_wrapper(&src, &dst, &dx, &dy);
-	if (dx < 0)
-		swap_pt(&src, &dst, &dx, &dy);
+	args[0] = &src.fx;
+	args[1] = &src.fy;
+	if (swap_wrapper(&src, &dst, &dx, &dy))
+	{
+		args[0] = &src.fy;
+		args[1] = &src.fx;
+	}
 	m = 0.0f;
 	if (fabsf(dx) > EPSILON)
 		m = dy / dx;
@@ -90,9 +107,6 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	{
 		src.fx += 1;
 		src.fy += m;
-		if (steep)
-			data->buf_edit(data, src.fy, src.fx);
-		else
-			data->buf_edit(data, src.fx, src.fy);
+		data->buf_edit(data, *args[0], *args[1]);
 	}
 }

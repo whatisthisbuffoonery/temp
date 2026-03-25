@@ -1,24 +1,22 @@
 #include "h_mlx.h"
 
-t_view	angle_init(char **v)//, t_pt *pt, int size)
+t_view	angle_init(void)//, t_pt *pt, int size)
 {
 	t_view	ret;
+	float	rad;
 
-	if (v[2] && v[2][0] == 'p' && v[2][1] == '\0')
-		ret.pers = 1;
-	else
-		ret.pers = 0;
-	(void) v;
-	ret.x = (360.0f - 35.264f) * RAD;
-	ret.y = 0.0f * RAD;
-	ret.z = (360.0f - 45.0f) * RAD;
+	rad = M_PI / 180.0f;
+	ret.x = 35.264f * rad;
+	ret.y = 0.0f * rad;
+	ret.z = 45.0f * rad;
 	ret.sinx = sinf(ret.x);
 	ret.siny = sinf(ret.y);
 	ret.sinz = sinf(ret.z);
 	ret.cosx = cosf(ret.x);
 	ret.cosy = cosf(ret.y);
 	ret.cosz = cosf(ret.z);
-	ret.fov = 60.0f; /* degrees */
-    ret.focal = ((float)HEIGHT * 0.5f) / tanf((ret.fov * 0.5f) * RAD);
+	ret.scale = 1.0f;
+	ret.step = M_PI / 180.0f;
+	ret.rad_max = 2 * M_PI;
 	return (ret);
 }

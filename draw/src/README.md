@@ -65,3 +65,8 @@ our formula: https://wikimedia.org/api/rest_v1/media/math/render/svg/c4d0ffc556c
 [really good explanation pt3](https://medium.com/@sepideh.92sh/part-iii-composing-rotations-euler-angles-and-roll-pitch-yaw-38aa816a5bcd)  
 The three rows represent, from top to bottom: x, y, and z.
 In code, 
+[conventions?](https://math.stackexchange.com/questions/3290237/rotation-matrix-difference-between-row-vs-column-representations)  
+[chained rotations?](https://en.wikipedia.org/wiki/Davenport_chained_rotations)
+[even simpler matrix usage](https://www.youtube.com/watch?v=kYB8IZa5AuE)
+
+(P.S. it is simple)
