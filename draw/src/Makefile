@@ -5,7 +5,7 @@ INCLUDES := -I$(MLX_DIR) -I$(LIBFT_DIR)/includes
 LIBS := -lm -lXext -lX11 -lmlx -lft -L$(MLX_DIR) -L$(LIBFT_DIR) -L/usr/lib/X11
 CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -g
-SRC := main.c view.c frame.c ras.c xiaoxiao.c pt.c
+SRC := main.c view.c frame.c ras.c xiaoxiao.c pt.c bresenham.c
 SRC_MAND := loop_mand.c
 SRC_BONUS := loop_bonus.c
 OBJ := $(SRC:.c=.o)
@@ -13,7 +13,7 @@ OBJ_MAND := $(SRC_MAND:.c=.o)
 OBJ_BONUS := $(SRC_BONUS:.c=.o)
 MLX := $(MLX_DIR)/libmlx.a
 NAME := fdf
-FULL := full
+FULL := woof
 
 all: $(NAME)
 

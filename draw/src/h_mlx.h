@@ -43,10 +43,11 @@
 //# define STEP (1.0f * RAD)
 //# define RAD_MAX (360.0f * RAD)
 
-//# define SHADE 0x00000100
+# define SHADE 0x00010101
 # define RED 0x00010000
 # define GREEN 0x00000100
 # define BLUE 0x00000001
+# define WHITE 0x00FFFFFF
 
 # define UP 4
 # define DOWN 5
@@ -155,5 +156,6 @@ int		pt_init(t_pt **pt, t_data *data, int *fd);
 int		clicked_x(void *param);
 int		perspective_flag(char *v);
 int		fd_err(int *fd);
+void	bresenham(t_pt src, t_pt dst, t_data *data);
 
 #endif

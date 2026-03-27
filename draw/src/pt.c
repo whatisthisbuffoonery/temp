@@ -43,6 +43,7 @@ int	size_init(t_data *data, int fd)
 */
 
 #include <stdio.h>
+/*
 int	size_init(t_data *data, int fd)//make this void and modify size directly
 {
 	char	*line;
@@ -72,6 +73,36 @@ int	size_init(t_data *data, int fd)//make this void and modify size directly
 	printf("input: %d\n", count);
 	return (count);
 }
+*/
+
+int	size_init(t_data *data, int fd)
+{
+	char	*line;
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	line = gnl(fd);
+	while (line)
+	{
+		while (line[i] == ' ' || line[i] == '\n')
+			i ++;
+		count += ft_isdigit(line[i + (line[i] == '-')]);
+		while (line[i] && line[i] != ' ' && line[i] != '\n')
+			i ++;
+		if (!line[i])
+		{
+			free(line);
+			line = gnl(fd);
+			data->y += 1;
+			if (!data->x)
+				data->x = count - 1;
+			i = 0;
+		}
+	}
+	return (count);
+}
 
 int	pt_xyz(t_pt **pt, t_data *data)
 {
@@ -94,8 +125,32 @@ int	pt_xyz(t_pt **pt, t_data *data)
 			z_max = (*pt)[i].z;
 		i ++;
 	}
-	data->f = max2(abs(z_min), abs(z_max)) * 2.0f;
-	return (0);
+	data->f = max2(abs(z_min), abs(z_max))
+		* (2.0f + (float)(data->size / 75000));
+	i = 0;
+	/*
+	while (i < data->size)
+	{
+		ft_putnbr((*pt)[i].z);
+		ft_putchar(' ');
+		i ++;
+		if (!(i % line))
+			ft_putchar('\n');
+	}
+	*/
+	return (0);//0
+}
+
+void	pt_input(t_pt *pt, char *line, int *i)
+{
+	pt->z = ft_atoi_ind(&line[*i], i);
+	pt->colour_flag = 0;
+	pt->colour = WHITE;
+	if (line[*i] == ',')
+	{
+		pt->colour_flag = 1;
+		pt->colour = ft_atohu_ind(&line[*i], i, 3);
+	}
 }
 
 int	pt_init(t_pt **pt, t_data *data, int *fd)
@@ -114,14 +169,31 @@ int	pt_init(t_pt **pt, t_data *data, int *fd)
 	{
 		if ((ft_isdigit(line[i]))
 			|| (line[i] == '-' && ft_isdigit(line[i + 1])))
-			(*pt)[k++].z = ft_atoi_ind(&line[i], &i);
+			pt_input(&(*pt)[k++], line, &i);
+			//(*pt)[k++].z = ft_atoi_ind(&line[i], &i);
 		i += (line[i] != 0);
+		/*
+		if (i > (int) ft_strlen(line))
+		{
+			ft_putstr("PANIKK\n");
+			exit(0);
+		}
+		*/
 		if (!line[i])
 		{
 			i = 0;
 			free(line);
 			line = gnl(fd[1]);
 		}
+	}
+	if (k != data->size)
+	{
+		ft_putstr("\npt_init_err\n");
+		ft_putnbr(k);
+		ft_putchar('\n');
+		ft_putnbr(data->size);
+		ft_putchar('\n');
+		exit(0);
 	}
 	return (pt_xyz(pt, data));
 }

@@ -41,6 +41,7 @@ The above showcases how to use matrix formulas, from plugging them in to derivin
 xyz due to my code implementation. That works well enough.  
   
 [xiaolin wu anti aliasing](https://youtu.be/f3Rs20k-hcI)  
+[bresenham algo](https://youtu.be/CceepU1vIKo) *wow I did not make good use of this design that should be fast, whole point was to never touch floats*
 [mlx usage guide](https://www.canva.com/design/DAGT6G8aJHY/fqork5u1hxZONk8a4WQtdQ/view#1)  
   
 The above mlx guide leaves out a few details:  

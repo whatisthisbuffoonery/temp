@@ -6,11 +6,11 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 22:31:27 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/15 21:30:34 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/25 15:29:04 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-inline void	ft_swapf(int *a, int *b)
+void	ft_swap(int *a, int *b)
 {
 	int	tmp;
 

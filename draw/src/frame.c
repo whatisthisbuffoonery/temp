@@ -55,6 +55,15 @@ int	frame_wait(struct timeval start)
 	return (0);
 }
 
+//sooooo lagggggg
+void	pt_wrapper(t_pt *src, t_pt *dst, t_data *data)
+{
+	if (src->colour_flag || dst->colour_flag)
+		bresenham(*src, *dst, data);
+	else
+		xiaolin_wu(*src, *dst, data);
+}
+
 void	goodlines(t_data *data)
 {
 	int		src;
@@ -71,9 +80,11 @@ void	goodlines(t_data *data)
 	while (src < size)
 	{
 		if (src / line == (src + 1) / line)
-			xiaolin_wu(pt[src], pt[src + 1], data);
+			pt_wrapper(&pt[src], &pt[src + 1], data);
+//			xiaolin_wu(pt[src], pt[src + 1], data);
 		if (src < y_lim)
-			xiaolin_wu(pt[src], pt[src + line], data);
+			pt_wrapper(&pt[src], &pt[src + line], data);
+//			xiaolin_wu(pt[src], pt[src + line], data);
 		src ++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);

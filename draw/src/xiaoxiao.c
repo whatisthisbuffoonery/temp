@@ -12,7 +12,7 @@
 
 #include "h_mlx.h"
 
-int	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
+static int	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 {
 	int		steep;
 	t_pt	tmp;
@@ -37,9 +37,10 @@ int	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 	return (steep);
 }
 
-void	buf_edit_uint(t_data *data, float fx, float fy)
+//cant do it baws, go ask bresenham
+void	buf_edit_uint(t_data *data, float fx, float fy)//, unsigned int base)
 {
-	int				value;
+	unsigned int	value;
 	unsigned int	*buf;
 	int				x;
 	int				y;
@@ -47,19 +48,25 @@ void	buf_edit_uint(t_data *data, float fx, float fy)
 
 	x = fx;
 	y = fy;
-	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < -1)
+	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < 0)
 		return ;
 	line = data->line / data->bypp;
 	buf = &data->ubuf[x + (y * line)];
+	//value = 0xFF * (fy - y);
+	//(void) value;
+	//(void) base;
 	value = 0xFF * (fy - y);
 	if (y >= 0 && y < HEIGHT)
 		*buf = (0xFF - value) * data->shade;
+		//*buf = ((int)(0xff * (1.0f - value)) << 16) + ((int)(0xff * (1.0f - value)) << 8) + (int)(0xff * (1.0f - value)) ;
 	y += 1;
 	if (y >= 0 && y < HEIGHT)
 		*(buf + line) = value * data->shade;
+		//*buf = ((int)(0xff * value) << 16) + ((int)(0xff * value) << 8) + (int)(0xff * value) ;
+		//*buf = 0x00ffffff * (fy - y);
 }
 
-void	buf_edit_char(t_data *data, float fx, float fy)
+void	buf_edit_char(t_data *data, float fx, float fy)//, unsigned int base)
 {
 	int		value;
 	char	*buf;
@@ -69,11 +76,12 @@ void	buf_edit_char(t_data *data, float fx, float fy)
 
 	x = fx;
 	y = fy;
-	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < -1)
+	if (x < 0 || x >= WIDTH || y >= HEIGHT || y < 0)
 		return ;
 	line = data->line;
 	buf = &data->buf[(x * data->bypp) + (y * line)];
 	value = 0xFF * (fy - y);
+	//(void) base;
 	if (data->bipp == 24)
 	{
 		if (y >= 0 && y < HEIGHT)
@@ -85,17 +93,6 @@ void	buf_edit_char(t_data *data, float fx, float fy)
 	}
 	if (y >= 0 && y < HEIGHT)
 		*(unsigned int *)(buf + line) = 0xFF;
-}
-
-void	swap_pt(t_pt *src, t_pt *dst, float *dx, float *dy)
-{
-	t_pt	tmp;
-
-	tmp = *src;
-	*src = *dst;
-	*dst = tmp;
-	*dy = dst->fy - src->fy;
-	*dx = dst->fx - src->fx;
 }
 
 void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
@@ -119,6 +116,6 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	{
 		src.fx += 1;
 		src.fy += m;
-		data->buf_edit(data, *args[0], *args[1]);
+		data->buf_edit(data, *args[0], *args[1]);//(colour_handle(src, dst));
 	}
 }
