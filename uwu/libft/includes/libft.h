@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 04:45:36 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/25 15:35:12 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/03/28 07:48:24 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void			ft_lstdelone(t_list *lst, void (*del)(void *));
 void			ft_lstclear(t_list **lst, void (*del)(void *));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstlast(t_list *lst);
-t_list			*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
+					void (*del)(void *));
 
 int				ft_isalnum(int c);
 int				ft_isalpha(int c);
@@ -51,6 +52,7 @@ int				ft_isprint(int c);
 int				ft_isquote(int c);
 int				ft_ishex(int c);
 
+int				ft_abs(int n);
 int				ft_tolower(int c);
 int				ft_toupper(int c);
 int				min(int a, int b);

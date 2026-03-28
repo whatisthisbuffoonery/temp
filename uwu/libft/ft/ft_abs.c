@@ -1,30 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atohu_ind.c                                     :+:      :+:    :+:   */
+/*   ft_abs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/28 06:46:36 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/28 06:46:51 by dthoo            ###   ########.fr       */
+/*   Created: 2026/03/28 07:47:18 by dthoo             #+#    #+#             */
+/*   Updated: 2026/03/28 07:47:56 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-unsigned int	ft_atohu_ind(char *s, int *index, int i)
+int	ft_abs(int n)
 {
-	unsigned int	a;
-
-	a = 0;
-	while (ft_ishex(s[i]))
-	{
-		a *= 16;
-		a += (s[i] >= 'a') * (s[i] - ('a' - 10));
-		a += (s[i] >= 'A' && s[i] <= 'Z') * (s[i] - ('A' - 10));
-		a += (s[i] >= '0' && s[i] <= '9') * (s[i] - '0');
-		i ++;
-	}
-	*index += i;
-	return (a);
+	if (n < 0)
+		return (-n);
+	return (n);
 }

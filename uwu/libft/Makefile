@@ -12,7 +12,7 @@ GNL_DIR := gnl
 FT_DIR := ft
 
 FT_SRC := ft_atoi.c ft_atoi_ind.c ft_atohu_ind.c ft_bzero.c ft_calloc.c ht_init.c \
-min.c max2.c \
+min.c max2.c ft_abs.c \
 ft_swap.c ft_swapf.c \
 ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c ft_isquote.c ft_ishex.c \
 ft_itoa.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c \
