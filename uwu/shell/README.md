@@ -1,0 +1,56 @@
+this says signal actions:
+https://pubs.opengroup.org/onlinepubs/7908799/xsh/signal.h.html
+
+we prolly just use sigaction
+
+echo uses just one dash to absorb all flags, including duplicates. so:
+	echo -eeeeeeeeeeeeeeeeeeeeeennnnnnnnnnnnnnnn is acceptable
+	check the other builtins too
+
+no set builtin means no set pipefail. then again my teammate is not handling children
+
+handle 2>
+
+handle quote waiting (pipes should be big enough)
+
+env parsing is just like argv parsing
+
+readline can differentiate quotes
+	error log for command not found displays backslash n
+	newline not treated as whitespace
+
+signals: if input has anything at that point, behaviour is quite different
+	ctrl d does nothing if input has text
+		ctrl d in a heredoc needs to emit "match not found" warning
+	ctrl backslash does nothing unless a child is running, it quits that
+	ctrl c is just ctrl c
+	all of these can bork return values differently
+
+ctrl c should not add half typed input to history
+
+elkan and yiyuan forgor to exclude empty inputs from history (possibly being just nl)
+
+$? not a env var, store in shell for later retrieval
+
+perplexity says env is a node list, say hello to 10 init files jackass
+
+handle "shell variable", something akin to push swap where the assignment is forgotten is 0.1seconds
+
+quote handling is, thankfully, left to right (ignore quotes of different types too)
+
+not asked to handle any other syntax symbols
+
+this project lives and dies by error reporting
+
+builtin with no options does not mean no args
+
+expand $vars before checking for commands
+
+why tf would I use fstat
+	why tf would I reach into bash to borrow shell printf
+
+cd dash returns you to the last dir you were at (init to ~) and prints a message detailing the new current dir (~/thing, or if not, abs path)
+
+volatile sig value it is
+
+
