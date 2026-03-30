@@ -10,13 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	type_bus(t_queue *q, const char *format, char *type)
+int	type_bus(t_pf_q *q, const char *format, char *type)
 {
 	(void) type;
-	if (!q)
-		return (0);
-	q->arg = format[0];
+	if (q)
+		q->arg = format[0];
 	return (0);
 }

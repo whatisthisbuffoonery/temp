@@ -10,7 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
+
+char	*percent_op(t_pf_q *q);
+char	*char_op(unsigned int c, t_pf_q *q);
+char	*ptr_op(uintptr_t src, char type, t_pf_q *q, char *hex);
+char	*uint_op(unsigned long n, char type, t_pf_q *q, char *hex);
+char	*int_op(int n, t_pf_q *q);
 
 static void	hex_init(char *a)
 {
@@ -32,12 +38,10 @@ static void	hex_init(char *a)
 	a[15] = 'f';
 }
 
-static char	*grab(t_queue *q, va_list *va)
+static char	*grab(t_pf_q *q, va_list *va, char *hex)
 {
 	char	cmp;
-	char	hex[16];
 
-	hex_init(hex);
 	if (q->type == str)
 		return (q->str);
 	else if (q->type == op)
@@ -57,7 +61,7 @@ static char	*grab(t_queue *q, va_list *va)
 	return (NULL);
 }
 
-int	print_strlen(char *a, t_queue *q)
+int	print_strlen(char *a, t_pf_q *q)
 {
 	int	i;
 
@@ -75,15 +79,17 @@ int	print_strlen(char *a, t_queue *q)
 	return (i);
 }
 
-int	process(t_queue *q, va_list *va)
+int	process(t_pf_q *q, va_list *va)
 {
-	t_queue	*f;
+	t_pf_q	*f;
 	char	*new;
+	char	hex[16];
 
 	f = q;
+	hex_init(hex);
 	while (f)
 	{
-		new = grab(f, va);
+		new = grab(f, va, hex);
 		if (!new)
 			return (-1);
 		f->str = new;

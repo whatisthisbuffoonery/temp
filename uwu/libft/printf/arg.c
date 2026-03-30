@@ -10,16 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
 int		uint_init(int *i, unsigned long *t);
-int		uint_help(char *ret, int flag, t_queue *q, int *i);
-int		int_help(char *ret, int flag, t_queue *q, int *index);
-int		prec_help(char *ret, t_queue *q, int n, int index);
-int		str_min(char **s, int size, t_queue *q);
-char	*handle_flag(size_t size, t_queue *q, int *index);
+int		uint_help(char *ret, int flag, t_pf_q *q, int *i);
+int		int_help(char *ret, int flag, t_pf_q *q, int *index);
+int		prec_help(char *ret, t_pf_q *q, int n, int index);
+int		str_min(char **s, int size, t_pf_q *q);
+char	*handle_flag(size_t size, t_pf_q *q, int *index);
 
-char	*percent_op(t_queue *q)
+char	*percent_op(t_pf_q *q)
 {
 	char	*ret;
 	int		i;
@@ -35,7 +35,7 @@ char	*percent_op(t_queue *q)
 	return (ret);
 }
 
-char	*char_op(unsigned int c, t_queue *q)
+char	*char_op(unsigned int c, t_pf_q *q)
 {
 	char	*ret;
 	int		i;
@@ -50,7 +50,7 @@ char	*char_op(unsigned int c, t_queue *q)
 	return (ret);
 }
 
-char	*uint_op(unsigned long n, char type, t_queue *q, char *hex)
+char	*uint_op(unsigned long n, char type, t_pf_q *q, char *hex)
 {
 	char			*ret;
 	int				i;
@@ -78,7 +78,7 @@ char	*uint_op(unsigned long n, char type, t_queue *q, char *hex)
 	return (ret);
 }
 
-char	*int_op(int num, t_queue *q)
+char	*int_op(int num, t_pf_q *q)
 {
 	char			*ret;
 	int				flag;
@@ -89,7 +89,7 @@ char	*int_op(int num, t_queue *q)
 	flag = (num < 0);
 	t = 1;
 	i = 1 + (flag || (q->flags && q->flags->plus_space));
-	if (flag && q->flags && q->flags->precision_set)
+	if (flag && q->flags && q->flags->precision_set && !q->flags->plus_space)
 		q->flags->precision += 1;
 	n = num;
 	if (num < 0)
@@ -107,7 +107,7 @@ char	*int_op(int num, t_queue *q)
 	return (ret);
 }
 
-char	*ptr_op(uintptr_t src, char type, t_queue *q, char *hex)
+char	*ptr_op(uintptr_t src, char type, t_pf_q *q, char *hex)
 {
 	int		i;
 	int		k;

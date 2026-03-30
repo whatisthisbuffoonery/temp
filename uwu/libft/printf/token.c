@@ -10,12 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
 void	tabler(char *type, char *flag, int *a, int *b);
-t_queue	*new_op(const char *format, int *index, char *type);
-t_queue	*new_str(const char *format, int start, int *end);
+t_pf_q	*new_op(const char *format, int *index, char *type);
+t_pf_q	*new_str(const char *format, int start, int *end);
 int		valid_cond_printf(const char *format, char *type, char *flag, int *i);
+int		enq(t_pf_q **q, t_pf_q *new);
 
 static int	valid(const char *format, int size, char *type, char *flag)
 {
@@ -39,13 +40,13 @@ static int	valid(const char *format, int size, char *type, char *flag)
 	return (1);
 }
 
-void	printf_tokens(const char *format, t_queue **q, int size)
+void	printf_tokens(const char *format, t_pf_q **q, int size)
 {
 	int		i;
 	int		start;
 	char	type[256];
 	char	flag[256];
-	t_queue	*tmp;
+	t_pf_q	*tmp;
 
 	tabler(type, flag, &i, &start);
 	if (!valid(format, size, type, flag))

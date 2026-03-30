@@ -15,6 +15,8 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdarg.h>
+# include <stdint.h>
 
 # ifndef INT_MAX
 #  define INT_MAX 2147483647
@@ -109,5 +111,33 @@ void			ft_putchar(char n);
 
 float			minf(float a, float b);
 float			absf(float a);
+
+typedef enum s_pf_type
+{
+	str,
+	op,
+	nil
+}	t_pf_type;
+
+typedef struct s_pf_flags
+{
+	char			plus_space;
+	char			minus_zero;
+	char			hex;
+	char			precision_set;
+	int				width;
+	int				precision;
+}					t_pf_flags;
+
+typedef struct s_pf_q
+{
+	struct s_pf_q		*next;
+	char				*str;
+	t_pf_flags			*flags;
+	t_pf_type			type;
+	char				arg;
+}						t_pf_q;
+
+int				ft_printf(const char *format, ...);
 
 #endif

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	prec_help(char *ret, t_queue *q, int n, int index)
+int	prec_help(char *ret, t_pf_q *q, int n, int index)
 {
 	int	i;
 
@@ -40,7 +40,7 @@ int	uint_init(int *i, unsigned long *t)
 	return (16);
 }
 
-int	uint_help(char *ret, int flag, t_queue *q, int *i)
+int	uint_help(char *ret, int flag, t_pf_q *q, int *i)
 {
 	int		k;
 	char	arg;
@@ -62,7 +62,7 @@ int	uint_help(char *ret, int flag, t_queue *q, int *i)
 	return (0);
 }
 
-int	int_help(char *ret, int flag, t_queue *q, int *index)
+int	int_help(char *ret, int flag, t_pf_q *q, int *index)
 {
 	int	i;
 	int	c;
@@ -89,7 +89,7 @@ int	int_help(char *ret, int flag, t_queue *q, int *index)
 	return (0);
 }
 
-int	str_min(char **s, int size, t_queue *q)
+int	str_min(char **s, int size, t_pf_q *q)
 {
 	if (!*s)
 	{

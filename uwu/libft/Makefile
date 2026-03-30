@@ -10,6 +10,7 @@ INCLUDE_DIR := includes
 OBJ_DIR := obj
 GNL_DIR := gnl
 FT_DIR := ft
+PRINTF_DIR := printf
 
 FT_SRC := ft_atoi.c ft_atoi_ind.c ft_atohu_ind.c ft_bzero.c ft_calloc.c ht_init.c \
 min.c max2.c ft_abs.c \
@@ -28,13 +29,18 @@ ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c ft_lst
 
 GNL_SRC := get_next_line_bonus.c get_next_line_utils_bonus.c get_next_line.c get_next_line_utils.c
 
+PRINTF_SRC := ft_printf.c arg.c process.c token.c token_call.c q_func.c arg_help.c \
+tabler_bonus.c type_bus_bonus.c handle_flag_bonus.c
+
 FT_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(FT_SRC))
 
 BONUS_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(BONUS_SRC))
 
 GNL_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(GNL_SRC))
 
-OBJ := $(FT_OBJ) $(GNL_OBJ) 
+PRINTF_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(PRINTF_SRC))
+
+OBJ := $(FT_OBJ) $(GNL_OBJ) $(PRINTF_OBJ)
 
 all: $(OBJ_DIR) $(NAME)
 
@@ -61,6 +67,9 @@ $(BONUS_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
 $(GNL_OBJ): $(OBJ_DIR)/%.o: $(GNL_DIR)/%.c
+	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
+
+$(PRINTF_OBJ): $(OBJ_DIR)/%.o: $(PRINTF_DIR)/%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
 clean:

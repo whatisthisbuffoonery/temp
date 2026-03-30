@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-void	clear_q(t_queue **q)
+void	clear_q(t_pf_q **q)
 {
-	t_queue	*f;
-	t_queue	*tmp;
+	t_pf_q	*f;
+	t_pf_q	*tmp;
 
 	f = NULL;
 	if (q && *q)
@@ -34,11 +34,11 @@ void	clear_q(t_queue **q)
 		*q = NULL;
 }
 
-t_queue	*q_new(void)
+t_pf_q	*q_new(void)
 {
-	t_queue	*tmp;
+	t_pf_q	*tmp;
 
-	tmp = malloc(sizeof(t_queue));
+	tmp = malloc(sizeof(t_pf_q));
 	if (!tmp)
 		return (NULL);
 	tmp->next = NULL;
@@ -49,9 +49,9 @@ t_queue	*q_new(void)
 	return (tmp);
 }
 
-int	enq(t_queue **q, t_queue *new)
+int	enq(t_pf_q **q, t_pf_q *new)
 {
-	t_queue	*f;
+	t_pf_q	*f;
 
 	if (!q)
 		return (1);

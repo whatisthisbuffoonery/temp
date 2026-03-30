@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_flag_mand.c                                 :+:      :+:    :+:   */
+/*   tabler_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 21:19:03 by dthoo             #+#    #+#             */
-/*   Updated: 2025/12/03 03:26:51 by dthoo            ###   ########.fr       */
+/*   Created: 2025/12/11 17:28:16 by dthoo             #+#    #+#             */
+/*   Updated: 2025/12/11 18:55:01 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*handle_flag(size_t size, t_queue *q, int *index)
+void	tabler(char *type, char *flag, int *a, int *b)
 {
-	char	*ret;
-
-	(void) q;
-	ret = malloc(size + 1);
-	if (!ret)
-		return (NULL);
-	ft_memset(ret, 0, size + 1);
-	*index = 0;
-	return (ret);
+	*a = 0;
+	*b = 0;
+	ft_memset(type, 0, 256);
+	ft_memset(flag, 0, 256);
+	type['c'] = 1;
+	type['s'] = 1;
+	type['p'] = 1;
+	type['d'] = 1;
+	type['i'] = 1;
+	type['u'] = 1;
+	type['x'] = 1;
+	type['X'] = 1;
+	type['%'] = 1;
+	flag['-'] = 1;
+	flag['0'] = 1;
+	flag['+'] = 1;
+	flag[' '] = 1;
+	flag['#'] = 1;
 }
-
-int	valid_cond_printf(const char *format, char *type, char *flag, int *i)
-{
-	(void) flag;
-	return (format[*i] != '%' && !type[(unsigned char) format[*i]]);
-}
+//. and % left out

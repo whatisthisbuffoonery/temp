@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
 static int	printf_atoi(const char *format, int *index)
 {
@@ -29,7 +29,7 @@ static int	printf_atoi(const char *format, int *index)
 	return (a);
 }
 
-static int	printf_len(t_flags *ret, const char *format)
+static int	printf_len(t_pf_flags *ret, const char *format)
 {
 	int	i;
 
@@ -46,7 +46,7 @@ static int	printf_len(t_flags *ret, const char *format)
 	return (i);
 }
 
-static int	bus_helper(t_queue *q, t_flags *ret, const char *format, int i)
+static int	bus_helper(t_pf_q *q, t_pf_flags *ret, const char *format, int i)
 {
 	char	a;
 
@@ -58,11 +58,11 @@ static int	bus_helper(t_queue *q, t_flags *ret, const char *format, int i)
 	return (i);
 }
 
-static t_flags	*printf_new_flag_node(void)
+static t_pf_flags	*printf_new_flag_node(void)
 {
-	t_flags	*a;
+	t_pf_flags	*a;
 
-	a = malloc(sizeof(t_flags));
+	a = malloc(sizeof(t_pf_flags));
 	if (!a)
 		return (NULL);
 	a->plus_space = 0;
@@ -74,11 +74,11 @@ static t_flags	*printf_new_flag_node(void)
 	return (a);
 }
 
-int	type_bus(t_queue *q, const char *format, char *type)
+int	type_bus(t_pf_q *q, const char *format, char *type)
 {
-	t_flags	*ret;
-	int		i;
-	char	a;
+	t_pf_flags	*ret;
+	int			i;
+	char		a;
 
 	i = -1;
 	if (!q)

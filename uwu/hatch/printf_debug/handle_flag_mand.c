@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*handle_flag(size_t size, t_queue *q, int *index)
+char	*handle_flag(size_t size, t_pf_q *q, int *index)
 {
 	char	*ret;
 

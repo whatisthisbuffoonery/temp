@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
 static int	muh_max(int a, int b, int c)
 {
@@ -21,7 +21,7 @@ static int	muh_max(int a, int b, int c)
 	return (a);
 }
 
-static char	*handle_flag_init(size_t size, t_queue *q, int *len)
+static char	*handle_flag_init(size_t size, t_pf_q *q, int *len)
 {
 	char	a;
 	char	*ret;
@@ -61,7 +61,7 @@ int	set_index(int size, int prec, int width, char flag)
 	return (i);
 }
 
-char	*handle_flag(size_t size, t_queue *q, int *index)
+char	*handle_flag(size_t size, t_pf_q *q, int *index)
 {
 	char	*ret;
 	int		len;

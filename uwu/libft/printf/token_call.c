@@ -10,11 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	type_bus(t_queue *q, const char *format, char *type);
+int		type_bus(t_pf_q *q, const char *format, char *type);
+t_pf_q	*q_new(void);
 
-static void	*tantrum(t_queue **a, char **b)
+static void	*tantrum(t_pf_q **a, char **b)
 {
 	if (*a)
 	{
@@ -31,9 +32,9 @@ static void	*tantrum(t_queue **a, char **b)
 	return (NULL);
 }
 
-t_queue	*new_op(const char *format, int *index, char *type)
+t_pf_q	*new_op(const char *format, int *index, char *type)
 {
-	t_queue	*ret;
+	t_pf_q	*ret;
 
 	ret = q_new();
 	*index += 2 + type_bus(ret, &format[1], type);
@@ -43,11 +44,11 @@ t_queue	*new_op(const char *format, int *index, char *type)
 	return (ret);
 }
 
-t_queue	*new_str(const char *format, int start, int *end)
+t_pf_q	*new_str(const char *format, int start, int *end)
 {
 	int		i;
 	int		flag;
-	t_queue	*ret;
+	t_pf_q	*ret;
 	char	*res;
 
 	ret = q_new();

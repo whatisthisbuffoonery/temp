@@ -45,6 +45,17 @@ this project lives and dies by error reporting
 builtin with no options does not mean no args
 
 expand $vars before checking for commands
+	env vars cannot contain special identifiers:
+		$?    → last exit status
+		$$    → current PID  
+		$!    → last background PID
+		$0    → script name
+		$#    → argument count
+		$@ $\*, positional parameters (1-9, ${10}+)
+			these are for args given to shell scripts
+			check for shebang assignment, fall back to calling bash to settle it
+		$-    → shell options flags
+		$_    → last argument of previous command
 
 why tf would I use fstat
 	why tf would I reach into bash to borrow shell printf
@@ -53,4 +64,12 @@ cd dash returns you to the last dir you were at (init to ~) and prints a message
 
 volatile sig value it is
 
+do remember to ignore leading whitespace in front of command, run it anyway
 
+&& and || blindly use the last exit status they got
+
+redirection assumes stdin/out, number and redirection without space says filenumber
+	1> for out, 0< for in
+		cat 0< file vomits the file
+			echo never pays attention to stdin, heredocs are the shell's problem
+	this will be mildly irritating

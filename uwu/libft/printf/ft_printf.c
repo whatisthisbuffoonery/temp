@@ -10,36 +10,47 @@
 /*																			  */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-void	printf_tokens(const char *format, t_queue **q, int size);
-char	*process(t_queue *q, va_list *va, int *len);
+void	printf_tokens(const char *format, t_pf_q **q, int size);
+int		process(t_pf_q *q, va_list *va);
+int		print_strlen(char *a, t_pf_q *q);
+void	clear_q(t_pf_q **q);
 
-static void	printf_init(t_queue **q, int *return_value, char **ret)
+static int	print_the_printf(t_pf_q *q)
 {
-	*return_value = 0;
-	*q = NULL;
-	*ret = NULL;
+	int	total;
+	int	curr;
+	int	written;
+
+	total = 0;
+	while (q)
+	{
+		curr = print_strlen(q->str, q);
+		written = 0;
+		while (written < curr)
+			written = write(1, q->str + written, curr - written);
+		total += curr;
+		q = q->next;
+	}
+	return (total);
 }
 
 int	ft_printf(const char *format, ...)
 {
 	va_list	va;
-	char	*ret;
-	t_queue	*q;
+	t_pf_q	*q;
 	int		return_value;
 
-	printf_init(&q, &return_value, &ret);
+	q = NULL;
+	return_value = -1;
 	va_start(va, format);
 	printf_tokens(format, &q, ft_strlen(format));
 	if (q)
-		ret = process(q, &va, &return_value);
-	clear_q(&q, ret);
-	if (ret)
-	{
-		write(1, ret, return_value);
-		free(ret);
-	}
+		return_value = process(q, &va);
+	if (q && !return_value)
+		return_value = print_the_printf(q);
+	clear_q(&q);
 	va_end(va);
 	return (return_value);
 }
