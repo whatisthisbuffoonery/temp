@@ -2,9 +2,49 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/wait.h>
+#include <errno.h>
 #include "libft.h"
 
 volatile sig_atomic_t	muh_number;
+
+void	do_thing(char *buf)
+{
+	char *arr[3];
+	pid_t pid;
+
+	(void) buf;
+	ft_putstr("<thing> ");
+	arr[0] = "/usr/bin/echo";
+	arr[1] = "./*";
+	arr[2] = NULL;
+	pid = fork();
+	if (!pid)
+	{
+		execve(arr[0], arr, NULL);
+		perror("huh");
+		exit(67);
+	}
+	/*
+	while (w)
+	{
+		pid = wait(NULL);
+		errno = 0;
+		flag -= (pid < 0);
+		if (flag)
+		{
+			ft_putnbr(pid);		//sig int causes this to immediately return -1
+			ft_putchar('\n');
+		}
+		if (errno || pid < 0)
+		{
+			perror("error");
+		}
+	}
+	*/
+	while (waitpid(pid, NULL, 0) < 0);
+	ft_putstr("done\n");
+}
 
 void	shell_print(char *buf)
 {
@@ -30,6 +70,8 @@ void	shell_print(char *buf)
 	else if (!buf)
 		ft_putstr("NULL");
 	ft_putchar('\n');
+	if (buf && buf[0] == 's' && !buf[1])
+		do_thing(buf);
 	free(buf);
 }
 
@@ -37,11 +79,11 @@ void	me_handle_signals(int signo)
 {
 	muh_number = signo;
 	if (muh_number == SIGQUIT)
-		ft_putstr("\nsig quit received\n");
+		ft_putstr("\nsig quit received\n");//sigquit does not spawn nl
 	else if (muh_number == SIGINT)
 		ft_putstr("\nsig int received\n");
 	rl_on_new_line();
-	rl_replace_line("", 1);
+	rl_replace_line("", 0);
 	rl_redisplay();
 	muh_number = 0;
 }
@@ -62,7 +104,7 @@ void	signal_init(struct sigaction *handler)
 int main(void)
 {
 	char				*buf;
-	struct sigaction	handler[2];
+	struct sigaction	handler[2];//not needed
 	struct sigaction	old[2];
 
 	signal_init(handler);
@@ -72,7 +114,7 @@ int main(void)
 	muh_number = 0;
 	while (1)
 	{
-		buf = readline("I am a shell%");
+		buf = readline("I am a shell% ");
 		if (muh_number)
 			free(buf);
 		else
