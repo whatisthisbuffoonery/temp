@@ -15,8 +15,8 @@ void	do_thing(char *buf)
 
 	(void) buf;
 	ft_putstr("<thing> ");
-	arr[0] = "/usr/bin/echo";
-	arr[1] = "./*";
+	arr[0] = "/usr/bin/sleep";
+	arr[1] = "3";
 	arr[2] = NULL;
 	pid = fork();
 	if (!pid)
@@ -108,7 +108,7 @@ int main(void)
 	struct sigaction	old[2];
 
 	signal_init(handler);
-	rl_catch_signals = 0;
+//	rl_catch_signals = 0;
 	sigaction(SIGINT, &handler[0], &old[0]);
 	sigaction(SIGQUIT, &handler[1], &old[1]);
 	muh_number = 0;

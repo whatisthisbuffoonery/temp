@@ -67,9 +67,42 @@ volatile sig value it is
 do remember to ignore leading whitespace in front of command, run it anyway
 
 && and || blindly use the last exit status they got
+	pipelines count as one command in this case
 
 redirection assumes stdin/out, number and redirection without space says filenumber
 	1> for out, 0< for in
 		cat 0< file vomits the file
 			echo never pays attention to stdin, heredocs are the shell's problem
 	this will be mildly irritating
+
+ctrl underscore nitpick
+
+wth is a subshell and how do you replicate it
+
+ctrl c stops the whole command pipeline
+
+just pass globstars \* into argv as is
+
+history features:
+!!           → last command
+!n           → history line n
+!string      → most recent command starting with "string"
+!?string[?]  → most recent containing "string"
+!$           → last argument of previous command
+!:N          → Nth arg of previous command
+!:1-3        → args 1-3 of previous command
+!:1*         → arg 1 + all after
+
+sigint stuct to code 130 and sigquit to 131
+
+bash will init all heredocs regardless, bash will not init pipes unless truthy
+
+go see if the systems have flex and bison
+
+--------------------------------------------
+
+|VETO| I need a linked list for history management. Not for arrow keys, but for '!' expansion
+|VETO| I need to interpret brackets
+globstars for all dirs? perplex lied, I have to glob manually
+redirection ok
+still keep 
