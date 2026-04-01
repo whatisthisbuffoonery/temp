@@ -53,7 +53,7 @@ int				ft_isdigit(int c);
 int				ft_isprint(int c);
 int				ft_isquote(int c);
 int				ft_ishex(int c);
-int				ft_iswspace(int c);
+int				ft_isspace(int c);
 
 int				ft_abs(int n);
 int				ft_tolower(int c);
