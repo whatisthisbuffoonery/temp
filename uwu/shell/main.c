@@ -5,10 +5,14 @@ int	signal_init(void)
 	sigset_t			mask;
 	struct sigaction	hands;
 
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
+	rl_signal_event_hook = rl_handle_signals;
+	ft_memset(&hands, 0, sizeof(struct sigaction));
 	if (sigemptyset(&mask) || sigaddset(&mask, SIGTERM)
 		|| sigaddset(&mask, SIGQUIT))
 		return (-1);
-	hands = {.sa_mask = mask, .sa_handler = sighands, .sa_flags = SA_RESTART};
+	hands = {.sa_mask = mask, .sa_handler = sighands};//, .sa_flags = SA_RESTART};//exclude restart flag
 	return (sigaction(SIGINT, &hands, NULL)
 		+ sigaction(SIGQUIT, &hands, NULL));
 }
@@ -20,24 +24,43 @@ cmd: the cmd name, actually I should call execute() regardless
 io[2]: two fds, debating to not store pipe relationships in node. also dont init pipes on false branch
 */
 
+pid_t	fork_wrapper(t_cmd **cmd, char *input)
+{
+	pid_t	ret;
+	if (input && input[0])
+		ret = fork();
+	else
+		return (0);//0 in main means no op, do not update last exit, init exit to 0
+	if (!ret)
+		good_syntax(cmd, src);//this is a child
+	return (ret);
+}
+
 int	main(int c, char **v, char **e)
 {
 	int		last;
 	char	*input;
-//	t_cmd	*cmd;//linked list
+	t_cmd	*cmd;//linked list
 
-	check_subshell(c, v, e);
-	last = 0;
+	//check_subshell(c, v, e);//keywords out of scope
 	if (signal_init())
 		return (-err(-1, "some string"));//err
+	last = 0;
+	cmd = NULL;
 	while (1)
 	{
 		input = readline();
 		if (!input)
-			return (buh_bye(last));//say 'exit'
+			return (buh_bye(last));//say 'exit'//clear history func
 		if (input[0])
 			add_history(input);
-		if (good_syntax
-		chew_list(input);
+		//LOCK SYNTAX CHECK BEHIND A FORK OMG then exit 1/cmd exit
+		fork_result = fork_wrapper(&cmd, input);//tokenise and not run if extra operators
+		//"bash: fork: Resource temporarily unavailable"//DO NOT EXIT ON ERR, YOU ARE THE SHELL
+		if (fork_result > 0)
+			chew_list(cmd, fork_result);//wait in here, decide from there
+		clean_cmd(&cmd);
+//		if (errno)
+//			return (1);//debatable exit code, wait, exit().
 	}
 }

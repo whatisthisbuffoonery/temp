@@ -99,6 +99,14 @@ bash will init all heredocs regardless, bash will not init pipes unless truthy
 
 go see if the systems have flex and bison
 
+history inside heredocs should be present
+
+use different handlers for flagging interrupt and fiddling with readline, rl_signal_event_hook
+
+improper syntax just return 1
+
+quotes stop whitespace from being ignored
+
 --------------------------------------------
 
 |VETO| I need a linked list for history management. Not for arrow keys, but for '!' expansion
