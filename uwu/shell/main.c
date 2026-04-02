@@ -36,8 +36,8 @@ int	syntax(t_cmd **cmd, char *input, int *last)
 	if (!ret)
 		good_syntax(cmd, src);//this is a child
 	child_wait(ret);
-	if (
-	return ();
+	*last = check_exit(n);
+	return (WIFEXITED(n) && !WEXITSTATUS(n));
 }
 
 int	main(int c, char **v, char **e)

@@ -1,5 +1,14 @@
 #include "h_minishell.h"
 
+int	check_exit(int n)
+{
+	if (WIFEXITED(n))
+		return (WEXITSTATUS(n));
+	else if (WIFSIGNALED(n))
+		return (WTERMSIG(n));
+	return (-1);
+}
+
 int	child_wait(pid_t cpid)
 {
 	int		n;
