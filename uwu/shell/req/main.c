@@ -75,17 +75,18 @@ void	shell_print(char *buf)
 	free(buf);
 }
 
-void	me_handle_signals(int signo)
+int	rl_handle_signals(void)//sigaction flag interrupt, rl handler	//does nl + redisplay (if not running a child)
 {
-	muh_number = signo;
-	if (muh_number == SIGQUIT)
-		ft_putstr("\nsig quit received\n");//sigquit does not spawn nl
-	else if (muh_number == SIGINT)
-		ft_putstr("\nsig int received\n");
+	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	muh_number = 0;
+	return (0);
+}
+
+void	me_handle_signals(int signo)
+{
+	muh_number = signo;
 }
 
 void	signal_init(struct sigaction *handler)
@@ -97,9 +98,12 @@ void	signal_init(struct sigaction *handler)
 	sigaddset(&mask, SIGQUIT);//one of these literally handles sigquit bruh
 	handler[0].sa_mask = mask;
 	handler[1].sa_mask = mask;
+
 	handler[0].sa_handler = me_handle_signals;
 	handler[1].sa_handler = me_handle_signals;
 }
+
+
 
 int main(void)
 {
@@ -107,19 +111,23 @@ int main(void)
 	struct sigaction	handler[2];//not needed
 	struct sigaction	old[2];
 
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
+	ft_memset(&handler[0], 0, sizeof(struct sigaction));
+	ft_memset(&handler[1], 0, sizeof(struct sigaction));
 	signal_init(handler);
-//	rl_catch_signals = 0;
+	rl_signal_event_hook = rl_handle_signals;
 	sigaction(SIGINT, &handler[0], &old[0]);
 	sigaction(SIGQUIT, &handler[1], &old[1]);
 	muh_number = 0;
 	while (1)
 	{
 		buf = readline("I am a shell% ");
-		if (muh_number)
-			free(buf);
-		else
-			shell_print(buf);
-		if (!muh_number && !buf)
+//		if (muh_number)
+//			free(buf);
+//		else
+		shell_print(buf);
+		if (/*!muh_number &&*/ !buf)
 		{
 			ft_putstr("exiting now\n");
 			exit(0);
