@@ -130,6 +130,7 @@ int main(void)
 		if (/*!muh_number &&*/ !buf)
 		{
 			ft_putstr("exiting now\n");
+			rl_clear_history();
 			exit(0);
 		}
 		muh_number = 0;

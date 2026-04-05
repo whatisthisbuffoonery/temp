@@ -46,6 +46,34 @@ t_list			*ft_lstlast(t_list *lst);
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 					void (*del)(void *));
 
+typedef enum s_pf_type
+{
+	str,
+	op,
+	nil
+}	t_pf_type;
+
+typedef struct s_pf_flags
+{
+	char			plus_space;
+	char			minus_zero;
+	char			hex;
+	char			precision_set;
+	int				width;
+	int				precision;
+}					t_pf_flags;
+
+typedef struct s_pf_q
+{
+	struct s_pf_q		*next;
+	char				*str;
+	t_pf_flags			*flags;
+	t_pf_type			type;
+	char				arg;
+}						t_pf_q;
+
+int				ft_printf(const char *format, ...);
+
 int				ft_isalnum(int c);
 int				ft_isalpha(int c);
 int				ft_isascii(int c);
@@ -68,11 +96,13 @@ int				ft_atoi(const char *nptr);
 int				ft_atoi_ind(const char *nptr, int *index);
 unsigned int	ft_atohu_ind(char *s, int *index, int i);
 
+int				ft_ptrlen(char **a);
 size_t			ft_strlen(const char *s);
 size_t			ft_strlcpy(char *dst, const char *src, size_t size);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
 
 char			*ft_itoa(int n);
+char			*ft_ftoa(float src);
 char			*ft_strnstr(const char *big, const char *little, size_t len);
 char			*ft_strchr(const char *s, int c);
 char			*ft_strrchr(const char *s, int c);
@@ -112,33 +142,5 @@ void			ft_putchar(char n);
 
 float			minf(float a, float b);
 float			absf(float a);
-
-typedef enum s_pf_type
-{
-	str,
-	op,
-	nil
-}	t_pf_type;
-
-typedef struct s_pf_flags
-{
-	char			plus_space;
-	char			minus_zero;
-	char			hex;
-	char			precision_set;
-	int				width;
-	int				precision;
-}					t_pf_flags;
-
-typedef struct s_pf_q
-{
-	struct s_pf_q		*next;
-	char				*str;
-	t_pf_flags			*flags;
-	t_pf_type			type;
-	char				arg;
-}						t_pf_q;
-
-int				ft_printf(const char *format, ...);
 
 #endif

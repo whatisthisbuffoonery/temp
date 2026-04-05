@@ -23,7 +23,7 @@ int main(int c, char **v)
 	if (c < 2)
 		return (1);
 	int i = 1;
-	int fd = open("fuckoff2.txt", O_CREAT | O_WRONLY, 0644);
+	int fd = open("gen2.txt", O_CREAT | O_WRONLY, 0644);
 	write(fd, "dot_o := ", 7);
 	while (i < c)
 	{

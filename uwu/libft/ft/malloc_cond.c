@@ -17,11 +17,13 @@ void	*malloc_cond(void **dst, size_t size)
 	char	*ret;
 	size_t	i;
 
-	ret = malloc(size);
+	ret = NULL;
+	if (size)
+		ret = malloc(size);
 	if (dst)
 		*dst = ret;
 	i = 0;
-	while (i < size)
+	while (ret && i < size)
 		ret[i++] = 0;
 	return (ret);
 }

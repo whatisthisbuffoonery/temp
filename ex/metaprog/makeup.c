@@ -23,7 +23,7 @@ int main(int c, char **v)
 	if (c < 2)
 		return (1);
 	int i = 1;
-	int fd = open ("fuckoff.txt", O_CREAT | O_WRONLY, 0644);
+	int fd = open ("gen.txt", O_CREAT | O_WRONLY, 0644);
 	while (i < c)
 	{
 		ft_putstr_ext(fd, v[i], 'o');
