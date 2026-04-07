@@ -75,6 +75,15 @@ static void	merge_sort(t_shnode **head)
 	window_shopping(*head, a, b);
 }
 
+void	env_init_cont(t_env *dst, int count)
+{
+	t_shnode	*iter;
+
+	iter = dst->export;
+	while (iter && 
+
+//init shell level, leave cd dash alone
+//mild proposal to standardise cmd nodes in order to consider per malloc init here
 void	env_init(t_env *dst, char **e)
 {
 	int			i;
@@ -91,14 +100,15 @@ void	env_init(t_env *dst, char **e)
 	ret[k].next = NULL;
 	ret[i - 1].next = NULL;
 	k = -1;
-	dst->export = ret;
+	dst->export = ret;//either change this to malloc per node, or put another field to track where this arr ends
 	dst->env = &ret[i];
 	while (e[++k])
 	{
 		ret[k].str = ft_strdup(e[i]);
 		ret[i + k].str = ft_strdup(e[i]);
 		if (!ret[k].str || !ret[i + k].str)
-			break;
+			break ;//yeah no, do per malloc
 	}
 	merge_sort(&dst->env);
+	env_init_cont(dst, i);
 }

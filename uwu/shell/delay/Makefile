@@ -1,0 +1,2 @@
+all:
+	sleep 3

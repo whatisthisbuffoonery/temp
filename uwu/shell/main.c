@@ -26,13 +26,20 @@ io[2]: two fds, debating to not store pipe relationships in node. also dont init
 
 int	good_syntax(t_cmd **cmd, char *input, int *last, t_env *env)//how about we dont fork
 {
+	t_cmd	*iter;
+
 	if (!input || !input[0])
 		return (0);//no op, dun change exit
-	if (syntax_check(cmd, env, src))//this is not a child
+	if (syntax_check(cmd, env, src) && !muh_number)//this is not a child
 	{
 		*last = 1;
 		return (0);
 	}
+	iter = *cmd;
+	while (iter && !muh_number)
+		*last = do_cmd(&iter);
+	if (muh_number)
+		*last = muh_number;//make sure 128 is or sumshit already added
 	return (1);
 }
 
@@ -58,6 +65,9 @@ int	buh_bye(int last, t_env *env)
 	return (last);
 }
 
+void	clean_cmd(t_cmd **cmd);//did ya make all cmd nodes their own malloc
+
+//sig quit does not produce '^\' for sleep, but that is not required...?
 int	main(int c, char **v, char **e)
 {
 	int		last;
@@ -81,6 +91,7 @@ int	main(int c, char **v, char **e)
 		//LOCK SYNTAX CHECK BEHIND A FORK OMG then exit 1/cmd exit
 		good_syntax(&cmd, input, &last, &env);//tokenise and not run if extra operators
 		//"bash: fork: Resource temporarily unavailable"//DO NOT EXIT ON ERR, YOU ARE THE SHELL
+		muh_number = 0;
 		clean_cmd(&cmd);
 	}
 }
