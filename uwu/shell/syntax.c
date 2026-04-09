@@ -58,7 +58,8 @@ int	syntax_err(char *str)
 }
 
 //thank fuck heredoc takes a name too
-//
+//end space uhhhhhhhhhh
+//expand envs and merge connected name nodes, inherit type field of first node
 int	actually_check(t_cmd **cmd, t_env *env)
 {
 	int		name;
@@ -101,28 +102,105 @@ void	node_append(t_cmd **dst, t_cmd *ret)
 		iter->next = ret;
 }
 
+//check for ending whitespace, ls'>'wa should stay as one element
 int	node_init(t_cmd **dst, char *src, int *cry)
 {
 	int		i;
 	char	c;
 	t_cmd	*ret;
 
-	i = 0;
+	i = 1;//oh mah gah
 	c = src[0];
 	while (!muh_number && ((iscond(c) && src[i] == c && i < 2)			//operator
-		|| ((!iscond(c) && !ft_isquote(c)) && iscontent(src[i]))		//operand
-			|| (isquote(c) && src[i] && src[i] != c)))					//quote, also operand
+		|| (iscontent(c) && iscontent(src[i]))							//operand
+			|| (ft_isquote(c) && src[i] && src[i] != c)))				//quote, also operand
 		i ++;
 	ret = cmd_node();
-	if (ret)
+	if (ret)//shove this out tbh
 	{
-		dst->str = ft_substr(src, 0, i);
-		dst->type = c;//this field is a char now
+		ret->str = ft_substr(src, (ft_isquote(c) != 0), i);
+		ret->type = c;//this field is a char now
 	}
 	if (!ret || !ret->str)
 		*cry = (err(-(ret && !ret->str), "cmd node str malloc") || 1);
+	ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
 	node_append(dst, ret);
-	return (i);
+	return (i + (ft_isquote(c) != 0));
+}
+
+//BLYAT I have to enforce good env var names
+int	match_env(char *input, char *dst, t_shnode *env, int *len)
+{
+	int			k;
+	int			i;
+	t_shnode	*iter;
+
+	i = 0;
+	k = 0;
+	iter = env;
+	while (ft_strchr(input, '$'))
+	{
+		while (input[i] != '$')
+			i ++;
+		input = &input[i + 1];
+		k += i;
+		i = 0;
+		while (input[i] && !iscontent(input[i]))
+			i ++;
+		while (iter && ft_strncmp(env->str, input, i))
+			iter = iter->next;
+		while //int number three woooooo
+
+int	expand_the_str(t_cmd *iter, t_shnode *env, char *ret)
+{
+	int		i;
+	int		len;
+	char	*prefix;
+
+	i = 0;
+	len = 0;
+	while (iter->str[i])
+	{
+		if (iter->str[i] != '$')
+		{
+			i ++;
+			len ++;
+			continue ;
+		}
+		i += match_env(&iter->str[i], ret, env, &len);
+	}
+	if (!ret)
+		return (-!malloc_cond((void **) &ret, len + 1)
+			|| expand_the_str(iter, env, ret));
+	free(iter->str);
+	iter->str = ret;
+	return (0);
+}
+
+int	expand_str(t_cmd **cmd, t_shnode *env)
+{
+	t_cmd	*iter;
+	char	*tmp;
+	int		len;
+
+	iter = *cmd;
+	while (iter)
+	{
+		if (iter->type != '\'' && ft_strchr(iter->str, '$')
+			&& err(expand_the_str(iter, env, NULL), "str expansion malloc"))
+			return (1);
+		iter = iter->next;
+	}
+	iter = *cmd;
+	while (iter && iter->next)
+	{
+		if (!iscond(iter->type) && !iscond(iter->next->type)
+			&& !iter->end_space
+				&& err(join_the_str(&iter, env), "cmd str malloc"))
+			return (1);
+		iter = iter->next;
+	}
+	return (0);
 }
 
 //do not expand env at this stage, treat as name nodes
@@ -136,8 +214,8 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 	i = 0;
 	cry = 0;
 	if (unclosed_check(input))
-		return (prompt_err("unclosed quotes", 1));//returns n wit hout looking at it
-	while (input[i])
+		return (prompt_err("unclosed quotes"));//will I make a general manager for all the different formats?
+	while (input[i] && !muh_number)
 	{
 		while (ft_isspace(input[i]))
 			i ++;
@@ -147,5 +225,6 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 		if (cry)
 			return (1);
 	}
-	return (actually_check(cmd, env));
+	return (muh_number
+		|| (!expand_str(cmd, env->env) && actually_check(cmd, env)));
 }

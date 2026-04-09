@@ -75,6 +75,7 @@ static void	merge_sort(t_shnode **head)
 	window_shopping(*head, a, b);
 }
 
+/*
 void	env_init_cont(t_env *dst, int count)
 {
 	t_shnode	*iter;
@@ -82,7 +83,6 @@ void	env_init_cont(t_env *dst, int count)
 	iter = dst->export;
 	while (iter && 
 
-//init shell level, leave cd dash alone
 //mild proposal to standardise cmd nodes in order to consider per malloc init here
 void	env_init(t_env *dst, char **e)
 {
@@ -111,4 +111,60 @@ void	env_init(t_env *dst, char **e)
 	}
 	merge_sort(&dst->env);
 	env_init_cont(dst, i);
+}
+*/
+
+
+int	env_add(t_env *env, t_shnode *src, char *dst)
+{
+	t_shnode	*ret;
+	t_shnode	*iter;
+	t_shnode	**list;
+
+	ret = src;
+	list = &env->export;
+	if (dst[1] == 'n')
+	{
+		ret = malloc(sizeof(t_shnode));
+		if (!ret)
+			return (-1);
+		ret->str = ft_strdup(iter->str);
+		if (!ret->str)
+			return (-1);
+		list = &env->env;
+	}
+	ret->next = NULL;
+	iter = *list;
+	while (iter && iter->next)
+		iter = iter->next;
+	if (!iter)
+		*list = ret;
+	else
+		iter->next = ret;
+	return (0);
+}
+
+//init shell level, only init cd dash if null/not present
+//also also change SHELL to be minishell lmao
+void	env_init(t_env *dst, char **e)
+{
+	int			i;
+	int			k;
+	t_shnode	*iter;
+
+	i = 0;
+	ft_memset(dst, 0, sizeof(t_env));
+	while (e[i])
+	{
+		iter = ft_calloc(1, sizeof(t_shnode));
+		if (!err((-!iter), "export node malloc"))
+			iter->str = ft_strdup(e[i]);
+		if ((!iter || err(-!iter->str, "export str malloc"))
+			|| (iter->str[0] && err(env_add(dst, iter, "env"), "env dup malloc")))
+			return ;
+		env_add(dst, iter, "export");
+		i ++;
+	}
+	merge_sort(&dst->env);
+	env_init_cont(dst);
 }
