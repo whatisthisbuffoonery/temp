@@ -46,6 +46,10 @@ t_list			*ft_lstlast(t_list *lst);
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 					void (*del)(void *));
 
+int				ft_lstiter_chk(t_list *lst, void (*f)(void *), int (*chk)(void *));
+t_list			*ft_lstnew_chk(void *content, int (*chk)(void *),
+					void (*del)(void *));
+
 typedef enum s_pf_type
 {
 	str,

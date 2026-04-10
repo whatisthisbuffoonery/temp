@@ -1,11 +1,9 @@
 NAME := libft.a
-FULL := full.a
 CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -c -g
 AR := ar
 AR_FLAGS := rcs
 HEADER := libft.h
-MAND_AR := mand.a
 INCLUDE_DIR := includes
 OBJ_DIR := obj
 GNL_DIR := gnl
@@ -25,8 +23,9 @@ ft_strrchr.c ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c \
 ft_ptrlen.c \
 parsed_argsplit.c malloc_cond.c
 
-BONUS_SRC := ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_lstdelone_bonus.c \
-ft_lstiter_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c ft_lstsize_bonus.c
+LST_SRC := ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
+ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
+ft_lstiter_chk.c ft_lstnew_chk.c
 
 GNL_SRC := get_next_line_bonus.c get_next_line_utils_bonus.c get_next_line.c get_next_line_utils.c
 
@@ -35,36 +34,27 @@ tabler_bonus.c type_bus_bonus.c handle_flag_bonus.c
 
 FT_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(FT_SRC))
 
-BONUS_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(BONUS_SRC))
+LST_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(LST_SRC))
 
 GNL_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(GNL_SRC))
 
 PRINTF_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(PRINTF_SRC))
 
-OBJ := $(FT_OBJ) $(GNL_OBJ) $(PRINTF_OBJ)
+OBJ := $(FT_OBJ) $(GNL_OBJ) $(PRINTF_OBJ) $(LST_OBJ)
 
 all: $(OBJ_DIR) $(NAME)
-
-bonus: $(OBJ_DIR) $(FULL)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
 $(NAME): $(OBJ)
 	$(AR) $(AR_FLAGS) $@ $^
-
-$(MAND_AR): $(OBJ)
-	$(AR) $(AR_FLAGS) $@ $^
-
-$(FULL): $(MAND_AR) $(BONUS_OBJ)
-	cp -p $(MAND_AR) $(FULL)
-	$(AR) $(AR_FLAGS) $(FULL) $(BONUS_OBJ)
-	cp $(FULL) $(NAME)
+	echo "\ntodo: remove some other static helpers\n\nDone"
 
 $(FT_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
-$(BONUS_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
+$(LST_OBJ): $(OBJ_DIR)/%.o: $(FT_DIR)/%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
 $(GNL_OBJ): $(OBJ_DIR)/%.o: $(GNL_DIR)/%.c
@@ -74,11 +64,11 @@ $(PRINTF_OBJ): $(OBJ_DIR)/%.o: $(PRINTF_DIR)/%.c
 	$(CC) $(CC_FLAGS) -I $(INCLUDE_DIR) $< -o $@
 
 clean:
-	rm -f $(OBJ) $(BONUS_OBJ)
+	rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME) $(MAND_AR) $(FULL)
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

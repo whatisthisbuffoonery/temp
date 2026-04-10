@@ -10,6 +10,7 @@ t_cmd	*cmd_node(void)
 	{
 		ret->next = NULL;
 		ret->str = NULL;
+		ret->env = NULL;
 		ret->type = '\0';
 	}
 	else
@@ -129,15 +130,17 @@ int	node_init(t_cmd **dst, char *src, int *cry)
 }
 
 //BLYAT I have to enforce good env var names
+//assume good names from bash //env contents can be anything
+//IF empty env name (i.e. "$" or "$<" using dquotes) 
 int	match_env(char *input, char *dst, t_shnode *env, int *len)
 {
 	int			k;
 	int			i;
-	t_shnode	*iter;
+//	t_shnode	*iter;
 
 	i = 0;
 	k = 0;
-	iter = env;
+//	iter = env;
 	while (ft_strchr(input, '$'))
 	{
 		while (input[i] != '$')
@@ -147,9 +150,13 @@ int	match_env(char *input, char *dst, t_shnode *env, int *len)
 		i = 0;
 		while (input[i] && !iscontent(input[i]))
 			i ++;
-		while (iter && ft_strncmp(env->str, input, i))
-			iter = iter->next;
-		while //int number three woooooo
+//		while (iter && ft_strncmp(env->str, input, i))
+//			iter = iter->next;
+		k += match_the_string(input, dst, env, &i);
+	}
+	return ();
+}
+//nah nah nah this sucks go make another list for expandable items
 
 int	expand_the_str(t_cmd *iter, t_shnode *env, char *ret)
 {
@@ -177,12 +184,24 @@ int	expand_the_str(t_cmd *iter, t_shnode *env, char *ret)
 	return (0);
 }
 
+
+//verify env is the one without empty items
+//if (char after '$' iscontent)
+//try the python size thing for all structs?
+int	expand_init(t_cmd **cmd, t_shnode *env)
+{
+	t_cmd	*iter;
+	int		i;
+	int		k;
+
 int	expand_str(t_cmd **cmd, t_shnode *env)
 {
 	t_cmd	*iter;
 	char	*tmp;
 	int		len;
 
+	if (expand_init(cmd, env))//my cmd node now contains a different linked list of env vars. i hate myself
+		return (1);
 	iter = *cmd;
 	while (iter)
 	{

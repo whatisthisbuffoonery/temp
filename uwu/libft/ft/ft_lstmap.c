@@ -12,44 +12,6 @@
 
 #include "libft.h"
 
-static t_list	*ft_lstnew_help(void *content)
-{
-	t_list	*a;
-
-	a = malloc(sizeof(t_list));
-	if (!a)
-		return (NULL);
-	a->next = NULL;
-	a->content = content;
-	return (a);
-}
-
-static void	ft_lstdelone_help(t_list *lst, void (*del)(void *))
-{
-	if (!lst)
-		return ;
-	if (del && lst->content)
-		del(lst->content);
-	free(lst);
-}
-
-static void	ft_lstclear_help(t_list **lst, void (*del)(void *))
-{
-	t_list	*f;
-	t_list	*tmp;
-
-	if (!lst || !*lst)
-		return ;
-	f = *lst;
-	while (f)
-	{
-		tmp = f->next;
-		ft_lstdelone_help(f, del);
-		f = tmp;
-	}
-	*lst = NULL;
-}
-
 static void	var_help(t_list **head, t_list **curr, t_list *tmp)
 {
 	if (!*head)
@@ -75,12 +37,12 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	while (lst)
 	{
 		str = f(lst->content);
-		tmp = ft_lstnew_help(str);
+		tmp = ft_lstnew(str);
 		if (!tmp)
 		{
 			if (del && str)
 				del(str);
-			ft_lstclear_help(&head, del);
+			ft_lstclear(&head, del);
 			return (NULL);
 		}
 		lst = lst->next;

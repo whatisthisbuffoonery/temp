@@ -79,7 +79,8 @@ int	main(int c, char **v, char **e)
 	signal_init();//
 	last = 0;
 	cmd = NULL;
-	env_init(&env, e);
+	env_init(&env, e);//do not check signal.
+	muh_number = 0;
 	while (1)
 	{
 		errno = 0;
