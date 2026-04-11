@@ -1,22 +1,6 @@
 #include "h_minishell.h"
 
 //redo env malloc semantics
-t_cmd	*cmd_node(void)
-{
-	t_cmd	*ret;
-
-	ret = malloc(sizeof(t_cmd));
-	if (ret)
-	{
-		ret->next = NULL;
-		ret->str = NULL;
-		ret->env = NULL;
-		ret->type = '\0';
-	}
-	else
-		err(-1, "cmd node malloc");
-	return (ret);
-}
 
 int	iscond(int c)
 {
@@ -58,9 +42,6 @@ int	syntax_err(char *str)
 	return (1);
 }
 
-//thank fuck heredoc takes a name too
-//end space uhhhhhhhhhh
-//expand envs and merge connected name nodes, inherit type field of first node
 int	actually_check(t_cmd **cmd, t_env *env)
 {
 	int		name;
@@ -89,8 +70,33 @@ int	actually_check(t_cmd **cmd, t_env *env)
 	}
 	return (!iter);
 }
+t_cmd	*cmd_node(char *src, int i, char c, int *cry)
+{
+	t_cmd	*ret;
 
-void	node_append(t_cmd **dst, t_cmd *ret)
+	ret = malloc(sizeof(t_cmd));
+	if (!ret)
+	{
+		err(-1, "cmd node malloc");
+		return (NULL);
+	}
+	ret->next = NULL;
+	ret->str = NULL;
+	ret->env = NULL;
+	ret->type = '\0';
+	ret->str = ft_substr(src, (ft_isquote(c) != 0), i);
+	ret->type = c;//this field is a char now
+	if (!ret->str)
+		*cry = (err(-1, "cmd node str malloc"));
+	else
+		ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
+	return (ret);
+}
+//heredoc takes a name too
+//end space uhhhhhhhhhh
+//expand envs and merge connected name nodes, inherit type field of first node
+
+void	cmd_node_append(t_cmd **dst, t_cmd *ret)
 {
 	t_cmd	*iter;
 
@@ -116,20 +122,11 @@ int	node_init(t_cmd **dst, char *src, int *cry)
 		|| (iscontent(c) && iscontent(src[i]))							//operand
 			|| (ft_isquote(c) && src[i] && src[i] != c)))				//quote, also operand
 		i ++;
-	ret = cmd_node();
-	if (ret)//shove this out tbh
-	{
-		ret->str = ft_substr(src, (ft_isquote(c) != 0), i);
-		ret->type = c;//this field is a char now
-	}
-	if (!ret || !ret->str)
-		*cry = (err(-(ret && !ret->str), "cmd node str malloc") || 1);
-	ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
-	node_append(dst, ret);
+	ret = cmd_node(src, i, c, cry);
+	cmd_node_append(dst, ret);
 	return (i + (ft_isquote(c) != 0));
 }
-
-//BLYAT I have to enforce good env var names
+/*
 //assume good names from bash //env contents can be anything
 //IF empty env name (i.e. "$" or "$<" using dquotes) 
 int	match_env(char *input, char *dst, t_shnode *env, int *len)
@@ -184,10 +181,7 @@ int	expand_the_str(t_cmd *iter, t_shnode *env, char *ret)
 	return (0);
 }
 
-
-//verify env is the one without empty items
-//if (char after '$' iscontent)
-//try the python size thing for all structs?
+//gave up here
 int	expand_init(t_cmd **cmd, t_shnode *env)
 {
 	t_cmd	*iter;
@@ -221,8 +215,95 @@ int	expand_str(t_cmd **cmd, t_shnode *env)
 	}
 	return (0);
 }
+*/
 
-//do not expand env at this stage, treat as name nodes
+//str sitting on '$'
+
+int	shnode_strlen(t_shnode *env)
+{
+	if (env && env->str)
+		return (ft_strlen(env->str));
+	return (0);
+}
+
+int add_expansion(t_cmd *dst, t_shnode *env, int *index)
+{
+	t_shnode	*ret;
+	char		*str;
+	int			i;
+
+	i = 1;
+	str = &dst->str[*index];
+	while (iscontent(str[i]))
+		i ++;
+	while (env && ft_strncmp(&str[1], env->name, i - 1))
+		env = env->next;
+	if (!malloc_cond((void **) &ret, (sizeof(t_shnode)))
+		|| !malloc_cond((void **) &ret->str, (shnode_strlen(env)) + 1))
+		return (err(-1, "expansion malloc"));
+	*index += i + 1;//use env name len
+	i = -1;
+	while (env && env->str[++i])
+		ret->str[i] = env->str[i];
+	ret->str[i + !env] = '\0';
+	ret->next = NULL;
+	shnode_append(&dst->env, ret);
+	return (0);
+}
+
+//stopped here ish
+int	use_expansion(t_cmd *dst, char *ret)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	len = 0;
+	while (dst->str[i])
+	{
+		if (dst->str[i] == '$' && iscontent(dst->str[i + 1]))
+			concat_wrapper(dst, ret, &i, &len);//either strlen or strlcat
+		else if (dst->str[i]
+			&& (dst->str[i] != '$' || !iscontent(dst->str[i + 1])))
+		{
+			len ++;
+			copy_wrapper(dst->str[i], ret);//copy one char
+	}
+	if (!ret
+		&& (!err(-!malloc_cond((void **) &ret, len), "expansion result malloc")))
+		return (use_expansion(dst, ret));
+	else if (!ret)
+		return (1);
+	return (0);
+}
+
+int	expand_str(t_cmd **cmd, t_shnode *env)
+{
+	t_cmd	*iter;
+	int		i;
+
+	while(iter)
+	{
+		i = 0;
+		while (iter->str[i] && iter->type != '\'')
+		{
+			if (iter->str[i] == '$' && iscontent(iter->str[i + 1])
+				&& add_expansion(iter, env, &i))//memcpy//env names dont have $ in them
+				return (1);
+			i += (iter->str[i] && iter->str[i] != '$');
+		}
+		iter = iter->next;
+	}
+	*iter = *cmd;
+	while (iter)
+	{
+		if (iter->type != '\'' && iter->env && use_expansion(iter))
+			return (1);
+		iter = iter->next;
+	}
+	return (0);
+}
+
 //do assert closed quotes before expanding env
 //oml do not code other redirections. not worth.
 int	syntax_check(t_cmd **cmd, t_env *env, char *input)
@@ -233,7 +314,7 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 	i = 0;
 	cry = 0;
 	if (unclosed_check(input))
-		return (prompt_err("unclosed quotes"));//will I make a general manager for all the different formats?
+		return (prompt_err("unclosed quotes"));
 	while (input[i] && !muh_number)
 	{
 		while (ft_isspace(input[i]))

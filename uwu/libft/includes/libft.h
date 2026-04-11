@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 04:45:36 by dthoo             #+#    #+#             */
-/*   Updated: 2026/03/28 07:48:24 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/04/11 23:29:58 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # endif
 
 //plez reconfigure lst 
+
+//# ifdef FT_LIST
 
 typedef struct s_list
 {
@@ -49,6 +51,10 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 int				ft_lstiter_chk(t_list *lst, void (*f)(void *), int (*chk)(void *));
 t_list			*ft_lstnew_chk(void *content, int (*chk)(void *),
 					void (*del)(void *));
+
+//# endif
+
+//# ifdef FT_PRINTF
 
 typedef enum s_pf_type
 {
@@ -77,6 +83,8 @@ typedef struct s_pf_q
 }						t_pf_q;
 
 int				ft_printf(const char *format, ...);
+
+//# endif
 
 int				ft_isalnum(int c);
 int				ft_isalpha(int c);

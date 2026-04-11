@@ -3,12 +3,12 @@ CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -c -g
 AR := ar
 AR_FLAGS := rcs
-HEADER := libft.h
 INCLUDE_DIR := includes
 OBJ_DIR := obj
 GNL_DIR := gnl
 FT_DIR := ft
 PRINTF_DIR := printf
+DEFINES := -DFT_LIST -DFT_GNL -DFT_PRINTF
 
 FT_SRC := ft_atoi.c ft_atoi_ind.c ft_atohu_ind.c ft_bzero.c ft_calloc.c ht_init.c \
 min.c max2.c ft_abs.c \
