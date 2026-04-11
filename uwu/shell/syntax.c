@@ -358,5 +358,7 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 			return (1);
 	}
 	return (muh_number
-		|| (!expand_str(cmd, env->env) && actually_check(cmd, env)));
+		|| (!expand_str(cmd, env->env)
+				&& rejoin_str(cmd)//end space field pls do
+					&& actually_check(cmd, env)));
 }
