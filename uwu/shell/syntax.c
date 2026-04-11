@@ -70,6 +70,7 @@ int	actually_check(t_cmd **cmd, t_env *env)
 	}
 	return (!iter);
 }
+
 t_cmd	*cmd_node(char *src, int i, char c, int *cry)
 {
 	t_cmd	*ret;
@@ -233,15 +234,15 @@ int add_expansion(t_cmd *dst, t_shnode *env, int *index)
 	int			i;
 
 	i = 1;
-	str = &dst->str[*index];
+	str = &dst->str[*index + 1];//dollar offset
 	while (iscontent(str[i]))
 		i ++;
-	while (env && ft_strncmp(&str[1], env->name, i - 1))
+	while (env && ft_strncmp(str, env->name, i))
 		env = env->next;
 	if (!malloc_cond((void **) &ret, (sizeof(t_shnode)))
 		|| !malloc_cond((void **) &ret->str, (shnode_strlen(env)) + 1))
 		return (err(-1, "expansion malloc"));
-	*index += i + 1;//use env name len
+	*index += i + 1;//use env name len plus dollar
 	i = -1;
 	while (env && env->str[++i])
 		ret->str[i] = env->str[i];
@@ -249,6 +250,35 @@ int add_expansion(t_cmd *dst, t_shnode *env, int *index)
 	ret->next = NULL;
 	shnode_append(&dst->env, ret);
 	return (0);
+}
+
+void	copy_wrapper(char *src, char *dst, int *i, int *len)
+{
+	if (dst)
+		dst[*len] = src[*i];
+	*i += 1;
+	*len += 1;
+}
+
+//bring back &str[i] for strncmp you blin
+void	concat_wrapper(t_cmd *dst, char *ret, int *i, int *len)
+{
+	t_shnode	*iter;
+	char		*str;
+	int			k;
+
+	k = 0;
+	iter = dst->env;
+	str = &dst->str[*i + 1];//standardise dollar offset with add_expansion() //may want to do that
+	while (iscontent(str[*i + k]))
+		k ++;
+	while (iter && ft_strncmp(str, iter->name, k))
+		iter = iter->next;
+	if (ret && iter)
+		len += ft_strlcat(ret, iter->str, -1);
+	else if (iter)
+		len += ft_strlen(iter->str);
+	*i += k + 1;
 }
 
 //stopped here ish
@@ -259,21 +289,23 @@ int	use_expansion(t_cmd *dst, char *ret)
 
 	i = 0;
 	len = 0;
+	if (ret)
+		ret[0] = '\0';
 	while (dst->str[i])
 	{
 		if (dst->str[i] == '$' && iscontent(dst->str[i + 1]))
 			concat_wrapper(dst, ret, &i, &len);//either strlen or strlcat
 		else if (dst->str[i]
 			&& (dst->str[i] != '$' || !iscontent(dst->str[i + 1])))
-		{
-			len ++;
-			copy_wrapper(dst->str[i], ret);//copy one char
+			copy_wrapper(dst->str, ret, &i, &len);//copy one char//yes we copy dollar sign if env name is invalid
 	}
 	if (!ret
 		&& (!err(-!malloc_cond((void **) &ret, len), "expansion result malloc")))
 		return (use_expansion(dst, ret));
 	else if (!ret)
 		return (1);
+	free(dst->str);
+	dst->str = ret;
 	return (0);
 }
 
@@ -297,7 +329,7 @@ int	expand_str(t_cmd **cmd, t_shnode *env)
 	*iter = *cmd;
 	while (iter)
 	{
-		if (iter->type != '\'' && iter->env && use_expansion(iter))
+		if (iter->type != '\'' && iter->env && use_expansion(iter, NULL))
 			return (1);
 		iter = iter->next;
 	}
