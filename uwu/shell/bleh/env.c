@@ -126,14 +126,12 @@ int	env_add(t_env *env, t_shnode *src, char *dst)
 	if (dst[1] == 'n')
 	{
 		ret = malloc(sizeof(t_shnode));
-		if (!ret)
-			return (-1);
-		ret->str = ft_strdup(iter->str);
-		if (!ret->str)
-			return (-1);
+		if (ret)
+			ret->str = ft_strdup(src->str);
 		list = &env->env;
 	}
-	ret->next = NULL;
+	if (ret)
+		ret->next = NULL;
 	iter = *list;
 	while (iter && iter->next)
 		iter = iter->next;
@@ -141,8 +139,22 @@ int	env_add(t_env *env, t_shnode *src, char *dst)
 		*list = ret;
 	else
 		iter->next = ret;
-	return (0);
+	return (-(!ret || !ret->str));
 }
+
+void	env_init_cont(t_env *env)
+{
+	t_shnode	*iter;
+
+	iter = env->env;
+	while (iter)
+	{
+		if (!strcmp(iter->name, "SHLVL"))
+			k;//this could be in a different func
+	}
+}
+
+//todo: get syntax and this file to tolerate null str env nodes
 
 //init shell level, only init cd dash if null/not present
 //also also change SHELL to be minishell lmao
@@ -160,7 +172,7 @@ void	env_init(t_env *dst, char **e)
 		if (!err((-!iter), "export node malloc"))
 			iter->str = ft_strdup(e[i]);
 		if ((!iter || err(-!iter->str, "export str malloc"))
-			|| (iter->str[0] && err(env_add(dst, iter, "env"), "env dup malloc")))
+			|| (/*iter->str[0] && */err(env_add(dst, iter, "env"), "env dup malloc")))
 			return ;
 		env_add(dst, iter, "export");
 		i ++;

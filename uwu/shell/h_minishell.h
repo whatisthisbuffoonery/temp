@@ -13,30 +13,31 @@
 typedef struct s_handler
 {
 	struct sigaction	mini;
-	struct sigaction	old;
+	struct sigaction	old;	//execve resets signal handlers for us, don't use. //although, signal masks will persist into execve. //I have to go dig up the online source for this
 }						t_handler;
 
 typedef struct s_shnode
 {
+	struct s_shnode	*next;
 	char			*name;
 	char			*str;
-	struct s_shnode	*next;
 }					t_shnode;
 
 typedef struct s_cmd
 {
 	struct s_cmd	*next;
-	char			*str;//stores one word or quoted section
-	t_shnode		*env;//expansion list
-	char			type;//stores just first char of pre parsed string, which might be a dquote excluded from str field
+	t_shnode		*env;		//expansion list //assert that operators are never assigned this list
+	char			*str;		//stores one word, operator, or quoted section
+	char			type;		//stores just first char of pre parsed string, which might be a dquote excluded from str field
+	char			end_space;	//bool for whether the char after the token was whitespace
 }					t_cmd;
 
 //t_list? //t_shnode? (just has str field) //self reallocing char **?
 typedef struct	s_env
 {
-	t_shnode	*export;
-	t_shnode	*env;
-}				t_env;
+	t_shnode	*export;		//env vars corresponding to export builtin	//export list stores env variables in no particular order, but can contain items with empty strings
+	t_shnode	*env;			//env vars corresponding to env builtin		//env list stores env variables in alphabet order, items with empty strings as values are never added to this list
+}				t_env;			//PSA empty strings can be in env list, null strings cannot
 
 //didnt use
 typedef struct	s_minishell

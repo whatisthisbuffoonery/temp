@@ -89,8 +89,7 @@ t_cmd	*cmd_node(char *src, int i, char c, int *cry)
 	ret->type = c;//this field is a char now
 	if (!ret->str)
 		*cry = (err(-1, "cmd node str malloc"));
-	else
-		ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
+	ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
 	return (ret);
 }
 //heredoc takes a name too
@@ -127,96 +126,6 @@ int	node_init(t_cmd **dst, char *src, int *cry)
 	cmd_node_append(dst, ret);
 	return (i + (ft_isquote(c) != 0));
 }
-/*
-//assume good names from bash //env contents can be anything
-//IF empty env name (i.e. "$" or "$<" using dquotes) 
-int	match_env(char *input, char *dst, t_shnode *env, int *len)
-{
-	int			k;
-	int			i;
-//	t_shnode	*iter;
-
-	i = 0;
-	k = 0;
-//	iter = env;
-	while (ft_strchr(input, '$'))
-	{
-		while (input[i] != '$')
-			i ++;
-		input = &input[i + 1];
-		k += i;
-		i = 0;
-		while (input[i] && !iscontent(input[i]))
-			i ++;
-//		while (iter && ft_strncmp(env->str, input, i))
-//			iter = iter->next;
-		k += match_the_string(input, dst, env, &i);
-	}
-	return ();
-}
-//nah nah nah this sucks go make another list for expandable items
-
-int	expand_the_str(t_cmd *iter, t_shnode *env, char *ret)
-{
-	int		i;
-	int		len;
-	char	*prefix;
-
-	i = 0;
-	len = 0;
-	while (iter->str[i])
-	{
-		if (iter->str[i] != '$')
-		{
-			i ++;
-			len ++;
-			continue ;
-		}
-		i += match_env(&iter->str[i], ret, env, &len);
-	}
-	if (!ret)
-		return (-!malloc_cond((void **) &ret, len + 1)
-			|| expand_the_str(iter, env, ret));
-	free(iter->str);
-	iter->str = ret;
-	return (0);
-}
-
-//gave up here
-int	expand_init(t_cmd **cmd, t_shnode *env)
-{
-	t_cmd	*iter;
-	int		i;
-	int		k;
-
-int	expand_str(t_cmd **cmd, t_shnode *env)
-{
-	t_cmd	*iter;
-	char	*tmp;
-	int		len;
-
-	if (expand_init(cmd, env))//my cmd node now contains a different linked list of env vars. i hate myself
-		return (1);
-	iter = *cmd;
-	while (iter)
-	{
-		if (iter->type != '\'' && ft_strchr(iter->str, '$')
-			&& err(expand_the_str(iter, env, NULL), "str expansion malloc"))
-			return (1);
-		iter = iter->next;
-	}
-	iter = *cmd;
-	while (iter && iter->next)
-	{
-		if (!iscond(iter->type) && !iscond(iter->next->type)
-			&& !iter->end_space
-				&& err(join_the_str(&iter, env), "cmd str malloc"))
-			return (1);
-		iter = iter->next;
-	}
-	return (0);
-}
-*/
 
 //str sitting on '$'
 
@@ -269,7 +178,7 @@ void	concat_wrapper(t_cmd *dst, char *ret, int *i, int *len)
 
 	k = 0;
 	iter = dst->env;
-	str = &dst->str[*i + 1];//standardise dollar offset with add_expansion() //may want to do that
+	str = &dst->str[*i + 1];
 	while (iscontent(str[*i + k]))
 		k ++;
 	while (iter && ft_strncmp(str, iter->name, k))
@@ -336,8 +245,76 @@ int	expand_str(t_cmd **cmd, t_shnode *env)
 	return (0);
 }
 
+void	join_names_cont(t_cmd *head, int i, char *ret)
+{
+	int		k;
+
+	k = 0;
+	free(head->str);
+	head->str = ret;
+	while (k++ < i)//exclude head node iteration now
+		cmd_node_del(&head, head->next);//this will be used in main as well
+}
+
+//i == 1 means join two nodes together, i == 2 means three nodes, etc
+int	join_name_nodes(t_cmd *head, int i)
+{
+	t_cmd	*iter;
+	int		len;
+	int		k;
+	char	*ret;
+
+	iter = head;
+	len = 0;
+	k = 0;
+	while (k++ <= i)
+	{
+		len += ft_strlen(iter->str);
+		iter = iter->next;
+	}
+	ret = ft_calloc(len + 1, sizeof(char));//strlcat needs at least the first char to be null
+	if (!ret)
+		return (err(-1, "join str malloc"));
+	iter = head;
+	k = 0;
+	while (k++ <= i)
+	{
+		ft_strlcat(ret, iter->str, -1);//this puts its own null terminator
+		iter = iter->next;
+	}
+	join_names_cont(head, i, ret);
+	return (0);
+}
+
+int	rejoin_str(t_cmd **cmd)
+{
+	int		i;
+	t_cmd	*iter;
+	t_cmd	*head;
+
+	iter = *cmd;
+	head = *cmd;
+	i = 0;
+	while (iter)
+	{
+		if (!iter->end_space && iter->next && !iscontent(iter->next->type))
+			i ++;
+		else if (i && join_name_nodes(head, i, &iter))//just modify next ptr and free the rest
+			return (1);
+		else
+		{
+			iter = head;
+			head = head->next;
+			i = 0;
+		}
+		iter = iter->next;
+	}
+	return (0);
+}
+
 //do assert closed quotes before expanding env
 //oml do not code other redirections. not worth.
+//cleanup funcs are left for later
 int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 {
 	int	i;
@@ -359,6 +336,6 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 	}
 	return (muh_number
 		|| (!expand_str(cmd, env->env)
-				&& rejoin_str(cmd)//end space field pls do
-					&& actually_check(cmd, env)));
+				&& rejoin_str(cmd)
+					&& actually_check(cmd, env)));//0 on success
 }
