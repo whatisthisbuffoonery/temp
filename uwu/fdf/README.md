@@ -15,6 +15,8 @@ Bonus features include:
 	changing colour where no colour is specified  
   
 ## Instructions  
+
+first, extract a copy of the minilibx lib into this folder
   
 make or make bonus, then pass in a bitmap file as an argument  
   
