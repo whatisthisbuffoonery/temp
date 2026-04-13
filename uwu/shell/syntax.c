@@ -342,6 +342,7 @@ int	rejoin_str(t_cmd **cmd)
 //do assert closed quotes before expanding env
 //oml do not code other redirections. not worth.
 //cleanup funcs are left for later
+//todo: reject glob patterns for redirections, but that should be done while evaluating each command at runtime
 int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 {
 	int	i;
