@@ -1,19 +1,17 @@
 #include "h_minishell.h"
 
-//redo env malloc semantics
-
 int	iscond(int c)
 {
-	return (c == '|' || c == '&' || c == '>' || c == '<');
+	return (c && (c == '|' || c == '&' || c == '>' || c == '<'));
 }
 
 int	iscontent(int c)
 {
-	return (!iscond(c) && !ft_isquote(c) && !ft_isspace(c) && c != 0);
+	return (!iscond(c) && !ft_isquote(c) && !ft_isspace(c));
 }
 
 
-//plez put sig check in while loop
+//put sig check at the start of each major step, putting it in while loops will be a bit cluttered
 
 
 
@@ -28,47 +26,47 @@ int	super_check(char x, char y)
 	b = (y == '|' || y == '&');
 	c = (x == '>' || x == '<');
 	d = (y == '>' || y == '<');
-	return ((a && b) || (c && d));
+	return ((a && b) || (c && d) || (c && a));
 }
 
 int	syntax_err(char *str)
 {
-	ft_putstr_fd("minishell", 2);
+	ft_putstr_fd("minishell: ", 2);
 	if (!str)
 		str = "NULL";
 	ft_putstr_fd("unexpected token near \"", 2);
 	ft_putstr_fd(str, 2);
-	write(2, "\n", 1);
+	write(2, "\"\n", 2);
 	return (1);
 }
 
+//heredoc takes a name too
+//expand envs and merge connected name nodes, inherit type field of first node
 int	actually_check(t_cmd **cmd, t_env *env)
 {
 	int		name;
 	int		redir;
 	char	c;
-	char	last;
+	char	last_space;//repurposed
 	t_cmd	*iter;
 
 	name = 0;
 	redir = 0;
 	iter = *cmd;
-	last = '\0';
+	last_space = 1;
 	while (iter)
 	{
 		c = iter->type;
-		if (c && !iscond(c) && (last == '<' || last == '>'))
-			redir = 0;
-		else if (c && !iscond(c))
-			name = 1;
-		else if (c == '>' || c == '<')
-			redir = 1;
-		else if (((c == '|' || c == '&') && (!name-- || redir))
-			|| super_check(c, last))
-			return (syntax_err(iter->str));//fail value...?//err log here
-		last = c;//eh
+		name += (!name && !redir && last_space && !iscond(c));
+		redir -= (redir && !iscond(c));
+		redir += (!redir && (c == '>' || c == '<'));
+		if (((c == '|' || c == '&' || !iter->next) && (!name-- || redir))
+			|| super_check(c, iter->next->type) || /*!ft_strcmp(iter->str, "&")*/)//single & not required
+			return (syntax_err(iter->str));
+		last_space = iter->end_space;
+		iter = iter->next;
 	}
-	return (!iter);
+	return (0);
 }
 
 t_cmd	*cmd_node(char *src, int i, char c, int *cry)
@@ -81,20 +79,18 @@ t_cmd	*cmd_node(char *src, int i, char c, int *cry)
 		err(-1, "cmd node malloc");
 		return (NULL);
 	}
+	ret->str = ft_substr(src, (ft_isquote(c) != 0), i);
 	ret->next = NULL;
-	ret->str = NULL;
 	ret->env = NULL;
 	ret->type = '\0';
-	ret->str = ft_substr(src, (ft_isquote(c) != 0), i);
-	ret->type = c;//this field is a char now
 	if (!ret->str)
 		*cry = (err(-1, "cmd node str malloc"));
+	ret->type = c;
+	if (ret->str && !ft_strcmp(ret->str, "&"))//single & not required
+		ret->type = '@';
 	ret->end_space = ft_isspace(src[i + (src[i] && ft_isquote(c))]);//bool
 	return (ret);
 }
-//heredoc takes a name too
-//end space uhhhhhhhhhh
-//expand envs and merge connected name nodes, inherit type field of first node
 
 void	cmd_node_append(t_cmd **dst, t_cmd *ret)
 {
@@ -128,12 +124,34 @@ int	node_init(t_cmd **dst, char *src, int *cry)
 }
 
 //str sitting on '$'
-
 int	shnode_strlen(t_shnode *env)
 {
 	if (env && env->str)
 		return (ft_strlen(env->str));
 	return (0);
+}
+
+t_shnode	*find_env(char *str, t_shnode *list, int n)
+{
+	while (list && (list->name[n] || ft_strncmp(str, list->name, n)))
+		list = list->next;
+	return (list);
+}
+
+t_shnode	*expansion_dup(t_shnode *src)
+{
+	t_shnode	*ret;
+
+	ret = malloc(sizeof(t_shnode));
+	if (!ret)
+	{
+		err(-1, "expansion malloc");
+		return (NULL);
+	}
+	ret->name = src->name;
+	ret->str = src->str;
+	ret->next = NULL;
+	return (ret);
 }
 
 int add_expansion(t_cmd *dst, t_shnode *env, int *index)
@@ -146,17 +164,13 @@ int add_expansion(t_cmd *dst, t_shnode *env, int *index)
 	str = &dst->str[*index + 1];//dollar offset
 	while (iscontent(str[i]))
 		i ++;
-	while (env && ft_strncmp(str, env->name, i))
-		env = env->next;
-	if (!malloc_cond((void **) &ret, (sizeof(t_shnode)))
-		|| !malloc_cond((void **) &ret->str, (shnode_strlen(env)) + 1))
-		return (err(-1, "expansion malloc"));
 	*index += i + 1;//use env name len plus dollar
-	i = -1;
-	while (env && env->str[++i])
-		ret->str[i] = env->str[i];
-	ret->str[i + !env] = '\0';
-	ret->next = NULL;
+	if (find_env(str, dst->env, i))
+		return (0);
+	env = find_env(str, env, i);
+	ret = expansion_dup(env);//mallocs a node, does not malloc the strings so dont free those
+	if (!ret)
+		return (1);
 	shnode_append(&dst->env, ret);
 	return (0);
 }
@@ -169,7 +183,6 @@ void	copy_wrapper(char *src, char *dst, int *i, int *len)
 	*len += 1;
 }
 
-//bring back &str[i] for strncmp you blin
 void	concat_wrapper(t_cmd *dst, char *ret, int *i, int *len)
 {
 	t_shnode	*iter;
@@ -190,7 +203,6 @@ void	concat_wrapper(t_cmd *dst, char *ret, int *i, int *len)
 	*i += k + 1;
 }
 
-//stopped here ish
 int	use_expansion(t_cmd *dst, char *ret)
 {
 	int		i;
@@ -229,14 +241,14 @@ int	expand_str(t_cmd **cmd, t_shnode *env)
 		while (iter->str[i] && iter->type != '\'')
 		{
 			if (iter->str[i] == '$' && iscontent(iter->str[i + 1])
-				&& add_expansion(iter, env, &i))//memcpy//env names dont have $ in them
+				&& add_expansion(iter, env, &i))
 				return (1);
 			i += (iter->str[i] && iter->str[i] != '$');
 		}
 		iter = iter->next;
 	}
 	*iter = *cmd;
-	while (iter)
+	while (iter)//move this over to command forking side, expand envs before each command, not before *all* commands
 	{
 		if (iter->type != '\'' && iter->env && use_expansion(iter, NULL))
 			return (1);
@@ -336,6 +348,6 @@ int	syntax_check(t_cmd **cmd, t_env *env, char *input)
 	}
 	return (muh_number
 		|| (!expand_str(cmd, env->env)
-				&& rejoin_str(cmd)
+				/*&& rejoin_str(cmd)*/ //due to moving env expansion over, this is moving over too.
 					&& actually_check(cmd, env)));//0 on success
 }

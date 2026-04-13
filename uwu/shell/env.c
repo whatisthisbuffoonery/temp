@@ -75,46 +75,6 @@ static void	merge_sort(t_shnode **head)
 	window_shopping(*head, a, b);
 }
 
-/*
-void	env_init_cont(t_env *dst, int count)
-{
-	t_shnode	*iter;
-
-	iter = dst->export;
-	while (iter && 
-
-//mild proposal to standardise cmd nodes in order to consider per malloc init here
-void	env_init(t_env *dst, char **e)
-{
-	int			i;
-	int			k;
-	t_shnode	*ret;
-
-	i = ft_ptrlen(e);
-	ft_memset(dst, 0, sizeof(t_env));
-	if (!malloc_cond((void **) &ret, (2 * i) * sizeof(t_shnode)))
-		return ;
-	k = -1;
-	while (++k + 1 < 2 * i)
-		ret[k].next = ret[k + 1];
-	ret[k].next = NULL;
-	ret[i - 1].next = NULL;
-	k = -1;
-	dst->export = ret;//either change this to malloc per node, or put another field to track where this arr ends
-	dst->env = &ret[i];
-	while (e[++k])
-	{
-		ret[k].str = ft_strdup(e[i]);
-		ret[i + k].str = ft_strdup(e[i]);
-		if (!ret[k].str || !ret[i + k].str)
-			break ;//yeah no, do per malloc
-	}
-	merge_sort(&dst->env);
-	env_init_cont(dst, i);
-}
-*/
-
-
 int	env_add(t_env *env, t_shnode *src, char *dst)
 {
 	t_shnode	*ret;
@@ -126,8 +86,10 @@ int	env_add(t_env *env, t_shnode *src, char *dst)
 	if (dst[1] == 'n')
 	{
 		ret = malloc(sizeof(t_shnode));
-		if (ret)
-			ret->str = ft_strdup(src->str);
+		if (!ret)
+			return (err(-1, "env dup malloc"));
+		ret->name = src->name;
+		ret->str = src->str;
 		list = &env->env;
 	}
 	if (ret)
@@ -139,25 +101,91 @@ int	env_add(t_env *env, t_shnode *src, char *dst)
 		*list = ret;
 	else
 		iter->next = ret;
-	return (-(!ret || !ret->str));
+	return (0);
 }
 
-void	env_init_cont(t_env *env)
+t_shnode	*env_init_node(char *e)
+{
+	t_shnode	*ret;
+	int			i;
+
+	ret = malloc(sizeof(t_shnode));
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (e[i] && e[i] != '=')
+		i ++;
+	ret->name = ft_strndup(e, i);
+	if (ret->name)
+		ret->str = ft_strdup(&e[i + (e[i] != '\0')]);
+	if (!ret->name || !ret->str)
+	{
+		free(ret->name);
+		free(ret);
+		return (NULL);
+	}
+	ret->next = NULL;
+	return (ret);
+}
+
+int	update_shell_lvl(t_env *dst)
 {
 	t_shnode	*iter;
+	char		*ret;
 
-	iter = env->env;
-	while (iter)
+	iter = find_env("SHLVL", dst->export, ft_strlen("SHLVL"));
+	if (!iter)
 	{
-		if (!strcmp(iter->name, "SHLVL"))
-			k;//this could be in a different func
+		iter = env_init_node("SHLVL=1");
+		if (!iter)
+			return (-1, "could not replace missing shlvl")
+		env_add(iter, dst, "env");
+		env_add(dst, iter, "export");
+		return ;
 	}
+	if (iter->str)
+		ret = ft_itoa(ft_atoi(iter->str) + 1);
+	else
+		ret = ft_itoa(1);
+	if (!ret)
+		return (err(-1, "shlvl update error"));
+	free(iter->str);
+	iter->str = ret;
+	iter = find_env("SHLVL", dst->env, ft_strlen("SHLVL"));
+	if (!shell_assert(!iter, "shlvl missing in env"))
+		iter->str = ret;
+	return (0);
 }
 
-//todo: get syntax and this file to tolerate null str env nodes
+//technically you would getcwd() here to list the binary name and location
+int	update_shell_name(t_env *dst)
+{
+	t_shnode	*iter;
+	char		*ret;
 
+	iter = find_env("SHELL", dst->export, ft_strlen("SHELL"));
+	if (!iter)
+	{
+		iter = env_init_node("SHELL=minishell");
+		if (!iter)
+			return (-1, "could not replace missing shell name")
+		env_add(iter, dst, "env");
+		env_add(dst, iter, "export");
+		return ;
+	}
+	ret = ft_strdup("minishell");
+	if (!ret)
+		return (err(-1, "shell name update error"));
+	free(iter->str);
+	iter->str = ret;
+	iter = find_env("SHELL", dst->env, ft_strlen("SHELL"));
+	if (!shell_assert(!iter, "shell name missing in env"))
+		iter->str = ret;
+	return (0);
+}
 //init shell level, only init cd dash if null/not present
-//also also change SHELL to be minishell lmao
+//also also change SHELL to be minishell, update SHLVL
+//dealing with LINES and COLUMNS for display stuff is way outside subject scope
 void	env_init(t_env *dst, char **e)
 {
 	int			i;
@@ -168,15 +196,15 @@ void	env_init(t_env *dst, char **e)
 	ft_memset(dst, 0, sizeof(t_env));
 	while (e[i])
 	{
-		iter = ft_calloc(1, sizeof(t_shnode));
-		if (!err((-!iter), "export node malloc"))
-			iter->str = ft_strdup(e[i]);
-		if ((!iter || err(-!iter->str, "export str malloc"))
-			|| (/*iter->str[0] && */err(env_add(dst, iter, "env"), "env dup malloc")))
-			return ;
+		iter = env_node_init(e[i]);
+		if (err((-!iter), "export node malloc"))
+			break ;
+		env_add(dst, iter, "env");
 		env_add(dst, iter, "export");
 		i ++;
 	}
 	merge_sort(&dst->env);
+	update_shell_lvl(dst);
+	update_shell_name(dst);
 	env_init_cont(dst);
 }
