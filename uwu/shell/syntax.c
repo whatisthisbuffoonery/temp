@@ -69,6 +69,8 @@ int	actually_check(t_cmd **cmd, t_env *env)
 	return (0);
 }
 
+/*syntax checker section------------------------------------------------------------*/
+
 t_cmd	*cmd_node(char *src, int i, char c, int *cry)
 {
 	t_cmd	*ret;
@@ -105,6 +107,11 @@ void	cmd_node_append(t_cmd **dst, t_cmd *ret)
 		iter->next = ret;
 }
 
+//this splits words, quotes, and operators &, |, >, <
+
+//splitting words from quotes is done for simplicity,
+//but should be recombined if they were not separated by whitespace
+
 //check for ending whitespace, ls'>'wa should stay as one element
 int	node_init(t_cmd **dst, char *src, int *cry)
 {
@@ -122,6 +129,8 @@ int	node_init(t_cmd **dst, char *src, int *cry)
 	cmd_node_append(dst, ret);
 	return (i + (ft_isquote(c) != 0));
 }
+
+/*cmd node utilities-------------------------------------------*/
 
 //str sitting on '$'
 int	shnode_strlen(t_shnode *env)
@@ -153,6 +162,8 @@ t_shnode	*expansion_dup(t_shnode *src)
 	ret->next = NULL;
 	return (ret);
 }
+
+/*shnode utilities------------------------------------------------------------*/
 
 int add_expansion(t_cmd *dst, t_shnode *env, int *index)
 {
@@ -257,6 +268,8 @@ int	expand_str(t_cmd **cmd, t_shnode *env)
 	return (0);
 }
 
+/*env expansion section-------------------------------------------------------------------------*/
+
 void	join_names_cont(t_cmd *head, int i, char *ret)
 {
 	int		k;
@@ -323,6 +336,8 @@ int	rejoin_str(t_cmd **cmd)
 	}
 	return (0);
 }
+
+/*this section accounts for [a"b"] being split up into [a], [b]----------------------------------------*/
 
 //do assert closed quotes before expanding env
 //oml do not code other redirections. not worth.

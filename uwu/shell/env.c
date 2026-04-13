@@ -75,6 +75,8 @@ static void	merge_sort(t_shnode **head)
 	window_shopping(*head, a, b);
 }
 
+/*merge sort section-------------------------------------------------------------------------------*/
+
 int	env_add(t_env *env, t_shnode *src, char *dst)
 {
 	t_shnode	*ret;
