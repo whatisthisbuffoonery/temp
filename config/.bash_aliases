@@ -1,0 +1,11 @@
+alias C='clang -Wall -Wextra -Werror -g'
+alias V='valgrind --track-origins=yes --leak-check=full --track-fds=yes -s'
+alias vimbash='vim ~/.bash_aliases'
+alias catfuck='cat ~/fuck.txt'
+alias P='python3'
+alias CX='chmod +x'
+alias ls='la'
+#alias paco='/home/darren/francinette-image/run.sh'
+alias mv='mv -i'
+alias cp='cp -i'
+#export PATH=$PATH:/snap/bin
