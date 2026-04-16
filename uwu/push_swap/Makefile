@@ -51,7 +51,7 @@ clean:
 	rm -f $(OBJ) $(BONUS_OBJ) $(SHARED_OBJ)
 
 fclean: clean
-	rm -f $(NAME) $(BONUS_NAME)
+	rm -f $(NAME) $(BONUS_NAME) $(NAME).wasm
 
 re: fclean all
 
