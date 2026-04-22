@@ -1,0 +1,76 @@
+**verify that this algo can parse piping into/out of a group
+
+
+**it hasnt fully sank in that there are THREE REDIR FIELDS
+
+
+node new just makes a node of given type
+isword is roughly isname (allowing glob)
+
+isredir
+
+advance iterates t_cmd within t_parser state
+
+void parse err only prints
+
+expect str
+	it compares strings (wants match + not null t_cmd)
+	sets err otherwise
+	prints err
+	advances
+	return
+
+count words builds argv. we will circumvent this.
+	while tok && (isword || isredir) >> argv array size
+	really??
+
+entry point does not much
+	it detects trailing tokens...?
+
+parse_redir
+	uses parse_one_redir to fill list of redirs
+
+parse_group
+	literally nobody else call this
+	node group
+	node body goes back to parse_list
+	group->left = body
+	fills redirects into group if no err (parse_redir)
+	return group
+
+parse_one_redir
+	new redir node
+	assign redir op to redir node
+	put redir arg in other field, same node
+	return redir node
+
+parse_simple
+	err if operator (i.e. very first token) (or null)
+	new cmd node
+	malloc char **, bit bigger than needed arh (count_words, assumes op/null terminator)
+	if redir, parse_one_redir >> fill new_cmd_node->redir_next
+	else, either collect_word or strdup
+		these three have differing increment logic
+
+parse_command
+	complains if null token
+	starts group if open bracket
+	always return parse_simple_cmd
+
+parse_pipeline
+	immediately fill left, err if !left || err (parse_command)
+	while is_pipe (not OR)
+		new pipe node
+		right = parse_command
+		fill pipe left and right
+		left = pipe (fill children)
+	return left if successful
+
+parse_list << entry
+	immediately fill left (parse_pipeline)
+	while (tok && tok landed on operator)
+		new op node (fill kind)
+		right = parse_pipeline
+		fill op node left, right
+		left = op node
+	return left if successful
