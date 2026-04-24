@@ -268,3 +268,58 @@ t_node	*parse(t_cmd *tok)
 	}
 	return (nodes);
 }
+
+static void print_indent(int d)
+{
+	int	i;
+
+	i = 0;
+	while (i < d)
+	{
+		ft_printf("\t");
+		i++;
+	}
+}
+
+static void print_redirs(t_node *r, int depth)
+{
+	while (r)
+	{
+		print_indent(depth);
+		ft_putstr("redirect  ");
+		ft_putstr(r->redir_op->str);
+		ft_putstr("  ");
+		word_print(r->redir_target);
+		r = r->redir_next;
+	}
+}
+
+void	ast_print(t_node *n, int depth)
+{
+	if (!n)
+		return ;
+	print_indent(depth);
+	depth ++;
+	if (n->kind == N_CMD)
+	{
+		print_cmd_node(n);
+		print_redirs(n->redir_next, depth);
+	}
+	else if (n->type == N_GROUP)
+	{
+		ft_putstr("Group\n");
+		ast_print(n->left, depth);
+		print_redirs(n->redir_next, depth);
+	}
+	else
+	{
+		if (n->kind == N_PIPE)
+			ft_putstr("Pipe\n");
+		else if (n->kind == N_AND)
+			ft_putstr("And\n");
+		else if (n->kind == N_OR)
+			ft_putstr("Or\n");
+		ast_print(n->left, depth);
+		ast_print(n->right, depth);
+	}
+}

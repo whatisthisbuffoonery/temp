@@ -1,0 +1,7 @@
+ret sementics (you get nowhere otherwise)
+
+1. calling win func
+2. calling <INT> <pad 2bytes> <arg (7f00 in our case)>
+3. putting sp at 4420 for some reason and calling bytecodes
+3.5. xor 7f00 to avoid getting fucked by strcpy null checking
+4. stack canaries are a thing
