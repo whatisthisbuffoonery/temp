@@ -24,29 +24,84 @@ typedef struct s_node
 	struct s_node	*right;			// unused for N_GROUP 
 }					t_node;
 
-
-
 int	ismeta(char c)
 {
 	return (isbracket((*tok)->type) || iscond((*tok)->type));
+}
+
+int	ast_iscond(t_cmd *tok)
+{
+	return (!ft_strcmp(tok->str, "||") || !ft_strcmp(tok->str, "&&"));
+}
+
+int	isarg(char c)
+{
+	return (!isbracket(c) && !iscond(c) && !isredir(c));
+}
+
+t_node_kind	find_kind_op(t_cmd *tok)
+{
+	if (!ft_strcmp(tok->str, "&&"))
+		return (N_AND);
+	else if (!ft_strcmp(tok->str, "||"))
+		return (N_OR);
+	return (N_ILLEGAL);
+}//really isnt necessary but eh
+
+t_node	*node_new(t_node_kind kind, int *complain)
+{
+	t_node	*ret;
+
+	ret = NULL;
+	if (kind != N_ILLEGAL)
+		ret = ft_calloc(sizeof(t_node), 1);
+	if (!ret)
+	{
+		*complain = 1;
+		if (kind != N_ILLEGAL)
+			ft_err(-1, "ast node malloc");
+		return (NULL);
+	}
+	ret->kind = kind;
+	return (ret);
+}
+
+void	cmd_pop(t_cmd **tok)
+{
+	t_cmd	*head;
+
+	if (!*tok)
+		return ;
+	head = (*tok)->next;
+	cmd_delone(*tok);
+	*tok = head;
 }
 
 t_node	*parse_one_redir(t_cmd **tok, int *stop)
 {
 	t_node	*r;
 
-	r = node_new();
+	r = node_new(N_REDIR, stop);
 	if (!r)
 		return (NULL);
 	r->redir_op = subcmd(tok, single);//increment
-	if ("null or not word")
-		//complain, return r damn you
-	r->redir_target = subcmd(tok, single);
+	if (!*tok || !isarg((*tok)->type))
+	{
+		ft_putstr_fd("syntax error: redirect followed by ", 2);
+		if (!*tok)
+			ft_putstr_fd("EOF", 2);
+		else
+			ft_putstr_fd((*tok)->str, 2);
+		ft_putstr_fd("\n", 2);
+		*stop = 1;
+	}
+	else
+		r->redir_target = subcmd(tok, single);//still counting on word_next
 	return (r);
 }
 
 //check redir_next usage
-t_node	*parse_redirs(t_cmd **tok, int *stop)
+t_node	*parse_redir_group(t_cmd **tok, int *stop)
 {
 	t_node	*head;
 	t_node	*tail;//eh
@@ -66,51 +121,86 @@ t_node	*parse_redirs(t_cmd **tok, int *stop)
 	return (head);
 }
 
+void	node_append(t_node **dst, t_node *src)
+{
+	t_node	*iter;
+
+	iter = *dst;
+	while (iter && iter->next)
+		iter = iter->next;
+	if (!iter)
+		*dst = src;
+	else
+		iter->next = src;
+}
+
 //cmd word idea: start is head, word_next = subcmd(&head->next, isjoined)
 t_node	*parse_simple(t_cmd **tok, int *stop)
 {
 	t_node	*new_cmd;
-	t_node	*r;
 
-	if (ismeta((*tok)->type))//accept redir
-		//parse_err "command", cmd str/EOF, stop = 1, return null
-	new_cmd = node_new();//does not increment
+	if (!*tok || !(*tok)->type || ismeta((*tok)->type))//accept redir
+	{
+		ft_putstr_fd("expected command, got ", 2);
+		if (!*tok)
+			ft_putstr_fd("EOF", 2);
+		else
+			ft_putstr_fd((*tok)->str, 2);
+		ft_putstr_fd("\n", 2);
+		*stop = 1;
+		return (NULL);
+	}
+	new_cmd = node_new(N_CMD, stop);//does not increment
 	if (!new_cmd)
 		return (NULL);
-	while (*tok && !*stop && !ismeta((*tok)->type))
+	while (*tok && !*stop && (*tok)->type && !ismeta((*tok)->type))
 	{
 		if (isredir((*tok)->type))
-			redir_append(new_cmd, parse_one_redir(tok, stop));//make a func
+			node_append(&new_cmd->redir_next, parse_one_redir(tok, stop));//make a func
 		else
-			argv_append(new_cmd, just_grab_one(tok));//increment
+			cmd_node_append(&new_cmd->argv, subcmd(tok, single));//increment
 	}
 	return (cmd);
 }
 
+//veto open bracket check
 t_node	*parse_group(t_cmd **tok, int *stop)
 {
 	t_node	*new_group;
 
-	new_group = node_new();
+	cmd_pop(tok);
+	new_group = node_new(N_GROUP, stop);
 	if (!new_group)
 		return (NULL);
 	new_group->left = parse_list(tok, stop);
-	if (*tok && (*tok)->type != ')')//increment if is close bracket
-		//tantrum
-	new_group->redir_next = parse_redirs(tok, stop);
+	if (*stop)
+		return (new_group);
+	if (!*tok || (*tok)->type != ')')
+	{
+		ft_putstr_fd("syntax error: unclosed brackets\n", 2);
+		*stop = 1;
+		return (new_group);
+	}
+	cmd_pop(tok);
+	new_group->redir_next = parse_redir_group(tok, stop);
 	return (new_group);
-}
 }
 
 t_node	*parse_command(t_cmd **tok, int *stop)
 {
 	if (!*tok)
-		//complain, return null
+	{
+		ft_putstr_fd("syntax error: unexpected end of input\n", 2);
+		*stop = 1;
+		return (NULL);
+	}
 	if ((*tok)->type == '(')
 		return (parse_group(tok, stop));
 	return (parse_simple(tok, stop));
 }
 
+//left = pipe symbol, right = command
+//execution idea: recursive pipe manager increments count
 t_node	*parse_pipeline(t_cmd **tok, int *stop)
 {
 	t_node	*L;
@@ -120,15 +210,13 @@ t_node	*parse_pipeline(t_cmd **tok, int *stop)
 	L = parse_command(tok, stop);
 	if (!L || *stop)
 		return (L);
-	while (*tok && !ft_strcmp((*tok)->str, "|"))
+	while (*tok && !*stop && !ft_strcmp((*tok)->str, "|"))
 	{
-		new_pipe = node_new();//again undecided
+		new_pipe = node_new(N_PIPE, stop);
 		if (!new_pipe)
 			return (L);
-		////INCREMENT BEFORE CALLING
-		R = parse_command(tok, stop);
-		if (!R || *stop)
-			return (L);
+		cmd_pop(tok);
+		R = parse_command(tok, stop);//veto failure catch
 		new_pipe->left = L;
 		new_pipe->right = R;
 		L = new_pipe;
@@ -145,16 +233,13 @@ t_node	*parse_list(t_cmd **tok, int *stop)
 	L = parse_pipeline(tok, stop);
 	if (!L || *stop)
 		return (L);
-	while (*tok && iscond((*tok)->type))
+	while (*tok && !*stop && ast_iscond(*tok))
 	{
-		new_op = node_new(thing, stop);//undecided between passing in the whole node or just type
-							//pass stop as well
+		new_op = node_new(find_kind_op(*tok), stop);
 		if (!new_op)
 			return (L);
-		////INCREMENT BEFORE CALLING
-		R = parse_pipeline(tok, stop);
-		if (!R || *stop)
-			return (L);
+		cmd_pop(tok);
+		R = parse_pipeline(tok, stop);//veto failure catch
 		new_op->left = L;
 		new_op->right = R;
 		L = new_op;
@@ -167,10 +252,19 @@ t_node	*parse(t_cmd *tok)
 	int		stop;
 	t_node	*nodes;
 
-	complain = 0;
+	stop = 0;
 	nodes = parse_list(&tok, &stop);
+	if (tok && !stop)
+	{
+		ft_putstr_fd("syntax error: unexpected token '", 2);
+		ft_putstr(tok->str, 2);
+		ft_putstr_fd("'\n", 2);
+		stop = 1;
+	}
 	if (stop)
-		//cleanup and null
-	if (tok)
-		//complain unexpected token
+	{
+		ast_free(nodes);
+		nodes = NULL;
+	}
+	return (nodes);
 }
