@@ -9,6 +9,11 @@ alias mv='mv -i'
 alias cp='cp -i'
 
 ff() {
+	if [ $# -eq 0 ]; then
+		echo "usage: ff [pattern] [files(optional)]"
+		return 1
+	fi
+
 	local pattern="$1"
 	shift #removes $1 search pattern from list of files
 
@@ -21,13 +26,25 @@ ff() {
 		files=( ./* )
 		tgt="./*"
 	fi
+
+#	echo "debug: ${files[@]}"
+
 	if [ ${#files[@]} -eq 0 ] || [ ! -e "${files[0]}" ]; then
 		echo "no files exist: ${files[0]:-"./*"}"
 		return 1
 	fi
 
 	local banana=$(grep -ln --exclude="*.o" --exclude="*.git" --exclude="*.out" "$pattern" "${files[@]}" 2>/dev/null)
-	if [ ${#banana[@]} -eq 0 ] || [ ! -e "${banana[0]}" ]; then
+
+#	echo "debug: ${banana[@]}"
+#	if [ ${#banana[@]} -eq 0 ]; then
+#		echo "banana no elem"
+#	fi
+#	if [ ! -e "${banana[0]}" ]; then
+#		echo "banana other check, ${banana[0]}"
+#	fi
+
+	if [ ${#banana[@]} -eq 0 ]; then
 		echo "no matches found: ${pattern} in ${tgt}"
 		return 1
 	fi
