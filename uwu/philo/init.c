@@ -1,5 +1,35 @@
 #include "h_philo.h"
 
+int	digit_check(char **v)
+{
+	int	i;
+	int	k;
+
+	k = 1;
+	while (v[k])
+	{
+		i = 0;
+		while (v[k][i])
+		{
+			if (!ft_isdigit(v[k][i]))//reject +-
+				return (1);
+			i ++;
+		}
+		k ++;
+	}
+	return (0);
+}
+
+struct timeval	timeval_init(char *v)
+{
+	int				src;
+	struct timeval	ret;
+
+	src = ft_atoi(v);
+	ret.tv_sec = src / 1000;
+	//remove sec component
+}
+
 //check for neg num ofcos
 int	args(int c, char **v, t_init_philo *init)
 {
