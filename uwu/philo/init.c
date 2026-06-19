@@ -1,5 +1,6 @@
 #include "h_philo.h"
 
+//check for neg num ofcos
 int	args(int c, char **v, t_init_philo *init)
 {
 	if (c != 5 && c != 6)
@@ -33,7 +34,7 @@ int	init_mutexes(t_init_philo *init)
 		return (mutex_cleanup(init, 0));
 	while (i < init->num_of_philos)
 	{
-		if (pthread_mutex_init(&init->forks[i]))
+		if (pthread_mutex_init(&init->forks[i], NULL))
 			return (mutex_cleanup(init, i));
 		i ++;
 	}
@@ -52,9 +53,9 @@ void	set_index(t_philo *iter, int n, int max)
 int	philo_init(t_init_philo *init, t_philo **philos)
 {
 	int			i;
-	t_philos	*iter;
+	t_philo		*iter;
 
-	*philos = malloc(sizeof(t_philo), init->num_of_philos);
+	*philos = malloc(sizeof(t_philo) * init->num_of_philos);
 	if (!*philos)
 		return (mutex_cleanup(init, init->num_of_philos));
 	i = 0;
