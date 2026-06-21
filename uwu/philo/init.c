@@ -27,7 +27,8 @@ struct timeval	timeval_init(char *v)
 
 	src = ft_atoi(v);
 	ret.tv_sec = src / 1000;
-	//remove sec component
+	ret.tv_usec = (src % 1000) * 1000;
+	return (ret);
 }
 
 //check for neg num ofcos
@@ -37,6 +38,7 @@ int	args(int c, char **v, t_init_philo *init)
 		return (1);
 	if (digit_check(v))
 		return (1);
+	ft_memset(init, 0, sizeof(t_init_philo));
 	init->num_of_philo = ft_atoi(v[1]);
 	init->die_delay = timeval_init(v[2]);
 	init->eat_delay = timeval_init(v[3]);
