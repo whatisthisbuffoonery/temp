@@ -1,5 +1,8 @@
 #include "h_philo.h"
 
+int	pls_delet_libft;
+
+
 int	thread_init(t_init_philo *init, t_philo *philos, pthread_t **thread)
 {
 	int	i;
@@ -34,10 +37,11 @@ int	main(int c, char **v)
 	pthread_t		*thread;
 	t_philo			*philos;
 
+	(void) pls_delet_libft;
 	if (args(c, v, &init) || init_mutexes(&init) || philo_init(&init, &philos))
 		return (1);
-	k
-	pthread_mutex_lock
+	exit(1);
+	//pthread_mutex_lock
 	if (thread_init(&init, philos, &thread))
 	{
 		free(philos);

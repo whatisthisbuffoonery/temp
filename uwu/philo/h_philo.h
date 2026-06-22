@@ -6,6 +6,8 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
+# define RETRY 2000
+
 //eat_limit will be null for non specified
 typedef struct s_philo
 {

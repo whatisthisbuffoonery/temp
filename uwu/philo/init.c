@@ -39,7 +39,7 @@ int	args(int c, char **v, t_init_philo *init)
 	if (digit_check(v))
 		return (1);
 	ft_memset(init, 0, sizeof(t_init_philo));
-	init->num_of_philo = ft_atoi(v[1]);
+	init->num_of_philos = ft_atoi(v[1]);
 	init->die_delay = timeval_init(v[2]);
 	init->eat_delay = timeval_init(v[3]);
 	init->sleep_delay = timeval_init(v[4]);
