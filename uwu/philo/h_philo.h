@@ -42,4 +42,6 @@ typedef struct s_init_philo
 	int				num_of_philos;
 }					t_init_philo;
 
+int	args(int c, char **v, t_init_philo *init);
+
 #endif
