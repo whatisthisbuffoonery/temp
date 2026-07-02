@@ -15,7 +15,7 @@ int	thread_init(t_init_philo *init, t_philo *philos, pthread_t **thread)
 		return (1);
 	while (i < init->num_of_philos)
 	{
-		if (pthread_create(&(*thread)[i], NULL, philos, &philos[i]))
+		if (pthread_create(&(*thread)[i], NULL, run, &philos[i]))
 		{
 			flag = 1;
 			break;

@@ -43,6 +43,7 @@ int	args(int c, char **v, t_init_philo *init)
 	init->die_delay = timeval_init(v[2]);
 	init->eat_delay = timeval_init(v[3]);
 	init->sleep_delay = timeval_init(v[4]);
+	init->eat_limit = 0;//honestly dont need the bool	
 	init->eat_limit_set = (v[5] != NULL);
 	if (init->eat_limit_set)
 		init->eat_limit = ft_atoi(v[5]);
@@ -87,7 +88,7 @@ int	philo_init(t_init_philo *init, t_philo **philos)
 	int			i;
 	t_philo		*iter;
 
-	*philos = malloc(sizeof(t_philo) * init->num_of_philos);
+	*philos = malloc(sizeof(t_philo) * init->num_of_philos);//double check i didnt 0 index this
 	if (!*philos)
 		return (mutex_cleanup(init, init->num_of_philos));
 	i = 0;

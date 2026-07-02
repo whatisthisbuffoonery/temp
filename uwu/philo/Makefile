@@ -8,7 +8,7 @@ LIBS := -L$(LIBFT_DIR) -lpthread -lft
 
 NAME := philo
 
-SRC := main.c init.c
+SRC := main.c init.c run.c
 
 OBJ := $(SRC:.c=.o)
 
