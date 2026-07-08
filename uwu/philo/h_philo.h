@@ -43,6 +43,6 @@ typedef struct s_init_philo
 }					t_init_philo;
 
 int		args(int c, char **v, t_init_philo *init);
-void	run(void *arg);
+void	*run(void *arg);
 
 #endif

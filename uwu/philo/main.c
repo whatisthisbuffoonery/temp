@@ -45,6 +45,6 @@ int	main(int c, char **v)
 	if (thread_init(&init, philos, &thread))
 	{
 		free(philos);
-		return (mutex_cleanup(init, init->num_of_philos));
+		return (mutex_cleanup(init, init.num_of_philos));
 	}
 }

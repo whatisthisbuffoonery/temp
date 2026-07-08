@@ -1,6 +1,6 @@
 #include "h_philo.h"
 
-void	run(void *arg)
+void	*run(void *arg)
 {
 	t_philo	*philo;
 
@@ -8,4 +8,5 @@ void	run(void *arg)
 	philo = (t_philo *) arg;
 	(void) philo;
 	exit(1);
+	return (NULL);
 }
