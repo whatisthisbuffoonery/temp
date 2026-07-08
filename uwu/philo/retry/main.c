@@ -18,6 +18,7 @@ int	arg_check(t_args *delay, int c, char **v)
 
 	if (c != 5 && c != 6)
 		return (1);
+	ft_memset(delay, 0, sizeof(t_args));
 	k = 0;
 	while (v[k])
 	{
@@ -32,6 +33,27 @@ int	arg_check(t_args *delay, int c, char **v)
 	}
 	init_delay(delay, v);
 	return (0);
+}
+
+void	headcount_cleanup(
+		t_philo *philos,
+		pthread_t *threads,
+		t_args *delay,
+		t_mutex_box *mutexes)
+{
+	int	i;
+
+	i = 0;
+	while (philos && threads && i < delay->headcount)
+		pthread_join(threads[i++]);
+	i = 0;
+	while (i < delay->headcount)
+		pthread_mutex_destroy(mutexes->forks[i++]);
+	pthread_mutex_destroy(mutexes->print);
+	pthread_mutex_destroy(mutexes->waiter);
+	free(philos);
+	free(threads);
+	free(mutexes->forks);
 }
 
 //delay has like 5 timevals
@@ -50,6 +72,5 @@ int	main(int c, char **v)
 		|| init_mutexes(&mutexes, &delay))
 		return (1);
 	start = init_philo(&philos, &threads, &delay, &mutexes);
-	//pthread_join() //first check if any ptrs are null
-	//free all
+	headcount_cleanup(philos, threads, &delay, &mutexes);
 }

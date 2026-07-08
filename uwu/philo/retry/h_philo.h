@@ -21,7 +21,9 @@ typedef struct
 	pthread_mutex_t	*waiter;
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*forks;
+	t_args			*delay;
 	int				forkid[2];
+	int				philoid;
 }					t_philo;
 
 //I refuse to put the box in philo directly

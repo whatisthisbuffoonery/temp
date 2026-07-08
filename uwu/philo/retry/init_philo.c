@@ -1,5 +1,6 @@
 #include "h_philo.h"
 
+//get run func to set its own forkid
 int	init_philo(
 		t_philo **philos,
 		pthread_t **threads,
@@ -14,10 +15,17 @@ int	init_philo(
 	i = 0;
 	while (i < delay->headcount)
 	{
-		//configure philos first ofc
+		(*philos)[i].waiter = &mutexes->waiter;
+		(*philos)[i].print = &mutexes->print;
+		(*philos)[i].forks = mutexes->forks;
+		(*philos)[i].delay = delay;
+		(*philos)[i].philoid = i;
 		if (pthread_create(&(*threads)[i], NULL, run, (*philos)[i]))
 		{
-			//cleanup
+			while (i-- > 0)
+				pthread_join((*threads)[i], NULL);
+			free(*threads);
+			*threads = NULL;
 			return (-1);
 		}
 		i ++;
