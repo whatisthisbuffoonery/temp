@@ -8,7 +8,7 @@ int	init_mutexes(t_mutex_box *dst, t_args *delay)
 
 	size = delay->headcount;
 	ft_memset(dst, 0, sizeof(t_mutex_box));
-	if (!malloc_cond((void **) &dst->forks, size * sizeof(t_mutex_box)))
+	if (!malloc_cond((void **) &dst->forks, size * sizeof(pthread_mutex_t)))
 		return (1);
 	i = 0;
 	while (i < size)

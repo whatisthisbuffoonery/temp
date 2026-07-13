@@ -1,16 +1,26 @@
 #include "h_philo.h"
 
-void	init_delay(t_args *delay, char **v)
+int	init_delay(t_args *delay, char **v)
 {
 	delay->headcount = ft_atoi(v[1]);
-	delay->starve = timeval_init(v[2]);
-	delay->digest = timeval_init(v[3]);
-	delay->sleep = timeval_init(v[4]);
-	delay->diet = 0;
+	delay->starve = ft_atoi(v[2]);
+	delay->digest = ft_atoi(v[3]);
+	delay->sleep = ft_atoi(v[4]);
 	if (v[5])
+	{
+		delay->diet_set = 1;
 		delay->diet = ft_atoi(v[5]);
+	}
+	delay->table = malloc(delay->headcount * sizeof(char));
+	delay->forklist = malloc(delay->headcount * sizeof(char));
+	if (!delay->table || !delay->forklist)
+		return (1);
+	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
+	ft_memset(delay->forklist, 0, delay->headcount * sizeof(char));
+	return (0);
 }
 
+//reject negative
 int	arg_check(t_args *delay, int c, char **v)
 {
 	int	i;
@@ -18,8 +28,7 @@ int	arg_check(t_args *delay, int c, char **v)
 
 	if (c != 5 && c != 6)
 		return (1);
-	ft_memset(delay, 0, sizeof(t_args));
-	k = 0;
+	k = 1;
 	while (v[k])
 	{
 		i = 0;
@@ -31,8 +40,7 @@ int	arg_check(t_args *delay, int c, char **v)
 		}
 		k ++;
 	}
-	init_delay(delay, v);
-	return (0);
+	return (init_delay(delay, v));
 }
 
 void	headcount_cleanup(
@@ -45,32 +53,44 @@ void	headcount_cleanup(
 
 	i = 0;
 	while (philos && threads && i < delay->headcount)
-		pthread_join(threads[i++]);
+		pthread_join(threads[i++], NULL);
 	i = 0;
 	while (i < delay->headcount)
-		pthread_mutex_destroy(mutexes->forks[i++]);
-	pthread_mutex_destroy(mutexes->print);
-	pthread_mutex_destroy(mutexes->waiter);
+		pthread_mutex_destroy(&mutexes->forks[i++]);
+	pthread_mutex_destroy(&mutexes->print);
+	pthread_mutex_destroy(&mutexes->waiter);
 	free(philos);
 	free(threads);
 	free(mutexes->forks);
+	free(delay->table);
+	free(delay->forklist);
 }
 
 //delay has like 5 timevals
+//start can be 1, 0, -1
+//being stuck with blocking mutex lock means:
+//we have to use main thread to update deathflag and print death message
+//so the philos do not check for starvation
+//usleep 9000
 int	main(int c, char **v)
 {
 	t_args		delay;
 	pthread_t	*threads;
 	t_philo		*philos;
 	t_mutex_box	mutexes;
-	int			start;//can be 1, 0, -1
 
 	threads = NULL;
 	philos = NULL;
-	start = 0;
+	delay.startflag = 0;
+	ft_memset(&delay, 0, sizeof(t_args));
 	if (arg_check(&delay, c, v)
 		|| init_mutexes(&mutexes, &delay))
+	{
+		free(delay.table);
+		free(delay.forklist);
 		return (1);
-	start = init_philo(&philos, &threads, &delay, &mutexes);
+	}
+	delay.startflag = init_philo(&philos, &threads, &delay, &mutexes);
+	monitor_philos(philos, &delay);
 	headcount_cleanup(philos, threads, &delay, &mutexes);
 }

@@ -1,5 +1,20 @@
 #include "h_philo.h"
 
+//gettimeofday can't really fail
+int	start_timeval(t_args *delay, t_philo *philos)
+{
+	int	i;
+
+	if (gettimeofday(&delay->start, NULL))
+		return (-1);
+	i = 0;
+	while (i < delay->headcount)
+		philos[i++].last_meal = delay->start;
+	if (delay->headcount < 1)
+		return (-1);
+	return (0);//zero
+}
+
 //get run func to set its own forkid
 int	init_philo(
 		t_philo **philos,
@@ -20,7 +35,7 @@ int	init_philo(
 		(*philos)[i].forks = mutexes->forks;
 		(*philos)[i].delay = delay;
 		(*philos)[i].philoid = i;
-		if (pthread_create(&(*threads)[i], NULL, run, (*philos)[i]))
+		if (pthread_create(&(*threads)[i], NULL, run, &(*philos)[i]))
 		{
 			while (i-- > 0)
 				pthread_join((*threads)[i], NULL);
@@ -30,5 +45,5 @@ int	init_philo(
 		}
 		i ++;
 	}
-	return (1);
+	return (start_timeval(delay, *philos));
 }
