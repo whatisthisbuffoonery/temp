@@ -24,7 +24,8 @@ void	philo_locks(t_philo *philo, t_args *delay, char *op)
 		pthread_mutex_unlock(&philo->forks[philo->forkid[1]]);
 		print_philo(philo, delay, "has let go of a fork");
 	}
-	delay->table[philo->philoid] = c;
+	if (c)
+		delay->table[philo->philoid] = c;//swap to odd/even rule and try
 }
 
 void	philo_table(t_args *delay)
@@ -97,9 +98,9 @@ void	think_too_hard(t_philo *philo, t_args *delay)
 	}
 	philo->done = 1;
 	//bruh
-	pthread_mutex_lock(philo->print);
-	ft_printf("exit: %d\n", philo->philoid + 1);
-	pthread_mutex_unlock(philo->print);
+//	pthread_mutex_lock(philo->print);
+//	ft_printf("exit: %d\n", philo->philoid + 1);
+//	pthread_mutex_unlock(philo->print);
 }
 
 

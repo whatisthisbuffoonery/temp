@@ -61,14 +61,30 @@ int	check_starvation(t_philo *philos, t_args *delay)
 	}
 	return (delay->starve - max_ms);
 }
-		
+
+int	check_done(t_philo *philos, t_args *delay)
+{
+	int	i;
+
+	i = 0;
+	while (i < delay->headcount)
+	{
+		if (!philos[i].done)
+			return (0);
+		i ++;
+	}
+	return (1);
+}
+
 //still use print mutex for eating and this
 //philo will never set death flag
 void	monitor_philos(t_philo *philos, t_args *delay)
 {
 	int	sleep_ms;
 
-	while (delay->startflag >= 0 && !delay->deathflag)
+	while (delay->startflag >= 0
+	&& !delay->deathflag
+	&& !check_done(philos, delay))
 	{
 		pthread_mutex_lock(philos[0].waiter);
 		sleep_ms = check_starvation(philos, delay);
