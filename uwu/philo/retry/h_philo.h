@@ -23,6 +23,7 @@ typedef struct s_args
 	int				headcount;
 	int				diet;
 	int				diet_set;
+	int				rule;
 }					t_args;
 
 typedef struct s_philo
@@ -34,6 +35,7 @@ typedef struct s_philo
 	t_args					*delay;
 	int						forkid[2];
 	int						philoid;//stored 0 indexed
+	int						rule;
 	int						done;
 }							t_philo;
 

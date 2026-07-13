@@ -1,5 +1,5 @@
 alias C='clang -Wall -Wextra -Werror -g'
-alias V='valgrind --track-origins=yes --leak-check=full --track-fds=yes --trace-children=yes -s'
+alias V='valgrind --track-origins=yes --leak-check=full --track-fds=yes --trace-children=yes --fair-sched=yes -s'
 alias vimbash='vim ~/.bash_aliases'
 alias Sbash='source ~/.bash_aliases'
 alias P='python3'

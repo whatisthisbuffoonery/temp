@@ -2,7 +2,7 @@
 
 void	philo_locks(t_philo *philo, t_args *delay, char *op)
 {
-	int	c;
+	static _Thread_local int	c;
 
 	c = 0;
 	if (op[0] == 'l')
@@ -31,14 +31,18 @@ void	philo_locks(t_philo *philo, t_args *delay, char *op)
 void	philo_table(t_args *delay)
 {
 	int	i;
+	int	rule;
 
 	i = 0;
+	rule = 0;
 	while (i < delay->headcount)
 	{
-		if (!delay->table[i])
+		if (rule == delay->rule && !delay->table[i])
 			return ;
 		i ++;
+		rule = !rule;
 	}
+	delay->rule = !delay->rule;
 	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
 }
 
@@ -52,7 +56,8 @@ int	call_waiter(t_philo *philo, t_args *delay)
 		if (delay->headcount < 2
 			|| delay->forklist[philo->forkid[0]]
 			|| delay->forklist[philo->forkid[1]]
-			|| delay->table[philo->philoid])
+			|| delay->table[philo->philoid]
+			|| philo->rule != delay->rule)
 			return (0);
 		philo_locks(philo, delay, "lock");
 		if (!delay->deathflag)
@@ -111,6 +116,7 @@ void	*run(void *src)
 	static _Thread_local t_philo	*philo;
 
 	philo = (t_philo *) src;
+	philo->rule = philo->philoid % 2;
 	philo->forkid[0] = philo->philoid;
 	philo->forkid[1] = philo->philoid + 1;
 	if (philo->forkid[1] >= philo->delay->headcount)
