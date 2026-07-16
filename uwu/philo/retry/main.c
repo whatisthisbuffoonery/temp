@@ -66,6 +66,20 @@ void	headcount_cleanup(
 	free(delay->forklist);
 }
 
+void	report(t_philo *philos, t_args *delay)
+{
+	int	i = 0;
+
+	ft_putstr("rules :[");
+	while (i < delay->headcount)
+	{
+		ft_putnbr(philos[i].rule);
+		ft_putstr(", ");
+		i ++;
+	}
+	ft_putstr("]\n");
+}
+
 //delay has like 5 timevals
 //start can be 1, 0, -1
 //being stuck with blocking mutex lock means:
@@ -81,8 +95,8 @@ int	main(int c, char **v)
 
 	threads = NULL;
 	philos = NULL;
-	delay.startflag = 0;
 	ft_memset(&delay, 0, sizeof(t_args));
+	delay.startflag = 0;
 	if (arg_check(&delay, c, v)
 		|| init_mutexes(&mutexes, &delay))
 	{
@@ -90,7 +104,13 @@ int	main(int c, char **v)
 		free(delay.forklist);
 		return (1);
 	}
-	delay.startflag = init_philo(&philos, &threads, &delay, &mutexes);
+	if (init_philo(&philos, &threads, &delay, &mutexes))
+	{
+		headcount_cleanup(philos, threads, &delay, &mutexes);
+		return (1);
+	}
+	delay.startflag = 1;
 	monitor_philos(philos, &delay);
+//	report(philos, &delay);
 	headcount_cleanup(philos, threads, &delay, &mutexes);
 }

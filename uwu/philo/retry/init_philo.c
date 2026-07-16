@@ -28,6 +28,8 @@ int	init_philo(
 		|| !malloc_cond((void **) philos, delay->headcount * sizeof(t_philo)))
 		return (-1);
 	i = 0;
+	delay->philos = *philos;
+	ft_printf("headcount: %d\n", delay->headcount);
 	while (i < delay->headcount)
 	{
 		(*philos)[i].waiter = &mutexes->waiter;

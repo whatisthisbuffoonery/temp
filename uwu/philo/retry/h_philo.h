@@ -13,8 +13,9 @@
 typedef struct s_args
 {
 	struct timeval	start;		//should it?
-	char			*table;
-	char			*forklist;
+	struct s_philo	*philos;
+	_Atomic char	*table;		//use a counter instead
+	_Atomic char	*forklist;
 	int	digest;		//should be ms
 	int	sleep;		//should be ms
 	int	starve;		//should be ms
@@ -23,12 +24,12 @@ typedef struct s_args
 	int				headcount;
 	int				diet;
 	int				diet_set;
-	int				rule;
+	_Atomic int		rule;
 }					t_args;
 
 typedef struct s_philo
 {
-	_Atomic struct timeval	last_meal;
+	struct timeval		last_meal;
 	pthread_mutex_t			*waiter;
 	pthread_mutex_t			*print;
 	pthread_mutex_t			*forks;
@@ -36,7 +37,7 @@ typedef struct s_philo
 	int						forkid[2];
 	int						philoid;//stored 0 indexed
 	int						rule;
-	int						done;
+	_Atomic int				done;
 }							t_philo;
 
 //I refuse to put the box in philo directly
@@ -55,8 +56,11 @@ int	init_philo(
 		t_args *delay,
 		t_mutex_box *mutexes);
 int	init_mutexes(t_mutex_box *dst, t_args *delay);
-void	print_philo(t_philo *philo, t_args *delay, char *msg);
+struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg);
 void	monitor_philos(t_philo *philos, t_args *delay);
+int	timeval_diff(struct timeval src1, struct timeval src2);
+int	timeval_diff_atomic(struct timeval src1, _Atomic struct timeval src2);
+void	philo_table(t_args *delay);
 
 
 //mutexes: merge printing and death bulb into one, one for waiter, 
