@@ -14,13 +14,14 @@ typedef struct s_args
 {
 	struct timeval	start;		//should it?
 	struct s_philo	*philos;
-	_Atomic char	*table;		//use a counter instead
 	_Atomic char	*forklist;
 	int	digest;		//should be ms
 	int	sleep;		//should be ms
 	int	starve;		//should be ms
+	_Atomic int		table;		//use a counter instead
 	_Atomic int		startflag;
 	_Atomic int		deathflag;
+	int				half;
 	int				headcount;
 	int				diet;
 	int				diet_set;

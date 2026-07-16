@@ -30,22 +30,24 @@ void	philo_locks(t_philo *philo, t_args *delay, char *op)//phase out
 */
 void	philo_table(t_args *delay)
 {
-	int		i;
+//	int		i;
 	t_philo	*philos;
 
 	philos = delay->philos;
 	pthread_mutex_lock(philos[0].waiter);
-	i = 0;
-	while (i < delay->headcount)
+//	i = 0;
+	if (delay->table < delay->half)
+		return;
+/*	while (i < delay->headcount)
 	{
-		if (philos[i].rule == delay->rule && !delay->table[i])
+		if (delay->table[i])
 		{
 			pthread_mutex_unlock(philos[0].waiter);
 			return ;
 		}
 		i ++;
-	}
-	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
+	}*/
+//	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
 	delay->rule += 1;
 	if (delay->rule >= 3 - !(delay->headcount % 2))
 		delay->rule = 0;
@@ -86,7 +88,7 @@ void	philo_dine(t_philo *philo, t_args *delay)
 	print_philo(philo, delay, "has taken a fork");
 	philo->last_meal = print_philo(philo, delay, "is eating");
 	pthread_mutex_lock(philo->waiter);
-	delay->table[philo->philoid] = 1;
+	delay->table += 1;
 	pthread_mutex_unlock(philo->waiter);
 	philo_sleep(delay->digest);
 	pthread_mutex_unlock(&philo->forks[philo->forkid[0]]);
@@ -102,6 +104,8 @@ void	philo_dine(t_philo *philo, t_args *delay)
 }
 
 //check starvation
+//		&& !delay->table[philo->philoid] //eh
+//wtf is hanging the program now
 int	call_waiter(t_philo *philo, t_args *delay)
 {
 	int	granted;
@@ -112,7 +116,7 @@ int	call_waiter(t_philo *philo, t_args *delay)
 		&& delay->headcount >= 2
 		&& !delay->forklist[philo->forkid[0]]
 		&& !delay->forklist[philo->forkid[1]]
-		&& !delay->table[philo->philoid]
+		&& delay->table < delay->half
 		&& philo->rule == delay->rule)
 	{
 		delay->forklist[philo->forkid[0]] = 1;
@@ -153,7 +157,9 @@ void	think_too_hard(t_philo *philo, t_args *delay)
 		print_philo(philo, delay, "is sleeping");
 		usleep(delay->sleep * 1000);//print sleeping */
 		i += (lock && delay->diet_set);
+		write(1, "a", 1);
 	}
+	write(1, "b", 1);
 	philo->done = 1;
 	//bruh
 //	pthread_mutex_lock(philo->print);

@@ -11,12 +11,13 @@ int	init_delay(t_args *delay, char **v)
 		delay->diet_set = 1;
 		delay->diet = ft_atoi(v[5]);
 	}
-	delay->table = malloc(delay->headcount * sizeof(char));
+//	delay->table = malloc(delay->headcount * sizeof(char));
 	delay->forklist = malloc(delay->headcount * sizeof(char));
-	if (!delay->table || !delay->forklist)
+	if (!delay->forklist)
 		return (1);
-	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
+//	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
 	ft_memset(delay->forklist, 0, delay->headcount * sizeof(char));
+	delay->half = delay->headcount / 2;
 	return (0);
 }
 
@@ -62,7 +63,7 @@ void	headcount_cleanup(
 	free(philos);
 	free(threads);
 	free(mutexes->forks);
-	free(delay->table);
+//	free(delay->table);
 	free(delay->forklist);
 }
 
@@ -100,7 +101,7 @@ int	main(int c, char **v)
 	if (arg_check(&delay, c, v)
 		|| init_mutexes(&mutexes, &delay))
 	{
-		free(delay.table);
+//		free(delay.table);
 		free(delay.forklist);
 		return (1);
 	}
