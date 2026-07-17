@@ -2,6 +2,7 @@
 
 int	init_delay(t_args *delay, char **v)
 {
+	ft_memset(delay, 0, sizeof(t_args));
 	delay->headcount = ft_atoi(v[1]);
 	delay->starve = ft_atoi(v[2]);
 	delay->digest = ft_atoi(v[3]);
@@ -11,11 +12,9 @@ int	init_delay(t_args *delay, char **v)
 		delay->diet_set = 1;
 		delay->diet = ft_atoi(v[5]);
 	}
-//	delay->table = malloc(delay->headcount * sizeof(char));
 	delay->forklist = malloc(delay->headcount * sizeof(char));
 	if (!delay->forklist)
 		return (1);
-//	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
 	ft_memset(delay->forklist, 0, delay->headcount * sizeof(char));
 	delay->half = delay->headcount / 2;
 	return (0);
@@ -63,22 +62,7 @@ void	headcount_cleanup(
 	free(philos);
 	free(threads);
 	free(mutexes->forks);
-//	free(delay->table);
 	free(delay->forklist);
-}
-
-void	report(t_philo *philos, t_args *delay)
-{
-	int	i = 0;
-
-	ft_putstr("rules :[");
-	while (i < delay->headcount)
-	{
-		ft_putnbr(philos[i].rule);
-		ft_putstr(", ");
-		i ++;
-	}
-	ft_putstr("]\n");
 }
 
 //delay has like 5 timevals
@@ -91,27 +75,27 @@ int	main(int c, char **v)
 {
 	t_args		delay;
 	pthread_t	*threads;
+	t_maint		maint;
 	t_philo		*philos;
 	t_mutex_box	mutexes;
 
 	threads = NULL;
 	philos = NULL;
-	ft_memset(&delay, 0, sizeof(t_args));
 	delay.startflag = 0;
 	if (arg_check(&delay, c, v)
 		|| init_mutexes(&mutexes, &delay))
 	{
-//		free(delay.table);
 		free(delay.forklist);
 		return (1);
 	}
-	if (init_philo(&philos, &threads, &delay, &mutexes))
+	if (init_philo(&philos, &threads, &delay, &mutexes)
+		|| init_maint(&maint, &delay, philos))
+		delay.startflag = -1;
+	else
 	{
-		headcount_cleanup(philos, threads, &delay, &mutexes);
-		return (1);
+		start_timeval(&delay, philos);
+		delay.startflag = 1;
 	}
-	delay.startflag = 1;
-	monitor_philos(philos, &delay);
-//	report(philos, &delay);
+	maint_cleanup(&maint, maint.size);
 	headcount_cleanup(philos, threads, &delay, &mutexes);
 }

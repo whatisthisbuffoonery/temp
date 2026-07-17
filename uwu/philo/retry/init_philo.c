@@ -47,5 +47,5 @@ int	init_philo(
 		}
 		i ++;
 	}
-	return (start_timeval(delay, *philos));
+	return (0);
 }

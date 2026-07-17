@@ -28,30 +28,26 @@ void	philo_locks(t_philo *philo, t_args *delay, char *op)//phase out
 		delay->table[philo->philoid] = c;//swap to odd/even rule and try
 }
 */
-void	philo_table(t_args *delay)
+void	*philo_table(void *data)
 {
-//	int		i;
-	t_philo	*philos;
+	t_args	*delay;
 
-	philos = delay->philos;
-	pthread_mutex_lock(philos[0].waiter);
-//	i = 0;
-	if (delay->table < delay->half)
-		return;
-/*	while (i < delay->headcount)
+	delay = (t_args *) data;
+	while (!delay->startflag)
+		continue ;
+	while (!delay->deathflag
+		&& delay->done != delay->headcount
+		&& delay->startflag > 0)
 	{
-		if (delay->table[i])
-		{
-			pthread_mutex_unlock(philos[0].waiter);
-			return ;
-		}
-		i ++;
-	}*/
-//	ft_memset(delay->table, 0, delay->headcount * sizeof(char));
-	delay->rule += 1;
-	if (delay->rule >= 3 - !(delay->headcount % 2))
-		delay->rule = 0;
-	pthread_mutex_unlock(philos[0].waiter);
+		if ((delay->rule != 2 && delay->table < delay->half)
+			|| (delay->rule == 2 && !delay->table))
+			continue ;
+		delay->rule += 1;
+		delay->table = 0;
+		if (delay->rule >= 3 - !(delay->headcount % 2))
+			delay->rule = 0;
+	}
+	return (NULL);
 }
 
 void	philo_sleep(int duration)
@@ -87,18 +83,18 @@ void	philo_dine(t_philo *philo, t_args *delay)
 	pthread_mutex_lock(&philo->forks[philo->forkid[1]]);
 	print_philo(philo, delay, "has taken a fork");
 	philo->last_meal = print_philo(philo, delay, "is eating");
-	pthread_mutex_lock(philo->waiter);
+//	pthread_mutex_lock(philo->waiter);
 	delay->table += 1;
-	pthread_mutex_unlock(philo->waiter);
+//	pthread_mutex_unlock(philo->waiter);
 	philo_sleep(delay->digest);
 	pthread_mutex_unlock(&philo->forks[philo->forkid[0]]);
 	print_philo(philo, delay, "has let go of a fork");
 	pthread_mutex_unlock(&philo->forks[philo->forkid[1]]);
 	print_philo(philo, delay, "has let go of a fork");
-	pthread_mutex_lock(philo->waiter);
+//	pthread_mutex_lock(philo->waiter);
 	delay->forklist[philo->forkid[0]] = 0;
 	delay->forklist[philo->forkid[1]] = 0;
-	pthread_mutex_unlock(philo->waiter);
+//	pthread_mutex_unlock(philo->waiter);
 	print_philo(philo, delay, "is sleeping");
 	philo_sleep(delay->sleep);//print sleeping
 }
@@ -157,9 +153,8 @@ void	think_too_hard(t_philo *philo, t_args *delay)
 		print_philo(philo, delay, "is sleeping");
 		usleep(delay->sleep * 1000);//print sleeping */
 		i += (lock && delay->diet_set);
-		write(1, "a", 1);
 	}
-	write(1, "b", 1);
+	delay->done += 1;
 	philo->done = 1;
 	//bruh
 //	pthread_mutex_lock(philo->print);

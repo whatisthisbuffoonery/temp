@@ -6,7 +6,7 @@ LIBFT_DIR := ../../libft
 LIBFT := $(LIBFT_DIR)/libft.a
 LIBFT_NAME := ft
 
-SRC := main.c init_philo.c mutex.c print.c run.c
+SRC := main.c init_philo.c init_maint.c mutex.c print.c run.c
 
 OBJ := $(SRC:.c=.o)
 

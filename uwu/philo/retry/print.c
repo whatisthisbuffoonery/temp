@@ -55,10 +55,10 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 	static _Thread_local struct timeval	src;
 	static _Thread_local int			ms;
 
+	pthread_mutex_lock(philo->print);
 	gettimeofday(&display, NULL);
 	src = philo->last_meal;
 	ms = timeval_diff(display, delay->start);
-	pthread_mutex_lock(philo->print);
 	if (!((msg[0] != 'd' && timeval_diff(display, src) >= delay->starve)
 		|| delay->deathflag))
 	{
@@ -75,18 +75,18 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 
 //I will actually make up my mind on cmp funcs after making bad ones fmllll
 //move curr back to local
-int	check_starvation(t_philo *philos, t_args *delay)
+int	check_starvation(t_philo *philos, t_args *delay, int max)
 {
-	struct timeval	cmp;
-	struct timeval	curr;
-	int				diff_ms;
-	int				max_ms;
-	int				i;
+	static _Thread_local struct timeval	cmp;
+	static _Thread_local struct timeval	curr;
+	static _Thread_local int			diff_ms;
+	static _Thread_local int			max_ms;
+	static _Thread_local int			i;
 
 	i = 0;
 	max_ms = INT_MIN;
 	gettimeofday(&curr, NULL);
-	while (i < delay->headcount && !delay->deathflag)
+	while (i < max && !delay->deathflag)
 	{
 		cmp = philos[i].last_meal;
 		diff_ms = timeval_diff(curr, cmp);
@@ -102,42 +102,26 @@ int	check_starvation(t_philo *philos, t_args *delay)
 	return (delay->starve - max_ms);
 }
 
-int	check_done(t_philo *philos, t_args *delay)
+//each thread gets a different philo
+//there was a waiter mutex for starvation
+void	*monitor_philos(void *data)
 {
-	int	i;
+	static _Thread_local t_philo	*philos;
+	static _Thread_local t_args		*delay;
+	static _Thread_local int		max;
 
-	i = 0;
-	while (i < delay->headcount)
-	{
-		if (!philos[i].done)
-			return (0);
-		i ++;
-	}
-	return (1);
-}
-
-//still use print mutex for eating and this
-//philo will never set death flag
-void	monitor_philos(t_philo *philos, t_args *delay)
-{
-//	int	sleep_ms;
-
+	philos = (t_philo *) data;
+	delay = philos[0].delay;
+	max = philos[0].philoid + THREAD_LOAD;
+	if (max >= delay->headcount)
+		max = delay->headcount % THREAD_LOAD;
+	else
+		max = THREAD_LOAD;
+	while (!delay->startflag)
+		continue ;
 	while (delay->startflag >= 0
-	&& !delay->deathflag
-	&& !check_done(philos, delay))
-	{
-//		pthread_mutex_lock(philos[0].waiter);
-		check_starvation(philos, delay);
-//		pthread_mutex_unlock(philos[0].waiter);
-		if (!delay->startflag)
-			delay->startflag = 1;
-//		if (sleep_ms > 5 || sleep_ms <= 0)
-//			sleep_ms = 5;
-//		if (sleep_ms < 2)
-//			sleep_ms = 2;
-//		sleep_ms --;
-		//usleep(sleep_ms * 1000);//suggest saving min difference to sleep a different amount, max()
-		philo_table(delay);
-		usleep(1000);//suggest saving min difference to sleep a different amount, max()
-	}
+		&& !delay->deathflag
+		&& delay->done != delay->headcount)
+		check_starvation(philos, delay, max);
+	return (NULL);
 }
