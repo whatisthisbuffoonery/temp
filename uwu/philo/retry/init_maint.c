@@ -23,7 +23,7 @@ int	init_maint(t_maint *dst, t_args *delay, t_philo *philos)
 	int	k;
 
 	ft_memset(dst, 0, sizeof(t_maint));
-	dst->size = (delay->headcount / 10) + (delay->headcount % 10 != 0);
+	dst->size = (delay->headcount / THREAD_LOAD) + (delay->headcount % THREAD_LOAD != 0);
 	if (!malloc_cond((void **) &dst->threads, dst->size * sizeof(pthread_t))
 		|| pthread_create(&dst->tabler, NULL, philo_table, delay))
 	{
@@ -34,7 +34,7 @@ int	init_maint(t_maint *dst, t_args *delay, t_philo *philos)
 	i = 0;
 	while (i < dst->size)
 	{
-		k = i * 10;
+		k = i * THREAD_LOAD;
 		if (pthread_create(&dst->threads[i], NULL, monitor_philos, &philos[k]))
 		{
 			maint_cleanup(dst, i);

@@ -10,7 +10,7 @@
 
 # include "libft.h" //pls pls remove
 
-# define THREAD_LOAD 5
+# define THREAD_LOAD 1
 
 typedef struct s_args
 {
@@ -61,16 +61,17 @@ typedef struct s_mutex_box
 }					t_mutex_box;
 
 
-void			*run(void *src);
-int	init_philo(
+int				init_philo(
 		t_philo **philos,
 		pthread_t **threads,
 		t_args *delay,
 		t_mutex_box *mutexes);
+
 int				init_mutexes(t_mutex_box *dst, t_args *delay);
 struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg);
 int				start_timeval(t_args *delay, t_philo *philos);
 
+void			*run(void *src);
 void			*monitor_philos(void *data);
 void			*philo_table(void *data);
 

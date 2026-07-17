@@ -1,33 +1,5 @@
 #include "h_philo.h"
-/*
-void	philo_locks(t_philo *philo, t_args *delay, char *op)//phase out
-{
-	static _Thread_local int	c;
 
-	c = 0;
-	if (op[0] == 'l')
-		c = 1;
-	delay->forklist[philo->forkid[0]] = c;
-	if (philo->forkid[1] < delay->headcount)
-		delay->forklist[philo->forkid[1]] = c;
-	if (op[0] == 'l')
-	{
-		pthread_mutex_lock(&philo->forks[philo->forkid[0]]);//print grabbing fork
-		print_philo(philo, delay, "has taken a fork");
-		pthread_mutex_lock(&philo->forks[philo->forkid[1]]);
-		print_philo(philo, delay, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_unlock(&philo->forks[philo->forkid[0]]);
-		print_philo(philo, delay, "has let go of a fork");
-		pthread_mutex_unlock(&philo->forks[philo->forkid[1]]);
-		print_philo(philo, delay, "has let go of a fork");
-	}
-	if (c)
-		delay->table[philo->philoid] = c;//swap to odd/even rule and try
-}
-*/
 void	*philo_table(void *data)
 {
 	t_args	*delay;
@@ -100,7 +72,6 @@ void	philo_dine(t_philo *philo, t_args *delay)
 }
 
 //check starvation
-//		&& !delay->table[philo->philoid] //eh
 //wtf is hanging the program now
 int	call_waiter(t_philo *philo, t_args *delay)
 {
