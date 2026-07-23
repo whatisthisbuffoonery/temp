@@ -22,7 +22,7 @@ void	philo_sleep(int duration)
 	}
 	while (curr.tv_sec != end.tv_sec)
 		gettimeofday(&curr, NULL);
-	while (curr.tv_usec < end.tv_usec)
+	while (curr.tv_usec < end.tv_usec && curr.tv_sec == end.tv_sec)
 		gettimeofday(&curr, NULL);
 }
 
@@ -56,7 +56,7 @@ int	call_waiter(t_philo *philo, t_args *delay)
 	int	granted;
 
 	granted = 0;
-	pthread_mutex_lock(philo->waiter);
+//	pthread_mutex_lock(philo->waiter);
 	if (!delay->deathflag
 		&& delay->headcount >= 2
 		&& !delay->forklist[philo->forkid[0]]
@@ -68,7 +68,7 @@ int	call_waiter(t_philo *philo, t_args *delay)
 		delay->forklist[philo->forkid[1]] = 1;
 		granted = 1;
 	}
-	pthread_mutex_unlock(philo->waiter);
+//	pthread_mutex_unlock(philo->waiter);
 	return (granted && !delay->deathflag);
 }
 

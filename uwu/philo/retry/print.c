@@ -24,7 +24,8 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 	return (display);
 }
 */
-struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
+
+struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)//check for i exceeding buf size
 {
 	static _Thread_local char			buf[50];
 	static _Thread_local struct timeval	display;
@@ -44,7 +45,18 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 			buf[i++] = ' ';
 	}
 	ft_strlcpy(&buf[i], msg, 50 - i);// NEEDS THREAD LOCAL IMPLEMENTATION
-	write(1, buf, i + ft_strlen(msg));
+	i = ft_strlen(buf);
+	buf[i] = '\n';
+//	buf[i++] = '\0';
+//	pthread_mutex_lock(philo->print);
+//	printf("\nwhat is str: %d, %s\n", i, buf);
+//	pthread_mutex_unlock(philo->print);
+//	i += ft_strlen(msg);
+//	if (i > 48)
+//		i = 48;
+	if (!((msg[0] != 'd' && timeval_diff(display, src) >= delay->starve)
+		|| delay->deathflag))
+		write(1, buf, i + 1);
 	return (display);
 }
 
