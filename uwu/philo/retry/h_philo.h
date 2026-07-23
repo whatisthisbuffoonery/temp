@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   h_philo.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/23 18:59:28 by dthoo             #+#    #+#             */
+/*   Updated: 2026/07/23 18:59:58 by dthoo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef H_PHILO_H
 # define H_PHILO_H
 
@@ -8,7 +20,7 @@
 # include <limits.h>
 # include <stdatomic.h>
 
-# include "libft.h" //pls pls remove
+//# include "libft.h" //pls pls remove
 
 # define THREAD_LOAD 1
 
@@ -60,6 +72,7 @@ typedef struct s_mutex_box
 	pthread_mutex_t	*forks;
 }					t_mutex_box;
 
+typedef	_Atomic struct timeval t_atomic_tv;
 
 int				init_philo(
 		t_philo **philos,
@@ -81,6 +94,12 @@ void			maint_cleanup(t_maint *maint, int size);
 int				timeval_diff(struct timeval src1, struct timeval src2);
 int				timeval_diff_atomic(struct timeval src1, _Atomic struct timeval src2);
 
+int	ft_atoi(char *s);
+void	*ft_memset(void *dst, int c, size_t n);
+size_t	ft_strlcpy(char *dest, const char *src, size_t dsize);
+void	*malloc_cond(void **dst, size_t size);
+int	bufnum(char *dst, int src, int size);
+size_t	ft_strlen(char *s);
 //mutexes: merge printing and death bulb into one, one for waiter, 
 //make dedicated funcs for sleeping and checking for starvation
 

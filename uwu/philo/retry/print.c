@@ -1,5 +1,5 @@
 #include "h_philo.h"
-
+/*
 struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 {
 	static _Thread_local struct timeval	display;
@@ -23,8 +23,8 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 	pthread_mutex_unlock(philo->print);
 	return (display);
 }
-
-void	print_philo_two(t_philo *philo, t_args *delay, char *msg)
+*/
+struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 {
 	static _Thread_local char			buf[50];
 	static _Thread_local struct timeval	display;
@@ -45,6 +45,7 @@ void	print_philo_two(t_philo *philo, t_args *delay, char *msg)
 	}
 	ft_strlcpy(&buf[i], msg, 50 - i);// NEEDS THREAD LOCAL IMPLEMENTATION
 	write(1, buf, i + ft_strlen(msg));
+	return (display);
 }
 
 //I will actually make up my mind on cmp funcs after making bad ones fmllll

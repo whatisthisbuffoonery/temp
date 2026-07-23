@@ -6,17 +6,17 @@ LIBFT_DIR := ../../libft
 LIBFT := $(LIBFT_DIR)/libft.a
 LIBFT_NAME := ft
 
-SRC := main.c init_philo.c init_maint.c mutex.c print.c run.c timeval.c table.c
+SRC := main.c init_philo.c init_maint.c mutex.c print.c run.c table.c utils.c
 
 OBJ := $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(MAND_OBJ) $(LIBFT)
-	$(CC) $(CC_FLAGS) $(OBJ) $(MAND_OBJ) $(LIBFT) -latomic -I $(LIBFT_DIR)/includes -o $(NAME)
+$(NAME): $(OBJ) $(MAND_OBJ)
+	$(CC) $(CC_FLAGS) $(OBJ) $(MAND_OBJ) -latomic -o $(NAME)
 
 $(OBJ): %.o: %.c
-	$(CC) $(CC_FLAGS) -c $< -I $(LIBFT_DIR)/includes -o $@
+	$(CC) $(CC_FLAGS) -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR) all
