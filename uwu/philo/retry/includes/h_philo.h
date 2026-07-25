@@ -20,20 +20,21 @@
 # include <limits.h>
 # include <stdatomic.h>
 
-//# include "libft.h" //pls pls remove
-
 # define THREAD_LOAD 1
+# define BUFLEN 50
+
+typedef _Atomic struct timeval	t_atomic_tv;
 
 typedef struct s_args
 {
-	struct timeval	start;		//should it?
+	struct timeval	start;
 	struct s_philo	*philos;
 	_Atomic char	*forklist;
-	int	digest;		//should be ms
-	int	sleep;		//should be ms
-	int	starve;		//should be ms
-	_Atomic int		table;		//use a counter instead
-	_Atomic int		done;		//note this is a counter now
+	int				digest;
+	int				sleep;
+	int				starve;
+	_Atomic int		table;
+	_Atomic int		done;
 	_Atomic int		startflag;
 	_Atomic int		deathflag;
 	int				half;
@@ -45,16 +46,16 @@ typedef struct s_args
 
 typedef struct s_philo
 {
-	struct timeval			last_meal;
-	pthread_mutex_t			*waiter;
-	pthread_mutex_t			*print;
-	pthread_mutex_t			*forks;
-	t_args					*delay;
-	int						forkid[2];
-	int						philoid;//stored 0 indexed
-	int						rule;
-	_Atomic int				done;
-}							t_philo;
+	t_atomic_tv		last_meal;
+	pthread_mutex_t	*waiter;
+	pthread_mutex_t	*print;
+	pthread_mutex_t	*forks;
+	t_args			*delay;
+	int				forkid[2];
+	int				philoid;
+	int				rule;
+	_Atomic int		done;
+}					t_philo;
 
 typedef struct s_maint
 {
@@ -64,21 +65,18 @@ typedef struct s_maint
 	int			do_not_cleanup;
 }				t_maint;
 
-//I refuse to put the box in philo directly
 typedef struct s_mutex_box
 {
 	pthread_mutex_t	waiter;
-	pthread_mutex_t	print;//write function will check death flag and starvation
+	pthread_mutex_t	print;
 	pthread_mutex_t	*forks;
 }					t_mutex_box;
 
-typedef	_Atomic struct timeval t_atomic_tv;
-
 int				init_philo(
-		t_philo **philos,
-		pthread_t **threads,
-		t_args *delay,
-		t_mutex_box *mutexes);
+					t_philo **philos,
+					pthread_t **threads,
+					t_args *delay,
+					t_mutex_box *mutexes);
 
 int				init_mutexes(t_mutex_box *dst, t_args *delay);
 struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg);
@@ -92,15 +90,13 @@ int				init_maint(t_maint *dst, t_args *delay, t_philo *philos);
 void			maint_cleanup(t_maint *maint, int size);
 
 int				timeval_diff(struct timeval src1, struct timeval src2);
-int				timeval_diff_atomic(struct timeval src1, _Atomic struct timeval src2);
 
-int	ft_atoi(char *s);
-void	*ft_memset(void *dst, int c, size_t n);
-size_t	ft_strlcpy(char *dest, const char *src, size_t dsize);
-void	*malloc_cond(void **dst, size_t size);
-int	bufnum(char *dst, int src, int size);
-size_t	ft_strlen(char *s);
-//mutexes: merge printing and death bulb into one, one for waiter, 
-//make dedicated funcs for sleeping and checking for starvation
+void			think_too_hard(t_philo *philo, t_args *delay);
+
+int				ft_atoi(char *s);
+void			*ft_memset(void *dst, int c, size_t n);
+size_t			ft_strlcpy(char *dest, const char *src, size_t dsize);
+void			*malloc_cond(void **dst, size_t size);
+int				bufnum(char *dst, int src, int size);
 
 #endif

@@ -92,10 +92,7 @@ int	main(int c, char **v)
 		|| init_maint(&maint, &delay, philos))
 		delay.startflag = -1;
 	else
-	{
-		start_timeval(&delay, philos);
-		delay.startflag = 1;
-	}
+		delay.startflag = start_timeval(&delay, philos);
 	maint_cleanup(&maint, maint.size);
 	headcount_cleanup(philos, threads, &delay, &mutexes);
 }

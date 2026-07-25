@@ -85,13 +85,3 @@ int	bufnum(char *dst, int src, int size)
 	dst[i] = '\0';
 	return (i);
 }
-
-size_t	ft_strlen(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i ++;
-	return (i);
-}

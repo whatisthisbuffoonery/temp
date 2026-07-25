@@ -28,35 +28,29 @@ void	philo_sleep(int duration)
 
 void	philo_dine(t_philo *philo, t_args *delay)
 {
-	pthread_mutex_lock(&philo->forks[philo->forkid[0]]);//print grabbing fork
+	pthread_mutex_lock(&philo->forks[philo->forkid[0]]);
 	print_philo(philo, delay, "has taken a fork");
 	pthread_mutex_lock(&philo->forks[philo->forkid[1]]);
 	print_philo(philo, delay, "has taken a fork");
 	philo->last_meal = print_philo(philo, delay, "is eating");
-//	pthread_mutex_lock(philo->waiter);
 	delay->table += 1;
-//	pthread_mutex_unlock(philo->waiter);
 	philo_sleep(delay->digest);
 	pthread_mutex_unlock(&philo->forks[philo->forkid[0]]);
 	print_philo(philo, delay, "has let go of a fork");
 	pthread_mutex_unlock(&philo->forks[philo->forkid[1]]);
 	print_philo(philo, delay, "has let go of a fork");
-//	pthread_mutex_lock(philo->waiter);
 	delay->forklist[philo->forkid[0]] = 0;
 	delay->forklist[philo->forkid[1]] = 0;
-//	pthread_mutex_unlock(philo->waiter);
 	print_philo(philo, delay, "is sleeping");
-	philo_sleep(delay->sleep);//print sleeping
+	philo_sleep(delay->sleep);
 }
 
-//check starvation
-//wtf is hanging the program now
 int	call_waiter(t_philo *philo, t_args *delay)
 {
 	int	granted;
 
 	granted = 0;
-//	pthread_mutex_lock(philo->waiter);
+	pthread_mutex_lock(philo->waiter);
 	if (!delay->deathflag
 		&& delay->headcount >= 2
 		&& !delay->forklist[philo->forkid[0]]
@@ -68,8 +62,15 @@ int	call_waiter(t_philo *philo, t_args *delay)
 		delay->forklist[philo->forkid[1]] = 1;
 		granted = 1;
 	}
-//	pthread_mutex_unlock(philo->waiter);
+	pthread_mutex_unlock(philo->waiter);
 	return (granted && !delay->deathflag);
+}
+
+void	philo_done(t_philo *philo, t_args *delay)
+{
+	print_philo(philo, delay, "is done");
+	delay->done += 1;
+	philo->done = 1;
 }
 
 void	think_too_hard(t_philo *philo, t_args *delay)
@@ -78,18 +79,16 @@ void	think_too_hard(t_philo *philo, t_args *delay)
 	static _Thread_local int			lock;
 	static _Thread_local int			was_thinking;
 	static _Thread_local struct timeval	curr;
+	static _Thread_local struct timeval	meal;
 
 	i = 0;
 	was_thinking = 0;
 	while (!delay->deathflag && (!delay->diet_set || i < delay->diet))
 	{
 		gettimeofday(&curr, NULL);
-		if (timeval_diff_atomic(curr, philo->last_meal) < delay->starve)
-		{
-//			pthread_mutex_lock(philo->waiter);//move to waiter
-			lock = call_waiter(philo, delay);//print thinking if 0
-//			pthread_mutex_unlock(philo->waiter);
-		}
+		meal = philo->last_meal;
+		if (timeval_diff(curr, meal) < delay->starve)
+			lock = call_waiter(philo, delay);
 		if (!lock && !was_thinking)
 			print_philo(philo, delay, "is thinking");
 		was_thinking = 1;
@@ -97,40 +96,7 @@ void	think_too_hard(t_philo *philo, t_args *delay)
 			continue ;
 		philo_dine(philo, delay);
 		was_thinking = 0;
-	/*	usleep(delay->digest * 1000);//eating msg goes here
-		philo_locks(philo, delay, "unlock");
-		print_philo(philo, delay, "is sleeping");
-		usleep(delay->sleep * 1000);//print sleeping */
 		i += (lock && delay->diet_set);
 	}
-	delay->done += 1;
-	philo->done = 1;
-	//bruh
-//	pthread_mutex_lock(philo->print);
-//	ft_printf("exit: %d\n", philo->philoid + 1);
-//	pthread_mutex_unlock(philo->print);
-}
-
-
-//suggest making a func that accepts a mutex to wait on, or check death/starvation
-//for mutexes, lock > run if no death > unlock
-void	*run(void *src)
-{
-	static _Thread_local t_philo	*philo;
-	static _Thread_local t_args		*delay;
-
-	philo = (t_philo *) src;
-	delay = philo->delay;
-	philo->rule = philo->philoid % 2;
-	if (philo->philoid == delay->headcount - 1 && delay->headcount % 2)
-		philo->rule = 2;
-	philo->forkid[0] = philo->philoid;
-	philo->forkid[1] = philo->philoid + 1;
-	if (philo->forkid[1] >= delay->headcount)
-		philo->forkid[1] = 0;
-	while (!delay->startflag)
-		continue ;
-	if (delay->startflag > 0)
-		think_too_hard(philo, philo->delay);
-	return (NULL);
+	philo_done(philo, delay);
 }
