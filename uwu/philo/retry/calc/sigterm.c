@@ -8,7 +8,15 @@ int	main(void)
 
 	int b = fork();
 	a[0] = 'q';
+	if (!b)
+	{
+		a[0] = 'o';
+		usleep(8000000);
+	}
 	if (b)
+	{
+		usleep(4000000);
 		kill(b, SIGTERM);
-	free(a);
+		free(a);
+	}
 }
