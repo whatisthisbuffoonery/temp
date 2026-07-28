@@ -13,11 +13,10 @@
 
 typedef struct s_sembox
 {
-	sem_t	*start;//really should just use waiter
-	sem_t	*forks;
-	sem_t	*print;
-	sem_t	*waiter;
-	sem_t	*bulb;
+	sem_t	*forks;//global
+	sem_t	*print;//global
+	sem_t	*waiter;//global
+	sem_t	*death;
 }			t_sembox;
 
 typedef struct s_args
@@ -33,7 +32,6 @@ typedef struct s_args
 	int				headcount;
 	int				diet;
 	int				diet_set;
-	_Atomic int		rule;
 }					t_args;
 
 #endif

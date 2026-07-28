@@ -35,6 +35,7 @@ void	*monitor_philos(void *data)
 	static _Thread_local t_philo	*philos;
 	static _Thread_local t_args		*delay;
 	static _Thread_local int		max;
+	static _Thread_local int		diff;
 
 	philos = (t_philo *) data;
 	delay = philos[0].delay;
@@ -48,7 +49,11 @@ void	*monitor_philos(void *data)
 	while (delay->startflag >= 0
 		&& !delay->deathflag
 		&& delay->done != delay->headcount)
-		check_starvation(philos, delay, max);
+	{
+		diff = check_starvation(philos, delay, max);
+		if (diff > SLEEP_THRESHOLD)
+			usleep((diff - SLEEP_THRESHOLD) * 1000);
+	}
 	return (NULL);
 }
 

@@ -22,6 +22,7 @@
 
 # define THREAD_LOAD 1
 # define BUFLEN 50
+# define SLEEP_THRESHOLD 40
 
 typedef _Atomic struct timeval	t_atomic_tv;
 

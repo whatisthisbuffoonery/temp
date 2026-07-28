@@ -26,6 +26,7 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 }
 */
 
+//mutex stays locked on death
 int	check_death(t_philo *philo, t_args *delay, char *msg)
 {
 	pthread_mutex_lock(philo->print);
@@ -35,7 +36,10 @@ int	check_death(t_philo *philo, t_args *delay, char *msg)
 		return (1);
 	}
 	else if (msg[0] == 'd')
+	{
 		delay->deathflag = 1;
+		return (0);
+	}
 	pthread_mutex_unlock(philo->print);
 	return (0);
 }
@@ -76,6 +80,8 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 		return (display);
 	else if (!(msg[0] != 'd' && timeval_diff(display, src) >= delay->starve))
 		write(1, buf, i + 1);
+	if (msg[0] == 'd')
+		pthread_mutex_unlock(philo->print);
 	return (display);
 }
 
