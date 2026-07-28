@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/28 18:43:48 by dthoo             #+#    #+#             */
-/*   Updated: 2026/07/28 18:43:48 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/07/28 22:40:19 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,19 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 //mutex stays locked on death
 int	check_death(t_philo *philo, t_args *delay, char *msg)
 {
-	pthread_mutex_lock(philo->print);
+	sem_wait(delay->box->print);
 	if (delay->deathflag)
 	{
-		pthread_mutex_unlock(philo->print);
+		sem_post(delay->box->print);
 		return (1);
 	}
 	else if (msg[0] == 'd')
 	{
 		delay->deathflag = 1;
+		sem_post(delay->box->death);
 		return (0);
 	}
-	pthread_mutex_unlock(philo->print);
+	sem_post(delay->box->print);
 	return (0);
 }
 
@@ -93,7 +94,7 @@ struct timeval	print_philo(t_philo *philo, t_args *delay, char *msg)
 	else if (!(msg[0] != 'd' && timeval_diff(display, src) >= delay->starve))
 		write(1, buf, i + 1);
 	if (msg[0] == 'd')
-		pthread_mutex_unlock(philo->print);
+		sem_post(delay->box->print);
 	return (display);
 }
 
