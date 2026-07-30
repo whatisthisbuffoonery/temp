@@ -40,9 +40,24 @@ int	init_delay(t_args *delay, int c, char **v)
 	return (0);
 }
 
-int	init_sem(t_sem_box *dst)
+void	philo_init(t_philo *philo, t_args *delay, t_sem_box *box)
 {
-	dst->waiter = sem_open("/waiter", O_CREAT, 0777, 0);
+	int	i;
+	int	pid;
+
+	i = 0;
+	while (i < delay->headcount)
+	{
+		pid = fork();
+		if (pid < 0)
+			//bruh sequence
+		else if (!pid)
+		{
+			//bweh sequence
+		}
+		i ++;
+	}
+}
 
 int	main(int c, char **v)
 {
@@ -57,9 +72,4 @@ int	main(int c, char **v)
 		return (1);
 	philo_init(&philo, &delay, &box);
 	philo_cleanup(box);
-}
-
-void	run(t_philo *philo, t_args *delay)
-{
-	//pthread_create after fork, which might fail
 }

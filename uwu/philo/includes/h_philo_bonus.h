@@ -11,6 +11,11 @@
 # include <limits.h>
 # include <stdatomic.h>
 
+# define WAITER "/waiter"
+# define PRINT "/print"
+# define FORKS "/forks"
+# define DEATH "/death"
+
 typedef struct s_sembox
 {
 	sem_t	*forks;//global
