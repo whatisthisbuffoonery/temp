@@ -40,11 +40,15 @@ int	init_delay(t_args *delay, int c, char **v)
 	return (0);
 }
 
-void	philo_init(t_philo *philo, t_args *delay, t_sem_box *box)
+//pid array bruh
+//how tf do we agree on start timestamp
+void	philo_init(t_philo *philo, t_args *delay, t_sem_box *box, pid_t **arr)
 {
 	int	i;
 	int	pid;
 
+	if (!malloc_cond((void **) arr, delay->headcount * sizeof(pid_t)))
+		//bruh sequence
 	i = 0;
 	while (i < delay->headcount)
 	{
@@ -53,8 +57,13 @@ void	philo_init(t_philo *philo, t_args *delay, t_sem_box *box)
 			//bruh sequence
 		else if (!pid)
 		{
-			//bweh sequence
+			philo->philoid = i;
+			free(*arr);
+			philo_init(philo, delay, box);//diff name la
+			exit(0);//...?
 		}
+		else
+			(*arr)[i] = pid;
 		i ++;
 	}
 }
@@ -67,9 +76,10 @@ int	main(int c, char **v)
 	t_philo		philo;//doesnt contain delay this time//just one
 	t_args		delay;
 	t_sem_box	box;
+	pid_t		*arr;
 
 	if (init_delay(&delay, c, v) || init_sem(&box))
 		return (1);
-	philo_init(&philo, &delay, &box);
+	philo_init(&philo, &delay, &box, &arr);
 	philo_cleanup(box);
 }

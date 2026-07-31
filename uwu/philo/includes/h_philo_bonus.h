@@ -27,7 +27,6 @@ typedef struct s_sembox
 typedef struct s_args
 {
 	struct timeval	start;
-	struct s_philo	*philos;
 	int				digest;
 	int				sleep;
 	int				starve;
