@@ -15,6 +15,7 @@
 # define PRINT "/print"
 # define FORKS "/forks"
 # define DEATH "/death"
+# define START "/start"
 
 typedef struct s_sembox
 {
@@ -22,6 +23,7 @@ typedef struct s_sembox
 	sem_t	*print;//global
 	sem_t	*waiter;//global
 	sem_t	*death;
+	sem_t	*start;
 }			t_sembox;
 
 typedef struct s_args
