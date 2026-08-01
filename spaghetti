@@ -1,0 +1,46 @@
+my teamwork with ai ni?
+
+I had finished my lexer when I found her as a teammate, and I initially
+tasked her with making the parser.
+
+I finished my part and realised: I would need to see the parser to really
+continue without guessing details
+>>> like, where exactly do I have tokens, or, strings instead of the tokens
+	is there a new struct involved
+	is there any new contextual data being passed around?
+	did she find a new behaviour (i.e. >a)
+
+So, I went about making my own parser; it is much easier to describe my
+thoughts on the task if I have my own examples.
+
+That... went not so well. It turns out this is the first coding group
+project for the both of us. We went our separate ways with the
+parser.
+
+In hindsight, despite our different approaches, the only problem I had was
+that she converted the tokens back to strings too early.
+
+At some point, I had gotten stuck dealing with brackets, as they are meant
+to give some operations priority like in math statements. What prompted me
+to go back and clear up the disagreements was that she had solved this
+problem in her implementation. That's great, I'd use her parser. But my own
+concerns were still there. So, I sat down with her again.
+
+Two details were not clear on her end, and that is my fault.
+One, she thought the system would resolve globs (asterisks) for us. Yes, there is a standard lib function for it, but using it was outside the project description.
+The other, how env substitution and quotes work. Messy, messy details such
+as how it interacts with globstars, and how bash splits a quotes and envs
+into a different number of strings by itself; can be more, can be less, can be the same number but the propertions are shifted around.
+
+I am an introvert, I naturally gravitate towards doing things myself. I
+learned here I should focus on teamwork, on making sure the goals and
+concerns are defined well.
+
+After that, I worked on adjusting her parser to suit me, while she took a
+break overseas. When she came back, I showed her the idea of how the
+tokens would be converted to strings: we had to handle globs and envs
+simultanteosly. I had tested and recorded the desirable behaviour this
+time, so we did not clash again.
+
+afterwards we had to do a few builtin commands, we casually claimed what
+we felt like doing.

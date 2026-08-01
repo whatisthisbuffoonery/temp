@@ -6,7 +6,7 @@
 /*   By: dthoo <dthoo@student.42singapore.sg>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/14 07:48:23 by dthoo             #+#    #+#             */
-/*   Updated: 2026/06/18 22:03:02 by dthoo            ###   ########.fr       */
+/*   Updated: 2026/08/01 13:00:32 by dthoo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	env_init(t_env *dst, char **e)
 	ft_memset(dst, 0, sizeof(t_env));
 	if (!e || !*e)
 	{
-		ft_putstr_fd("minishell: null envp at init\n", 2);
+		ft_putstr_fd("minishell: warning: null envp at init\n", 2);
 		return ;
 	}
 	while (e[i])
