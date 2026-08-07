@@ -34,7 +34,6 @@ typedef struct s_args
 	int				starve;
 	_Atomic int		done;
 	_Atomic int		deathflag;
-	int				half;
 	int				headcount;
 	int				diet;
 	int				diet_set;

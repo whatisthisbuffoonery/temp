@@ -43,3 +43,15 @@ int	init_sem(t_sem_box *dst, t_args *delay)
 	}
 	return (0);
 }
+
+void	sem_lightbulb(sem_t	*sem, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		sem_post(sem);
+		i ++;
+	}
+}
