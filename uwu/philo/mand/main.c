@@ -77,6 +77,28 @@ void	headcount_cleanup(
 	free(delay->forklist);
 }
 
+int	macro_check(void)
+{
+	int	ret;
+
+	ret = 0;
+	if (THREAD_LOAD <= 0 || THREAD_LOAD > INT_MAX)
+	{
+		ret ++;
+		write(2,
+			"THREAD_LOCAL needs to be a positive integer greater than zero\n",
+			62);
+	}
+	if (SLEEP_THRESHOLD < 0 || SLEEP_THRESHOLD > INT_MAX)
+	{
+		ret ++;
+		write(2,
+			"SLEEP_THRESHOLD cannot be a negative or overflowing integer\n",
+			60);
+	}
+	return (0);
+}
+
 //delay has like 5 timevals
 //start can be 1, 0, -1
 //being stuck with blocking mutex lock means:
@@ -94,7 +116,7 @@ int	main(int c, char **v)
 	threads = NULL;
 	philos = NULL;
 	delay.startflag = 0;
-	if (arg_check(&delay, c, v)
+	if (macro_check() || arg_check(&delay, c, v)
 		|| init_mutexes(&mutexes, &delay))
 	{
 		free(delay.forklist);
