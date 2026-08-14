@@ -96,7 +96,7 @@ int	macro_check(void)
 			"SLEEP_THRESHOLD cannot be a negative or overflowing integer\n",
 			60);
 	}
-	return (0);
+	return (ret);
 }
 
 //delay has like 5 timevals
