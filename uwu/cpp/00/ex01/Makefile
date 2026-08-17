@@ -4,7 +4,7 @@ INCLUDES := -I./
 
 NAME := thing
 
-SRC := Contact.cpp PhoneBook.cpp
+SRC := Contact.cpp PhoneBook.cpp main.cpp
 OBJ := $(SRC:.cpp=.o)
 
 all: $(NAME)

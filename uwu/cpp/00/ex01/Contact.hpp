@@ -20,6 +20,6 @@ private:
 	std::string DarkestSecret;
 };
 
-int	string_init(std::string& dst);
+int	string_init(std::string& dst, const std::string& prompt);
 
 #endif

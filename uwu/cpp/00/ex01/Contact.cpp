@@ -26,13 +26,13 @@ Contact&	Contact::operator=(const Contact& src)
 Contact::~Contact(void) {}
 
 //no number enforcement on phone number
-int	init(void)
+int	Contact::init(void)
 {
-	if (string_init(FirstName)
-		|| string_init(LastName)
-		|| string_init(Nickname)
-		|| string_init(PhoneNumber)
-		|| string_init(DarkestSecret))
-		return (1);
-	return (0);
+	if (!string_init(FirstName, "first name")
+		|| !string_init(LastName, "last name")
+		|| !string_init(Nickname, "nickname")
+		|| !string_init(PhoneNumber, "phone number")
+		|| !string_init(DarkestSecret, "darkest secret"))
+		return (0);
+	return (1);
 }

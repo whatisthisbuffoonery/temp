@@ -12,8 +12,8 @@ public:
 	~PhoneBook(void);
 
 	//these funcs exit eof is encountered
-	void	add(void);
-	void	search(void);
+	int	add(void);
+	int	search(void);
 private:
 	int		size;
 	Contact arr[8];
