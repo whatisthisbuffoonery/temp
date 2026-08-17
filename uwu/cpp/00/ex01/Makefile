@@ -2,9 +2,9 @@ CPP := c++
 CPP_FLAG := -Wall -Wextra -Werror -std=c++98
 INCLUDES := -I./
 
-NAME := int
+NAME := thing
 
-SRC := int.cpp main.cpp
+SRC := Contact.cpp PhoneBook.cpp
 OBJ := $(SRC:.cpp=.o)
 
 all: $(NAME)
@@ -12,7 +12,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CPP) $(CPP_FLAG) $(OBJ) $(INCLUDES) -o $(NAME)
 
-$(OBJ): %.o: %.cpp int.hpp
+$(OBJ): %.o: %.cpp
 	$(CPP) $(CPP_FLAG) -c $< $(INCLUDES) -o $@
 
 clean:

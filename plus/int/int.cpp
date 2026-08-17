@@ -14,9 +14,11 @@ muh_int::muh_int(int src)
 }
 */
 
-muh_int::muh_int(void) : n(0) {std::cout << "no arg" << std::endl;}
+muh_int::muh_int(void) : n(0) {std::cout << "default constructor" << std::endl;}
 
-muh_int::muh_int(int src) : n(src) {std::cout << "one arg" << std::endl;}
+muh_int::muh_int(int src) : n(src) {std::cout << "int constructor" << std::endl;}
+
+
 
 //can see its own object
 void	muh_int::print_muh_int(void)
@@ -28,6 +30,8 @@ int	muh_int::operator() (void) const
 {
 	return (n);
 }
+
+muh_int::muh_int(const muh_int &src) : n(src()) {std::cout << "copy constructor" << std::endl;}
 
 //belongs to a in a + b
 /*
@@ -52,12 +56,36 @@ muh_int	operator+(const muh_int &a, int b)
 	return (muh_int(a() + b));
 }
 
-void	muh_int::operator=(muh_int b)
+muh_int	operator+(int a, const muh_int &b)
+{
+	std::cout << "adding " << a << " to " << b() << std::endl;
+	return (muh_int(a + b()));
+}
+
+//this is a ptr, &b is a ptr to the param object
+muh_int	&muh_int::operator=(const muh_int &b)
+{
+	std::cout << "copy assignment" << std::endl;
+	if (this != &b)
+		std::cout << "free attempt" << std::endl;
+	n = b();
+	return (*this);
+}
+
+muh_int	&muh_int::operator=(int b)
+{
+	std::cout << "copying an int" << std::endl;
+	n = b;
+	return (*this);
+}
+
+/*
+void	muh_int::operator=(const muh_int &b)
 {
 	n = b();
 	std::cout << "operator= called" << std::endl;
 }
-
+*/
 muh_int::~muh_int(void)
 {
 	std::cout << "me go away now: " << n << std::endl;
