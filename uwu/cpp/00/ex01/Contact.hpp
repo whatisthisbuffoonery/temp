@@ -2,6 +2,9 @@
 # define CONTACT_HPP
 
 # include <string>
+# include <iostream>
+# include <sstream>
+# include <iomanip>
 
 class Contact
 {
@@ -11,7 +14,9 @@ public:
 	Contact& operator=(const Contact& src);
 	~Contact(void);
 
-	int	init(void);
+	int		init(void);
+	void	display_contact_table(std::ostringstream& oss, char *str, int width, int line);
+	void	display_contact_full(void);
 private:
 	std::string FirstName;
 	std::string LastName;
@@ -19,7 +24,5 @@ private:
 	std::string PhoneNumber;
 	std::string DarkestSecret;
 };
-
-int	string_init(std::string& dst, const std::string& prompt);
 
 #endif

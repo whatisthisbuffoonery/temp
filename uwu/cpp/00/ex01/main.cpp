@@ -1,27 +1,12 @@
 #include "PhoneBook.hpp"
 
-int	string_init(std::string& dst, const std::string& prompt)
-{
-	std::cout << "input " << prompt << std::endl;
-	while (1)
-	{
-		if (!std::getline(std::cin, dst))
-		{
-			std::cout << "std::cin is deceased now, bailing!!!" << std::endl;
-		/*	std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');*/
-			return (0);
-		}
-		else if (dst.size() > 0)
-			break ;
-	}
-	return (1);
-}
-
-bool	getcmd(std::string& dst)
+int	getcmd(std::string& dst, int& flag)
 {
 	std::cout << "input command: " << std::endl;
-	return ((bool)std::getline(std::cin, dst));
+	flag = (bool) (std::getline(std::cin, dst));
+	if (!flag)
+		phonebook_eof();
+	return (flag);
 }
 
 int	main(void)
@@ -30,7 +15,8 @@ int	main(void)
 	std::string	cmd;
 	int			flag = 1;
 
-	while (flag && getcmd(cmd))
+	std::cout << "I am a phonebook" << std::endl;
+	while (flag && getcmd(cmd, flag))
 	{
 		if (cmd == "ADD")
 			flag = book.add();

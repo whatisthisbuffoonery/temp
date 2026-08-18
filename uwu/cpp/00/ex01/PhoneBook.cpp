@@ -1,8 +1,4 @@
 #include "PhoneBook.hpp"
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <limits>
 
 /*std::copy tries to use your copy assignment if available*/
 
@@ -38,56 +34,60 @@ int	PhoneBook::add(void)
 			for (int i = 1; i < 8; i ++)
 				arr[i - 1] = arr[i];
 			arr[7] = newest;
+			std::cout << "note: oldest contact replaced by new entry" << std::endl;
 		}
 		else
 		{
 			arr[size] = newest;
 			size += 1;
 		}
+		std::cout << std::endl;
 		return (1);
 	}
 	return (0);
 }
 
-int	PhoneBook::search(void)
+void	PhoneBook::display_phonebook_contents(void)
 {
-	int					line = 0;
-	int					len;
 	int					width = 10;
+	int					line = 0;
 	char				str[11];
 	std::ostringstream	oss;
 
-	if (size < 1)
-	{
-		std::cout << "no contacts stored, returning to main menu" << std::endl;
-		return (1);
-	}
-	std::cout << "     index" << "|" << "first name" << "|" << " last name" << "|" << "  nickname" << std::endl;
 	str[10] = '\0';
+	std::cout << "     index" << "|" << "first name" << "|" << " last name" << "|" << "  nickname" << std::endl;
 	while (line < size)
 	{
-		oss << std::right << std::setw(width) << std::setfill(' ') << line + 1 << "|";
-		oss << std::right << std::setw(width) << std::setfill(' ') << phonebook_format(str, arr[line].FirstName) << "|";
-		oss << std::right << std::setw(width) << std::setfill(' ') << phonebook_format(str, arr[line].LastName) << "|";
-		oss << std::right << std::setw(width) << std::setfill(' ') << phonebook_format(str, arr[line].Nickname) << "\n";
+		arr[line].display_contact_table(oss, str, width, line);
 		line ++;
 	}
-	cout << oss.string() << "Enter entry index:" std::endl;
-	while (!std::cin >> line)
+	std::cout << oss.str() << std::endl;
+}
+
+int	PhoneBook::search(void)
+{
+	int	line = 0;
+
+	if (size < 1)
+	{
+		std::cout << "no contacts currently stored, returning to main menu" << std::endl;
+		return (1);
+	}
+	this->display_phonebook_contents();
+	std::cout << "Enter entry index, or type 0 to go back:" << std::endl;
+	while (!(bool)(std::cin >> line))
 	{
 		if (std::cin.eof())
-		{
-			std::cout << "std::cin deceased, bailing now!!!" << std::endl;
-			return (0);
-		}
-		if (std::cin.rdbuf->in_avail() > 0)
-			std::cout << "invalid input, try again\n" << "Enter entry index:" << std::endl;
+			return ((phonebook_eof()), 0);
+		std::cout << "not an integer, try again:" << std::endl;
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
-	if (line < 0 || line > size)
-		std::cout << "invalid index, returning to main menu" << std::endl;
-	else
-		//huh;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	if (line > 0 && line <= size)
+		return ((arr[line - 1].display_contact_full()), 1);
+	else if (line != 0)
+		std::cout << "invalid index, ";
+	std::cout << "returning to main menu" << std::endl;
 	return (1);
 }

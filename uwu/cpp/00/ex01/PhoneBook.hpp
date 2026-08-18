@@ -1,6 +1,7 @@
 #ifndef PHONEBOOK_HPP
 # define PHONEBOOK_HPP
 
+# include <limits>
 # include "Contact.hpp"
 
 class PhoneBook
@@ -11,12 +12,15 @@ public:
 	PhoneBook& operator=(const PhoneBook& src);
 	~PhoneBook(void);
 
-	//these funcs exit eof is encountered
-	int	add(void);
-	int	search(void);
+	int		add(void);
+	int		search(void);
 private:
 	int		size;
 	Contact arr[8];
+	void	display_phonebook_contents(void);
+	void	print_index(int line);
 };
+
+void	phonebook_eof(void);
 
 #endif
