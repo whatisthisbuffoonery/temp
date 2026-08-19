@@ -6,7 +6,11 @@ int	main(int c, char **v)
 	int	i;
 	int	k;
 
-	(void) c;
+	if (c < 2)
+	{
+		std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *" << std::endl;
+		return (0);
+	}
 	k = 1;
 	while (v[k])
 	{
@@ -16,20 +20,7 @@ int	main(int c, char **v)
 			v[k][i] = std::toupper(v[k][i]);
 			i ++;
 		}
-		k ++;
+		std::cout << v[k++];
 	}
-	if (k == 1)
-		std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *" << std::endl;
-	else
-	{
-		k = 1;
-		while (v[k])
-		{
-			std::cout << v[k];
-			if (v[k + 1])
-				std::cout << " ";
-			k ++;
-		}
-		std::cout << std::endl;
-	}
+	std::cout << std::endl;
 }
