@@ -10,7 +10,6 @@ int	Account::_totalNbWithdrawals = 0;
 /*constructor/destructor*/
 
 //this one is private
-//print?
 Account::Account(void) : _accountIndex(_nbAccounts), _amount(0), _nbDeposits(0), _nbWithdrawals(0)
 {
 	_nbAccounts += 1;

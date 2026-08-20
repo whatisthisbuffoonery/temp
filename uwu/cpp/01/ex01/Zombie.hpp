@@ -8,7 +8,7 @@ class Zombie
 public:
 	Zombie(void);
 	Zombie(const Zombie& src);
-	Zombie	operator=(const Zombie& src);//stack ig
+	Zombie&	operator=(const Zombie& src);//stack ig
 	~Zombie(void);
 	Zombie(const std::string& name);
 
@@ -19,5 +19,7 @@ private:
 
 Zombie	*newZombie(std::string name);//no ref?
 void	randomChump(std::string name);//cant reach the new zombie
+
+Zombie	*zombieHorde(int N, std::string name);
 
 #endif
