@@ -1,4 +1,3 @@
-
 #ifndef HUMANB_HPP
 # define HUMANB_HPP
 
@@ -20,8 +19,8 @@ public:
 	const Weapon&		getWeapon(void) const;
 	void				setWeapon(const Weapon& src);
 private:
-	std::string	name;
-	Weapon		*stick;
+	std::string			name;
+	const Weapon		*stick;
 };
 
 #endif

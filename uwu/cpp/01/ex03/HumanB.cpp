@@ -11,7 +11,7 @@ HumanB&	HumanB::operator=(const HumanB& src)
 	if (this != &src)
 	{
 		name = src.getName();
-		stick.setType(src.getWeapon().getType());
+		setWeapon(src.getWeapon());
 	}
 	return (*this);
 }
@@ -19,12 +19,17 @@ HumanB&	HumanB::operator=(const HumanB& src)
 HumanB::~HumanB(void) {}
 
 /*custom*/
-HumanB::HumanB(const std::string& srcname) : name(srcname) {}
+HumanB::HumanB(const std::string& srcname) : name(srcname), stick(NULL) {}
 
 /*methods*/
 void	HumanB::attack(void)
 {
-	std::cout << name << " attacks with their " << stick.getType() << std::endl;
+	std::cout << name << " attacks with their ";
+	if (stick)
+		std::cout << stick->getType();
+	else
+		std::cout << "bare hands";
+	std::cout << std::endl;
 }
 
 const std::string&	HumanB::getName(void) const
@@ -34,10 +39,10 @@ const std::string&	HumanB::getName(void) const
 
 const Weapon&	HumanB::getWeapon(void) const
 {
-	return (stick);
+	return (*stick);
 }
 
 void	HumanB::setWeapon(const Weapon& src)
 {
-	stick = src;
+	stick = &src;
 }

@@ -3,7 +3,6 @@
 
 # include "Weapon.hpp"
 
-//will always be armed.... default?
 class HumanA
 {
 public:
@@ -20,9 +19,9 @@ public:
 	const Weapon&		getWeapon(void) const;
 	void				setWeapon(const Weapon& src);
 private:
-	std::string	name;
-	Weapon		spare;
-	Weapon		*stick;
+	std::string			name;
+	Weapon				spare;
+	const Weapon		*stick;
 };
 
 #endif
