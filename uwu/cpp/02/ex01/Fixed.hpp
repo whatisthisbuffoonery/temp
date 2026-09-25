@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <cstring>
+# include <climits>
 
 class Fixed
 {
@@ -25,7 +26,8 @@ public:
 	float	toFloat(void) const;
 	int		toInt(void) const;
 
-	float	operator<<(void) const;
 };
+
+std::ostream& operator<<(std::ostream& out, const Fixed& src);
 
 #endif
