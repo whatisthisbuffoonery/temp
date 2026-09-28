@@ -20,8 +20,8 @@ public:
 
 	~Fixed(void);
 
-	int		getRawBits(void) const;//promises not to modify class obj remember
-	void	setRawBits(int const raw);
+	unsigned int	getRawBits(void) const;//promises not to modify class obj remember
+	void			setRawBits(unsigned int const raw);
 
 	float	toFloat(void) const;
 	int		toInt(void) const;

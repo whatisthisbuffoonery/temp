@@ -2,6 +2,8 @@
 
 const int	Fixed::frac = 8;
 
+const int	size_bits = sizeof(unsigned int) * CHAR_BIT;
+
 Fixed::Fixed(void) : value(0) {std::cout << "Default constructor called" << std::endl;}
 Fixed::Fixed(const Fixed& src) : value(src.getRawBits()) {std::cout << "Copy constructor called" << std::endl;}
 Fixed&	Fixed::operator=(const Fixed& src)
@@ -18,15 +20,14 @@ Fixed::Fixed(const int src)
 	unsigned int	u = (unsigned int) src;
 	if (sign)
 		u = 0u - u;
-	value = (sign << ((sizeof(unsigned int) * CHAR_BIT) - 1)) | ((u & (UINT_MAX >> (frac + 1))) << frac);
+	value = (sign << (size_bits - 1)) | ((u & (UINT_MAX >> (frac + 1))) << frac);
 	std::cout << "Int constructor called" << std::endl;
 }
 
 static int	find_shift(int *shift, int exp, int local_exp, int frac)
 {
 	*shift = exp + (-127) + local_exp + frac;
-	int	tol_U = (sizeof(unsigned int) * CHAR_BIT);
-	return (0 <= *shift && *shift < tol_U - 1);//-8 < n < 2^(32 - 8) //thats the sign bit aaaaa
+	return (0 <= *shift && *shift < size_bits - 1);//-8 < n < 2^(32 - 8) //thats the sign bit aaaaa
 }
 
 Fixed::Fixed(const float src)
@@ -39,7 +40,7 @@ Fixed::Fixed(const float src)
 	}
 	unsigned int	sign = (src < 0);
 	unsigned int	u;
-	int				man_bits = (sizeof(unsigned int) * CHAR_BIT) - (8 + 1);
+	int				man_bits = size_bits - (8 + 1);
 	unsigned int	curr_bit = 1;
 
 	std::memcpy(&u, &src, sizeof(unsigned int));
@@ -59,18 +60,19 @@ Fixed::Fixed(const float src)
 		i ++;
 		curr_bit *= 2;
 	}
-	t |= (sign << ((sizeof(unsigned int) * CHAR_BIT) - 1));
+	t |= (sign << (size_bits - 1));
 	value = t + round_up;
 }
 
 Fixed::~Fixed(void) {std::cout << "Destructor called" << std::endl;}
 
-int	Fixed::getRawBits(void) const
+unsigned int	Fixed::getRawBits(void) const
 {
 	std::cout << "getRawBits member function called" << std::endl;
 	return (value);
 }
-void	Fixed::setRawBits(int const raw)
+
+void	Fixed::setRawBits(unsigned int const raw)
 {
 	std::cout << "setRawBits member function called" << std::endl;
 	value = raw;
@@ -78,7 +80,6 @@ void	Fixed::setRawBits(int const raw)
 
 float	Fixed::toFloat(void) const
 {
-	int				size_bits = sizeof(unsigned int) * CHAR_BIT;
 	int				i = 1 + 1;
 
 	int				sign = (value > INT_MAX);
@@ -132,20 +133,19 @@ Fixed	operator+(const Fixed& a, const Fixed& b)
 {
 	int				carry = 0;
 	int				i = 0;
-	int				size_bits = (sizeof(unsigned int) * CHAR_BIT);
 	unsigned int	bits = 0;
 	unsigned int	bits_a = a.getRawBits();
 	unsigned int	bits_b = b.getRawBits();
 	int				sum;
 
-	if ((bits_a & (1u << (size_bits - 1))) != (bits_b & (1u << (size_bits - 1))))
+	if ((bits_a >> (size_bits - 1)) != (bits_b >> (size_bits - 1)))
 	{
 		Fixed	temp = -b;
 		return (a - temp);//I would otherwise have 4 of plus and minus each
 	}
 	while (i < size_bits - 1)//sign bit
 	{
-		sum = ((bits_a >> i) & 1u) + ((bits_b >> i) & 1u) + carry;
+		sum = (bits_a >> i) + (bits_b >> i) + carry;
 		if (sum & 1u)//no more modulo
 			bits |= 1 << i;
 		carry = (sum >= 2);
@@ -155,4 +155,80 @@ Fixed	operator+(const Fixed& a, const Fixed& b)
 	Fixed	ret;
 	ret.setRawBits(bits);
 	return (ret);
+}
+
+int	operator==(const Fixed& a, const Fixed& b) {return (a.getRawBits() == b.getRawBits());}
+
+int	operator!=(const Fixed& a, const Fixed& b) {return (a.getRawBits() != b.getRawBits());}
+
+int	operator>(const Fixed& a, const Fixed& b)
+{
+	int	sign_a;
+	int	sign_b;
+	unsigned int	bits_a;
+	unsigned int	bits_b;
+
+	bits_a = a.getRawBits();
+	bits_b = b.getRawBits();
+	if (bits_a == bits_b)//-ve 0 and +ve 0 are slightly different
+		return (0);
+	sign_a = (bits_a > INT_MAX);
+	sign_b = (bits_b > INT_MAX);
+	if (sign_a != sign_b)
+		return (sign_a < sign_b);
+	return (bits_a > bits_b);
+}
+
+int	operator<(const Fixed& a, const Fixed& b)
+{
+	int	sign_a;
+	int	sign_b;
+	unsigned int	bits_a;
+	unsigned int	bits_b;
+
+	bits_a = a.getRawBits();
+	bits_b = b.getRawBits();
+	if (bits_a == bits_b)
+		return (0);
+	sign_a = (bits_a > INT_MAX);
+	sign_b = (bits_b > INT_MAX);
+	if (sign_a != sign_b)
+		return (sign_a > sign_b);
+	return (bits_a < bits_b);
+}
+
+int	operator>=(const Fixed& a, const Fixed& b)
+{
+	int	sign_a;
+	int	sign_b;
+	unsigned int	bits_a;
+	unsigned int	bits_b;
+
+	bits_a = a.getRawBits();
+	bits_b = b.getRawBits();
+	if (bits_a == bits_b)
+		return (1);
+	sign_a = (bits_a > INT_MAX);
+	sign_b = (bits_b > INT_MAX);
+	if (sign_a != sign_b)
+		return (sign_a < sign_b);
+	return (bits_a > bits_b);
+}
+
+int	operator<=(const Fixed& a, const Fixed& b)
+{
+	int	sign_a;
+	int	sign_b;
+	unsigned int	bits_a;
+	unsigned int	bits_b;
+
+	bits_a = a.getRawBits();
+	bits_b = b.getRawBits();
+	if (bits_a == bits_b)
+		return (1);
+	sign_a = (bits_a > INT_MAX);
+	sign_b = (bits_b > INT_MAX);
+	if (sign_a != sign_b)
+		return (sign_a > sign_b);
+	return (bits_a < bits_b);
 }
