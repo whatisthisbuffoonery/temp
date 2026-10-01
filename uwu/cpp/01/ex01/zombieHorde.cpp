@@ -9,6 +9,6 @@ Zombie	*zombieHorde(int N, std::string name)
 		return (NULL);
 	ret = new Zombie[N];
 	while (i < N)
-		ret[i++] = Zombie(name);
+		ret[i++].setname(name);
 	return (ret);
 }

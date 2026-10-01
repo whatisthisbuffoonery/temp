@@ -36,3 +36,7 @@ void	randomChump(std::string name)
 	chump.announce();
 }
 
+void	Zombie::setname(const std::string& src)
+{
+	name = src;
+}
