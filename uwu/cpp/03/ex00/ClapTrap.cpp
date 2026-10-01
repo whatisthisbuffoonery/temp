@@ -21,10 +21,10 @@ ClapTrap& ClapTrap::operator=(const ClapTrap& src)
 
 ClapTrap::~ClapTrap(void) {std::cout << "destructor" << std::endl;}
 
-std::string&	ClapTrap::getname(void) {return (name);}
-int				ClapTrap::gethp(void) {return (HitPoint);}
-int				ClapTrap::getenergy(void) {return (EnergyPoint);}
-int				ClapTrap::getattack(void) {return (AttackDamage);}
+std::string	ClapTrap::getname(void) const {return (Name);}
+int			ClapTrap::gethp(void) const {return (HitPoints);}
+int			ClapTrap::getenergy(void) const {return (EnergyPoints);}
+int			ClapTrap::getattack(void) const {return (AttackDamage);}
 
 void	ClapTrap::attack(const std::string& target)
 {
@@ -34,11 +34,11 @@ void	ClapTrap::attack(const std::string& target)
 void	ClapTrap::takeDamage(unsigned int amount)
 {
 	std::cout << "ClapTrap " << Name << " took " << amount << " damage!" << std::endl;
-	hp -= amount;
+	HitPoints -= amount;
 }
 
 void	ClapTrap::beRepaired(unsigned int amount)
 {
 	std::cout << "ClapTrap " << Name << " repaired " << amount << " hit points!" << std::endl;
-	hp += amount;
+	HitPoints += amount;
 }

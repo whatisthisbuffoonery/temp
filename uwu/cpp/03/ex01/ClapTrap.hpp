@@ -13,14 +13,14 @@ private:
 	int			AttackDamage;
 public:
 	ClapTrap(void);
-	ClapTrap(const Claptrap& src);
+	ClapTrap(const ClapTrap& src);
 	ClapTrap&	operator=(const ClapTrap& src);
 	~ClapTrap(void);
 
-	std::string&	getname(void) const;
-	int				gethp(void) const;
-	int				getenergy(void) const;
-	int				getattack(void) const;
+	std::string	getname(void) const;
+	int			gethp(void) const;
+	int			getenergy(void) const;
+	int			getattack(void) const;
 
 	void	attack(const std::string& target);
 	void	takeDamage(unsigned int amount);
