@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdarg.h>
 # include <stdint.h>
+# include <errno.h>
 
 # ifndef INT_MAX
 #  define INT_MAX 2147483647

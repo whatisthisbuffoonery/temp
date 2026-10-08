@@ -27,7 +27,10 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	size_max = -1;
 	i = size_max / size;
 	if (nmemb > i)
+	{
+		errno = ENOMEM;
 		return (NULL);
+	}
 	size *= nmemb;
 	ret = malloc(size);
 	if (!ret)
