@@ -40,7 +40,8 @@ GNL_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(GNL_SRC))
 
 PRINTF_OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(PRINTF_SRC))
 
-OBJ := $(FT_OBJ) $(GNL_OBJ) $(PRINTF_OBJ) $(LST_OBJ)
+#OBJ := $(FT_OBJ) $(GNL_OBJ) $(PRINTF_OBJ) $(LST_OBJ)
+OBJ := $(FT_OBJ) $(GNL_OBJ)
 
 all: $(OBJ_DIR) $(NAME)
 

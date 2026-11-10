@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//the number HAS to be near nptr[0]
 int	ft_atoi_ind(const char *nptr, int *index)
 {
 	int	i;
