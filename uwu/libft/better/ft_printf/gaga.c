@@ -79,7 +79,7 @@ int main(void)
 	int	ret = 0;
 	ft_printf("|%--194.54X|\n" ,3852169892u);
 	printf("|%--194.54X|\n" ,3852169892u);
-	//null_string();
+	null_string();
 //	ft_printf("%.2u\n", 1);
 //	printf("%.2u\n", 1);
 	/*
@@ -115,7 +115,7 @@ int main(void)
 	printf("|%-10s|\n", "");
 	printf("|%.3s|\n", "");
 	*/
-	/*
+	
 	ft_printf("%1d\n", 123);
 	ft_printf("%1i\n", 123);
 	ft_printf("%1u\n", 123);
@@ -216,7 +216,7 @@ int main(void)
 	ft_printf("%012d\n", 123);
 	ft_printf("%012i\n", 123);
 	ft_printf("%012u\n", 123);
-	*/
+	
 	(void) ret;
 	fflush(stdout);
 }
