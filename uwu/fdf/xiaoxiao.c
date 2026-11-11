@@ -38,7 +38,7 @@ static int	swap_wrapper(t_pt *src, t_pt *dst, float *dx, float *dy)
 }
 
 //cant do it baws, go ask bresenham
-void	buf_edit_uint(t_data *data, float fx, float fy)
+void	buf_edit_uint(t_data *data, float fx, float fy, int steep)
 {
 	unsigned int	value;
 	unsigned int	*buf;
@@ -55,12 +55,12 @@ void	buf_edit_uint(t_data *data, float fx, float fy)
 	value = 0xFF * (fy - y);
 	if (y >= 0 && y < HEIGHT)
 		*buf = (0xFF - value) * data->shade;
-	y += 1;
-	if (y >= 0 && y < HEIGHT)
+	line = (line * !steep) + steep;
+	if (x + steep < WIDTH && y + !steep < HEIGHT)
 		*(buf + line) = value * data->shade;
 }
 
-void	buf_edit_char(t_data *data, float fx, float fy)
+void	buf_edit_char(t_data *data, float fx, float fy, int steep)
 {
 	int		value;
 	char	*buf;
@@ -79,8 +79,8 @@ void	buf_edit_char(t_data *data, float fx, float fy)
 	{
 		if (y >= 0 && y < HEIGHT)
 			*(unsigned int *) buf = (0xFF - value) * data->shade;
-		y += 1;
-		if (y >= 0 && y < HEIGHT)
+		line = (line * !steep) + steep;
+		if (x + steep < WIDTH && y + !steep < HEIGHT)
 			*(unsigned int *)(buf + line) = value * data->shade;
 		return ;
 	}
@@ -94,10 +94,12 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	float	dx;
 	float	dy;
 	float	*args[2];
+	int		steep;
 
 	args[0] = &src.fx;
 	args[1] = &src.fy;
-	if (swap_wrapper(&src, &dst, &dx, &dy))
+	steep = swap_wrapper(&src, &dst, &dx, &dy);
+	if (steep)
 	{
 		args[0] = &src.fy;
 		args[1] = &src.fx;
@@ -109,6 +111,6 @@ void	xiaolin_wu(t_pt src, t_pt dst, t_data *data)
 	{
 		src.fx += 1;
 		src.fy += m;
-		data->buf_edit(data, *args[0], *args[1]);
+		data->buf_edit(data, *args[0], *args[1], steep);
 	}
 }

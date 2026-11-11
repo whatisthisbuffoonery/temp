@@ -2,18 +2,54 @@
 #include <limits.h>
 #include "ft_printf.h"
 
-int main(void)
+void	null_string(void)
 {
-	/*
-	ft_printf("1: %p \n", -1);
-	ft_printf("2: %p \n", 1);
-	ft_printf("3: %p \n", 15);
-	ft_printf("4: %p \n", 16);
-	ft_printf("5: %p \n", 17);
-	ft_printf("6: %p %p \n", LONG_MIN, LONG_MAX);
-	ft_printf("7: %p %p \n", INT_MIN, INT_MAX);
-	ft_printf("8: %p %p \n", ULONG_MAX, -ULONG_MAX);
-	*/
+	ft_printf("|%.03s|\n", NULL);
+	printf("|%.03s|\n", NULL);
+	ft_printf("|%.3s|\n", NULL);
+	printf("|%.3s|\n", NULL);
+	ft_printf("|%.06s|\n", NULL);
+	printf("|%.06s|\n", NULL);
+	ft_printf("|%.05s|\n", NULL);
+	printf("|%.05s|\n", NULL);
+	ft_printf("|%5.3s|\n", NULL);
+	printf("|%5.3s|\n", NULL);
+}
+
+void	char_thing(void)
+{
+	ft_printf("|%5%|\n");
+	printf("|%5%|\n");
+	ft_printf("|%5c|\n", '%');
+	printf("|%5c|\n", '%');
+	ft_printf("|%-5c|\n", '%');
+	printf("|%-5c|\n", '%');
+}
+
+void	negative_signed(void)
+{
+	int	ret = 0;
+	ret += ft_printf(" %d ", -9);
+	ret += ft_printf(" %d ", -10);
+	ret += ft_printf(" %d ", -11);
+	ret += ft_printf(" %d ", -14);
+	ret += ft_printf(" %d ", -15);
+	ret += ft_printf(" %d ", -16);
+	ret += ft_printf(" %d ", -99);
+	ret += ft_printf(" %d ", -100);
+	ret += ft_printf(" %d ", -101);
+	ft_printf("written: %d\n", ret);
+	ret = 0;
+	ret += printf(" %d ", -9);
+	ret += printf(" %d ", -10);
+	ret += printf(" %d ", -11);
+	ret += printf(" %d ", -14);
+	ret += printf(" %d ", -15);
+	ret += printf(" %d ", -16);
+	ret += printf(" %d ", -99);
+	ret += printf(" %d ", -100);
+	ret += printf(" %d ", -101);
+	printf("written: %d\n", ret);
 	ft_printf(" %04d \n", -14);
 	ft_printf(" %05d \n", -15);
 	ft_printf(" %06d \n", -16);
@@ -26,6 +62,40 @@ int main(void)
 	printf(" %4d \n", -14);
 	printf(" %5d \n", -15);
 	printf(" %6d \n", -16);
+}
+
+void	signed_precision(void)
+{
+	ft_printf("1:|%.2d|\n", 5);
+	printf("1:|%.2d|\n", 5);
+	ft_printf("2:|%.2d|\n", -5);
+	printf("2:|%.2d|\n", -5);
+	ft_printf("3:|%d|\n", -5);
+	printf("3:|%d|\n", -5);
+}
+
+int main(void)
+{
+	int	ret = 0;
+	ft_printf("|%--194.54X|\n" ,3852169892u);
+	printf("|%--194.54X|\n" ,3852169892u);
+	//null_string();
+//	ft_printf("%.2u\n", 1);
+//	printf("%.2u\n", 1);
+	/*
+	ft_printf("%#x\n", 0);
+	printf("%#x\n", 0);
+	*/
+	/*
+	ft_printf("1: %p \n", -1);
+	ft_printf("2: %p \n", 1);
+	ft_printf("3: %p \n", 15);
+	ft_printf("4: %p \n", 16);
+	ft_printf("5: %p \n", 17);
+	ft_printf("6: %p %p \n", LONG_MIN, LONG_MAX);
+	ft_printf("7: %p %p \n", INT_MIN, INT_MAX);
+	ft_printf("8: %p %p \n", ULONG_MAX, -ULONG_MAX);
+	*/
 	/*
 	// Null pointer — well-defined
 	printf("|%p|\n", (void *)NULL);
@@ -147,5 +217,6 @@ int main(void)
 	ft_printf("%012i\n", 123);
 	ft_printf("%012u\n", 123);
 	*/
+	(void) ret;
 	fflush(stdout);
 }

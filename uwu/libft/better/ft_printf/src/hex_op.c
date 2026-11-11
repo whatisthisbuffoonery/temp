@@ -31,23 +31,23 @@ static void	hex_buf(char *buf, int *index, uintptr_t n, char c)
 static void	set_length(t_pf_specifiers *sp, int *buflen, int *p, uintptr_t n)
 {
 	*p = 0;
+	if (!n)
+		sp->hex = 0;
 	if (sp->p_set && !sp->precision)
 	{
 		sp->p_set = 0;
 		if (!n)
-		{
-			sp->hex = 0;
 			*buflen = 0;
-		}
 	}
 	else if (sp->p_set)
 		*p = sp->precision - *buflen;//no dot
 	if (*p < 1)
+	{
+		*p = 0;
 		sp->p_set = 0;
-	if (*buflen && sp->hex)
+	}
+	if (sp->hex)
 		*buflen += 2;
-	if (sp->w_set && *buflen + *p >= sp->width)
-		sp->w_set = 0;
 }
 
 static int	resolve_arg(uintptr_t *n, t_write_head *w, char c)
@@ -69,7 +69,7 @@ int	hex_op(char c, int *len, t_write_head w)
 	int			i;
 	int			buflen;
 	int			p;
-	uintptr_t	n;
+	uintmax_t	n;
 	char		*prefix;
 
 	if (resolve_arg(&n, &w, c))//subject to change due to length modifiers: hh is char, h is short, l is long, ll is long long
@@ -80,16 +80,13 @@ int	hex_op(char c, int *len, t_write_head w)
 	prefix = "0x";
 	if (c == 'X')
 		prefix = "0X";
-	//printf("hex debug... buflen: %d\n", buflen);
+//	printf("hex debug... buflen:%d, width:%d, p:%d\n", buflen, w.sp.width, p);
 	if ((w.sp.w_set && !w.sp.dash && fill_width(w, buflen, p))
 		|| (w.sp.hex && printf_write(w, prefix, 2))
 		|| (p && fill_precision_hex(w, p))
 		|| printf_write(w, &w.buf[i], buflen - (2 * w.sp.hex))//yup this goes last now
 		|| (w.sp.w_set && w.sp.dash && fill_width(w, buflen, p)))
 		return (1);
-	if (w.sp.w_set)
-		*len += w.sp.width;
-	else
-		*len += buflen + p;
+	*len += printf_max(w.sp.width, buflen + p);
 	return (0);
 }

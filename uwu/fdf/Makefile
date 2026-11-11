@@ -1,5 +1,5 @@
 MLX_DIR := minilibx-linux
-LIBFT_DIR := libft
+LIBFT_DIR := ../libft
 LIBFT := $(LIBFT_DIR)/libft.a
 INCLUDES := -I$(MLX_DIR) -I$(LIBFT_DIR)/includes
 LIBS := -lm -lXext -lX11 -lmlx -lft -L$(MLX_DIR) -L$(LIBFT_DIR) -L/usr/lib/X11

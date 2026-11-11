@@ -5,7 +5,7 @@ CC := clang
 CC_FLAGS := -Wall -Wextra -Werror -g
 AR := ar
 AR_FLAGS := rcs
-__SRC := char_op.c str_op.c int_op.c uint_op.c hex_op.c ft_printf.c symbol.c fill.c #gaga.c
+__SRC := char_op.c str_op.c int_op.c uint_op.c hex_op.c ft_printf.c symbol.c fill.c float_op.c
 NAME := libftprintf.a
 
 SRC_DIR := src
@@ -16,13 +16,16 @@ OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(__SRC))
 
 all: $(NAME)
 
-gaga:
+gaga: all
 	cc gaga.c libftprintf.a -I includes/ 2>/dev/null
 	./a.out
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT)
 	cp $(LIBFT) $(NAME)
 	$(AR) $(AR_FLAGS) $(NAME) $(OBJ)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR) all

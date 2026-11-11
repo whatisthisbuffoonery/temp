@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 //the number HAS to be near nptr[0]
+//#include <stdio.h>
 int	ft_atoi_ind(const char *nptr, int *index)
 {
 	int	i;
@@ -26,12 +27,14 @@ int	ft_atoi_ind(const char *nptr, int *index)
 	{
 		if (nptr[i] == '-')
 			flag = -1;
+	//	printf("atoi char %c:%d\n", nptr[i], nptr[i]);
 		i ++;
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
 		a *= 10;
 		a += nptr[i] - '0';
+	//	printf("atoi char %c:%d\n", nptr[i], nptr[i]);
 		i ++;
 	}
 	*index += i;

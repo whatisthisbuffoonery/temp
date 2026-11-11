@@ -5,6 +5,7 @@ int	hex_op(char c, int *len, t_write_head w);
 int	char_op(char src, int *len, t_write_head w);
 int	int_op(int *len, t_write_head w);
 int	uint_op(int *len, t_write_head w);
+int	g_op(char c, int *len, t_write_head w);
 
 static void	fill_numeric(t_pf_specifiers *sp, const char **format)
 {
@@ -19,8 +20,10 @@ static void	fill_numeric(t_pf_specifiers *sp, const char **format)
 	i = 0;
 	if (**format != '.')
 	{
+//		printf("width parse: %c%c%c\n", (*format)[i], (*format)[i + 1], (*format)[i + 2]);
 		sp->width = ft_atoi_ind(&(*format)[i], &i);
 		sp->w_set = 1;
+//		printf("result width: %d\n", sp->width);
 	}
 	if ((*format)[i] == '.')
 	{
@@ -71,9 +74,9 @@ int	printf_symbol(const char **format, int *len, t_write_head w)
 	if (c)
 		*format = &(*format)[1];
 	if (c == 'c' || c == '%')
-		return (char_op(c, len, w));
+		return (char_op(c, len, w));//'l' len modifier expects wide chars
 	else if (c == 's')
-		return (str_op(len, w, (char *) va_arg(*w.va, uintptr_t)));
+		return (str_op(len, w, (char *) va_arg(*w.va, uintptr_t)));//'l' len modifier expects wide chars
 	ft_memset(w.buf, 0, sizeof(char) * NUM_BUFFER);
 	if (c == 'd' || c == 'i')
 		return (int_op(len, w));
@@ -81,10 +84,12 @@ int	printf_symbol(const char **format, int *len, t_write_head w)
 		return (hex_op(c, len, w));
 	else if (c == 'u')
 		return (uint_op(len, w));
+	ft_memset(w.fer, 0, sizeof(char) * NUM_BUFFER);
+	if (c == 'f' || c == 'e' || c == 'g')
+		return (g_op(c, len, w));
 	i = printf_write(w, "[printf error]", 14);//write an error and keep going
 	*len += i;
 	return (i < 0);
 }
-
 //0 precision suppresses all numbers when they are 0
 //floats get 0 decimal places instead

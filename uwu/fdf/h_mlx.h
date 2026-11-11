@@ -118,7 +118,7 @@ typedef struct s_data
 	void			*img;
 	char			*buf;
 	unsigned int	*ubuf;
-	void			(*buf_edit)(struct s_data *, float, float);
+	void			(*buf_edit)(struct s_data *, float, float, int);
 	void			(*rasterise)(t_pt *, t_view, int, struct s_data *);
 	int				size;
 	int				endian;
@@ -146,8 +146,8 @@ int		fdf_cleanup(t_data *d);
 int		fd_err(int *fd);
 int		perspective_flag(char *v);
 
-void	buf_edit_uint(t_data *data, float fx, float fy);
-void	buf_edit_char(t_data *data, float fx, float fy);
+void	buf_edit_uint(t_data *data, float fx, float fy, int steep);
+void	buf_edit_char(t_data *data, float fx, float fy, int steep);
 
 void	rasterise_isometric(t_pt *pt, t_view view, int size, t_data *data);
 void	rasterise_perspective(t_pt *pt, t_view view, int size, t_data *data);

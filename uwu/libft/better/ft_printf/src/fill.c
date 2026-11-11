@@ -1,5 +1,12 @@
 #include "ft_printf.h"
 
+int	printf_max(int a, int b)
+{
+	if (a < b)
+		return (b);
+	return (a);
+}
+
 int	printf_repeat_write(t_write_head w, char c, int len)
 {
 	int	i;
@@ -31,10 +38,7 @@ int	fill_width(t_write_head w, int buflen, int p)
 	len = w.sp.width - buflen - p;
 	//printf("debug width... len:%d, width:%d, buflen:%d, p:%d\n", len, w.sp.width, buflen, p);
 	if (len < 0)
-	{
-		write(2, "\nbro what\n", 10);
 		return (0);
-	}
 	c = ' ';
 	if (w.sp.zero)
 		c = '0';
@@ -44,12 +48,8 @@ int	fill_width(t_write_head w, int buflen, int p)
 int	fill_precision(t_write_head w, int p)
 {
 	if (p < 0)
-	{
-		write(2, "\nbro what\n", 10);
 		return (0);
-	}
-	if (printf_repeat_write(w, '.', 1)
-		|| (printf_repeat_write(w, '0', p - 1)))
+	if (printf_repeat_write(w, '0', p))
 		return (1);
 	return (0);
 }
@@ -57,9 +57,6 @@ int	fill_precision(t_write_head w, int p)
 int	fill_precision_hex(t_write_head w, int p)
 {
 	if (p < 0)
-	{
-		write(2, "\nbro what\n", 10);
 		return (0);
-	}
 	return (printf_repeat_write(w, '0', p));
 }

@@ -69,14 +69,15 @@ int	ft_printf(const char *format, ...)
 	int				i;
 	int				len;
 	va_list			va;
-	char			buf[NUM_BUFFER];
+	char			buf[2][NUM_BUFFER];
 	t_write_head	w;
 
 	va_start(va, format);
 	w.fd = printf_fd(PRINTF_PROBE);
 	w.flags = printf_flags(PRINTF_PROBE);
 	w.va = &va;
-	w.buf = buf;
+	w.buf = buf[0];
+	w.fer = buf[1];
 	len = 0;
 	while (*format)
 	{

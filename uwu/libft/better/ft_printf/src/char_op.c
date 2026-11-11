@@ -7,7 +7,10 @@ int	char_op(char src, int *len, t_write_head w)
 	if (src == 'c')
 		c = va_arg(*w.va, int);
 	else
+	{
 		c = '%';
+		w.sp.w_set = 0;
+	}
 	if (w.sp.w_set && w.sp.width <= 1)
 		w.sp.w_set = 0;
 	if ((w.sp.w_set && !w.sp.dash && fill_width(w, 1, 0))

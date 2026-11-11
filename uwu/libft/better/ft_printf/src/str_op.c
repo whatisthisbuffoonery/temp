@@ -1,11 +1,15 @@
 #include "ft_printf.h"
 
-int	str_op(int *len, t_write_head w, char *str)
+int	str_op(int *len, t_write_head w, const char *str)
 {
 	int		buflen;
 
 	if (!str)
+	{
 		str = "(null)";//why oh why does gnu let you truncate this fallback
+		if (w.sp.p_set && w.sp.precision < 6)
+			str = "";
+	}
 	buflen = ft_strlen(str);
 	w.sp.zero = 0;
 	//printf("debug flags... precision>> %d:%d\n", w.sp.p_set, w.sp.precision);
