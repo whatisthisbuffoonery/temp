@@ -3,7 +3,7 @@
 
 # include "ClapTrap.hpp"
 
-class ScavTrap : class ClapTrap
+class ScavTrap : ClapTrap
 {
 public:
 	ScavTrap(void);
@@ -19,3 +19,5 @@ public:
 	void	takeDamage(unsigned int amount);
 	void	beRepaired(unsigned int amount);
 };
+
+#endif

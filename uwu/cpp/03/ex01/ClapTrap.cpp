@@ -1,5 +1,8 @@
 #include "ClapTrap.hpp"
 
+ClapTrap::ClapTrap(const std::string& srcname, const int& hp, const int& ep, const int& atk) : Name(srcname), HitPoints(hp), EnergyPoints(ep), AttackDamage(atk)
+{std::cout << "inherited constructor" << std::endl;}
+
 ClapTrap::ClapTrap(void) : Name("who"), HitPoints(10), EnergyPoints(10), AttackDamage(0)
 {std::cout << "default constructor" << std::endl;}
 

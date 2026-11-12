@@ -1,14 +1,14 @@
 #include "ScavTrap.hpp"
 
-ScavTrap::ScavTrap(void) : Name("who"), HitPoints(100), EnergyPoints(50), AttackDamage(20)
-{std::cout << "default constructor" << std::endl;}
+ScavTrap::ScavTrap(void) : ClapTrap("A nobody", 100, 50, 20)
+{std::cout << "scav default constructor" << std::endl;}
 
-ScavTrap::ScavTrap(const ScavTrap& src) : Name(src.getname()), HitPoints(src.gethp()), EnergyPoints(src.getenergy()), AttackDamage(src.getattack())
-{std::cout << "copy constructor" << std::endl;}
+ScavTrap::ScavTrap(const ScavTrap& src) : ClapTrap(src.getname(), src.gethp(), src.getenergy(), src.getattack())
+{std::cout << "scav copy constructor" << std::endl;}
 
 ScavTrap& ScavTrap::operator=(const ScavTrap& src)
 {
-	std::cout << "copy assignment operator" << std::endl;
+	std::cout << "scav copy assignment operator" << std::endl;
 	if (this != &src)
 	{
 		Name = src.getname();
@@ -19,10 +19,10 @@ ScavTrap& ScavTrap::operator=(const ScavTrap& src)
 	return (*this);
 }
 
-ScavTrap::~ScavTrap(void) {std::cout << "destructor" << std::endl;}
+ScavTrap::~ScavTrap(void) {std::cout << "scav destructor" << std::endl;}
 
-ScavTrap::ScavTrap(const std::string& name) : Name(name), HitPoints(10), EnergyPoints(10), AttackDamage(0)
-{std::cout << "string constructor" << std::endl;}
+ScavTrap::ScavTrap(const std::string& name) : ClapTrap(name, 100, 50, 20)
+{std::cout << "scav string constructor" << std::endl;}
 
 void	ScavTrap::guardGate(void) {std::cout << "ScavTrap " << Name << " is guarding a gate" << std::endl;}
 
