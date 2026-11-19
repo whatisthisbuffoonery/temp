@@ -1,7 +1,20 @@
 #include "ft_printf.h"
+/*
+void	signed_buf_duo(char *buf, int *index, intmax_t src, t_write_head *w)
+{
+	int			offset;
+	int			i;
+	uint64_t	n;
 
+	offset = NUM_BUFFER - 1;
+	i = 0;
+	w->minus = (src < 0);
+	n = src;
+	if (w->minus)
+		n = 0lu - n;
+*/
 //buffer length needed to represent 128bit numbner in binary is 128 + \r\n\0 = 131
-static void	signed_buf(char *buf, int *index, intmax_t src, t_write_head *w)
+static void	signed_buf_uno(char *buf, int *index, intmax_t src, t_write_head *w)
 {
 	int			offset;
 	int			i;
@@ -68,7 +81,10 @@ int	int_op(int *len, t_write_head w)
 	int			prefix;
 
 	n = va_arg(*w.va, int);//subject to change due to length modifiers: hh is char, h is short, l is long, ll is long long
-	signed_buf(w.buf, &i, n /*va_next(*w.va, int)*/, &w);
+//	if (n > INT_MAX || n < INT_MIN)
+//		signed_buf_duo(w.buf, &i, n, &w);
+//	else
+	signed_buf_uno(w.buf, &i, n, &w);
 	prefix = (w.minus || w.sp.plus || w.sp.space);
 	buflen = NUM_BUFFER - i;//-1 on the buffer for 0 index, zzzzzzz
 	set_length(&w.sp, &buflen, &p, n);

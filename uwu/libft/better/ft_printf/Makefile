@@ -17,7 +17,7 @@ OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(__SRC))
 all: $(NAME)
 
 gaga: all
-	cc gaga.c libftprintf.a -I includes/ 2>/dev/null
+	cc gaga.c $(INCLUDES) libftprintf.a 2>/dev/null
 	./a.out
 
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT)

@@ -30,23 +30,17 @@ typedef struct s_write_head
 {
 	t_pf_specifiers	sp;
 	va_list			*va;
+	const char		*pairs;
 	char			*buf;
 	char			*fer;
 	int				fd;
 	int				flags;
 	int				minus;
-	const char		*thing;
 }	t_write_head;
 
-/*
-	const char		pairs[] = 
-		"0001020304050607080910111213141516171819"
-		"2021222324252627282930313233343536373839"
-		"4041424344454647484950515253545556575859"
-		"6061626364656667686970717273747576777879"
-		"8081828384858687888990919293949596979899";
-*/
 int	ft_printf(const char *format, ...) __attribute__((format(printf, 1, 2)));
+int	printf_fd(int n);
+int	printf_flags(int n);
 
 /*internal only*/
 int	printf_write(t_write_head w, const char *str, int len);

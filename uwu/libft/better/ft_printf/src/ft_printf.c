@@ -62,6 +62,20 @@ int	printf_write(t_write_head w, const char *str, int len)
 	return (0);
 }
 
+static void	printf_init(t_write_head *w, char buf[2][NUM_BUFFER])
+{
+	static const char	pairs[201] = "0001020304050607080910111213141516171819"
+		"2021222324252627282930313233343536373839"
+		"4041424344454647484950515253545556575859"
+		"6061626364656667686970717273747576777879"
+		"8081828384858687888990919293949596979899";
+	w->fd = printf_fd(PRINTF_PROBE);
+	w->flags = printf_flags(PRINTF_PROBE);
+	w->buf = buf[0];
+	w->fer = buf[1];
+	w->pairs = &pairs[0];
+}
+
 //posix standard defines I will not be multitasking normal use case and grabbing positional args %2$d
 //that will be a separate implementation
 int	ft_printf(const char *format, ...)
@@ -73,11 +87,8 @@ int	ft_printf(const char *format, ...)
 	t_write_head	w;
 
 	va_start(va, format);
-	w.fd = printf_fd(PRINTF_PROBE);
-	w.flags = printf_flags(PRINTF_PROBE);
+	printf_init(&w, buf);
 	w.va = &va;
-	w.buf = buf[0];
-	w.fer = buf[1];
 	len = 0;
 	while (*format)
 	{
