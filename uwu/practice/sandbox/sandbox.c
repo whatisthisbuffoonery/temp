@@ -10,14 +10,13 @@
 #define OK 1
 #define BAD 0
 
-
 volatile sig_atomic_t	signo;//only used for timeouts
 int						timeout_bulb;//use a counter that doesnt update out of nowhere
 
 void	sighands(int src)
 {
 	(void) src;
-	write(1, "ping\n", 5);
+	//write(1, "ping\n", 5);
 	signo = 1;
 }
 
@@ -54,7 +53,8 @@ int	sandbox_exit(int n, unsigned int timeout_src, bool verbose, pid_t pid)
 
 	if (signo)
 	{
-		printf("attempt cleanup: %d...%d, %s\n", pid, kill(SIGKILL, pid), strerror(errno));
+		//printf("attempt cleanup: %d...%d, %s\n", pid, kill(pid, SIGKILL), strerror(errno));
+		kill(pid, SIGKILL);
 		timeout_bulb = 1;
 		n = 1;
 	}
@@ -62,16 +62,15 @@ int	sandbox_exit(int n, unsigned int timeout_src, bool verbose, pid_t pid)
 		n = WTERMSIG(n);
 	else if (stop)			//treat any stopped job as bad
 		n = WSTOPSIG(n);	//example skipped verbose for stop signals and returned -1???
-	printf("final exit status %d\n", n);
+	else if (WIFEXITED(n))
+		n = WEXITSTATUS(n);
+	//printf("final exit status %d, stop %d term %d\n", n, stop, term);
 	if (verbose)
 		sandbox_exit_verbose(n, timeout_src, stop, term);
 	if (!n)
 		return (OK);
 	return (BAD);
 }
-
-//handles parent errors and stop signals
-
 
 int	sandbox(void (*f)(void), unsigned int timeout, bool verbose)
 {
@@ -88,16 +87,15 @@ int	sandbox(void (*f)(void), unsigned int timeout, bool verbose)
 		f();
 		exit(0);
 	}
-	printf("parent pid holding: %d\n", pid);
+	//printf("parent pid holding: %d\n", pid);
 	signal_init();
 	alarm(timeout);
-	waiting = waitpid(pid, &n, 0);
+	waiting = waitpid(pid, &n, WUNTRACED);
 	while (waiting == -1 && errno == EINTR && !signo)
-		waiting = waitpid(pid, &n, 0);
+		waiting = waitpid(pid, &n, WUNTRACED);
 	alarm(0);
 	return (sandbox_exit(n, timeout, verbose, pid));
 }
-
 
 void ok_f(void)
 {
@@ -106,10 +104,8 @@ void ok_f(void)
 
 void inf_f(void)
 {
-	//while (1)
-	//	;
-	sleep(5);
-	printf("wtf you aint wake me up\n");
+	while (1)
+		;
 }
 
 void bad_exit(void)
@@ -170,14 +166,14 @@ void test_func(void (*f)(void), unsigned int timeout, const char* name)
 
 int	main(void)
 {
-//	test_func(ok_f, 2, "noice");
-//	test_func(fast_print_f, 2, "other ok func");
-//	test_func(abort_f, 2, "abort");
-//	test_func(stop_f, 2, "stop");
-//	test_func(segfault_f, 2, "segfault");
-//	test_func(cancel_alarm, 2, "chump thinks he can sleep");
-//	test_func(leak_f, 2, "leak func");
+	test_func(ok_f, 2, "noice");
+	test_func(fast_print_f, 2, "other ok func");
+	test_func(abort_f, 2, "abort");
+	test_func(stop_f, 2, "stop");
+	test_func(segfault_f, 2, "segfault");
+	test_func(cancel_alarm, 2, "chump thinks he can sleep");
+	test_func(leak_f, 2, "leak func");
 	test_func(inf_f, 2, "simple timeout");
-//	test_func(bad_exit, 2, "nonzero exit");
-//	test_func(suicide_f, 2, "SIGKILL self");
+	test_func(bad_exit, 2, "nonzero exit");
+	test_func(suicide_f, 2, "SIGKILL self");
 }
