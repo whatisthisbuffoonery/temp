@@ -29,6 +29,7 @@ int			ClapTrap::getattack(void) const {return (AttackDamage);}
 void	ClapTrap::attack(const std::string& target)
 {
 	std::cout << "ClapTrap " << Name << " attacks " << target << ", causing " << AttackDamage << " points of damage!" << std::endl;
+	EnergyPoints -= 1;
 }
 
 void	ClapTrap::takeDamage(unsigned int amount)
@@ -41,4 +42,7 @@ void	ClapTrap::beRepaired(unsigned int amount)
 {
 	std::cout << "ClapTrap " << Name << " repaired " << amount << " hit points!" << std::endl;
 	HitPoints += amount;
+	EnergyPoints -= 1;
 }
+
+/*you forgot to check against energy. for all the exercises.*/

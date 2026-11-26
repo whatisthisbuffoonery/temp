@@ -1,3 +1,8 @@
 #include "ClapTrap.hpp"
 
-int	main(void) {}
+int	main(void)
+{
+	ClapTrap	Harl = ClapTrap("Harl");
+
+	while (Harl.getenergy
+}

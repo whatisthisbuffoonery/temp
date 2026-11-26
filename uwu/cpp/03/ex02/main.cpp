@@ -1,4 +1,5 @@
 #include "ScavTrap.hpp"
+#include "FragTrap.hpp"
 
 //omfg remember to put a main file in ex00
 //plss put energy exhaustion in both
@@ -9,4 +10,9 @@ int	main(void)
 	bob.guardGate();
 	bob.attack("the wall");
 	bob.takeDamage(10);
+
+	std::cout << "=======" << std::endl;
+	FragTrap	bert("bert");
+
+	bert.highFivesGuys();
 }

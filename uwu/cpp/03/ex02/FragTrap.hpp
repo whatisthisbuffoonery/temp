@@ -11,7 +11,7 @@ public:
 	FragTrap&	operator=(const FragTrap& src);
 	~FragTrap(void);
 
-	ClapTrap(const std::string& name);
+	FragTrap(const std::string& name);
 
 	void	attack(const std::string& target);
 	void	takeDamage(unsigned int amount);
