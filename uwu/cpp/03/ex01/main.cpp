@@ -6,8 +6,13 @@ int	main(void)
 {
 	ScavTrap	bob("bob");
 
-	bob.guardGate();
+	while (bob.getenergy())
+		bob.attack("the wall");
 	bob.attack("the wall");
+
+	std::cout << "======" << std::endl;
+
+	bob.guardGate();
 	bob.takeDamage(10);
 	ScavTrap	tmp;
 	tmp = bob;

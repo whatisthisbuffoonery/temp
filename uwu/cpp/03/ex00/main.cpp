@@ -2,7 +2,9 @@
 
 int	main(void)
 {
-	ClapTrap	Harl = ClapTrap("Harl");
+	ClapTrap	Harl = ClapTrap();
 
-	while (Harl.getenergy
+	while (Harl.getenergy() > 0)
+		Harl.attack("the wall");
+	Harl.attack("the wall");
 }

@@ -12,6 +12,7 @@ protected:
 	int			EnergyPoints;
 	int			AttackDamage;
 
+	int			exhausted(void) const;
 	ClapTrap(const std::string& srcname, const int& hp, const int& ep, const int& atk);
 public:
 	ClapTrap(void);

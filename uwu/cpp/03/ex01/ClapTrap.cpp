@@ -32,9 +32,19 @@ int					ClapTrap::gethp(void) const {return (HitPoints);}
 int					ClapTrap::getenergy(void) const {return (EnergyPoints);}
 int					ClapTrap::getattack(void) const {return (AttackDamage);}
 
+int			ClapTrap::exhausted(void) const
+{
+	if (EnergyPoints > 0)
+		return (0);
+	std::cout << "ClapTrap " << Name << " is exhausted!" << std::endl;
+	return (1);
+}
+
 void	ClapTrap::attack(const std::string& target)
 {
-	std::cout << "ClapTrap " << Name << " attacks " << target << ", causing " << AttackDamage << " points of damage!" << std::endl;
+	if (this->exhausted())
+		return ;
+	std::cout << Name << " attacks " << target << ", causing " << AttackDamage << " points of damage!" << std::endl;
 	EnergyPoints -= 1;
 }
 
@@ -46,6 +56,8 @@ void	ClapTrap::takeDamage(unsigned int amount)
 
 void	ClapTrap::beRepaired(unsigned int amount)
 {
+	if (this->exhausted())
+		return ;
 	std::cout << "ClapTrap " << Name << " repaired " << amount << " hit points!" << std::endl;
 	HitPoints += amount;
 	EnergyPoints -= 1;

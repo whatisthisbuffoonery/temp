@@ -52,7 +52,6 @@ int accept(char **s, char c)
     return (0);
 }
 
-//this function sucks
 int expect(char **s, char c)
 {
     if (accept(s, c))
@@ -61,50 +60,18 @@ int expect(char **s, char c)
     return (0);
 }
 
-node	*append_node(char **s)
+//...
+
+node    *parse_expr(char *s)
 {
-	node	tmp;
+    //...
 
-	tmp.l = NULL;
-	tmp.r = NULL;
-	tmp.val = 0;
-	if (isdigit(**s))
-	{
-		tmp.type = VAL;
-		tmp.val = **s - '0';
-	}
-	else if (**s == '+')
-		tmp.val = ADD;
-	else if (**s == '*')
-		tmp.val = MULTI;
-	else
-	{
-		unexpected(**s);
-		return (NULL);
-	}
-	(*s)++;
-	return (new_node(tmp));
-}
-
-node    *parse_expr(char **s, int bracket)
-{
-	node	*l = NULL;
-	node	*curr = NULL;
-
-    while (1)
-	{
-		if (accept(s, '('))
-			curr = parse_expr(s, bracket + 1);
-		else if (accept(s, ')'))
-			bracket --;
-		else
-			curr = append_node(s);
-		if (!curr || bracket < 0)
-			break ;
-		increment(&l, curr);
-	}
-	if (!curr || bracket
-    return (l);
+    if (*s) 
+    {
+        destroy_tree(ret);
+        return (NULL);
+    }
+    return (ret);
 }
 
 int eval_tree(node *tree)
@@ -124,8 +91,7 @@ int main(int argc, char **argv)
 {
     if (argc != 2)
         return (1);
-	char	*tmp = argv[1];
-    node *tree = parse_expr(&tmp, 0);
+    node *tree = parse_expr(argv[1]);
     if (!tree)
         return (1);
     printf("%d\n", eval_tree(tree));

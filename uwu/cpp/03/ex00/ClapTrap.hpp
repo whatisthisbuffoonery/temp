@@ -11,6 +11,8 @@ private:
 	int			HitPoints;
 	int			EnergyPoints;
 	int			AttackDamage;
+
+	int			exhausted(void) const;
 public:
 	ClapTrap(void);
 	ClapTrap(const ClapTrap& src);
